@@ -1,0 +1,70 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Helvetica Neue';
+  color: #261f1d;
+  letter-spacing: -0.05em;
+  font-family:'Helvetica Neue', sans-serif;
+  
+  font-weight: 400;
+}
+
+h1{
+  font-weight: 50;
+  letter-spacing: -0.05em;
+  font-family:'Helvetica Neue', sans-serif;
+  font-size: 50px;
+  font-weight: 400;
+
+}
+
+
+.marcy1 {
+  background-image: url(https://nycetc.org/wp-content/uploads/2020/12/Marcy-Lab_04-scaled.jpg) ;
+  background-size: cover; /* Makes the image cover the entire container */
+  background-position: 0% 40%;
+}
+
+
+h2{
+  font-weight: 50;
+  letter-spacing: -0.05em;
+  font-family: 'Practice Display';
+  font-size: 50px;
+  line-height: 48px;
+  padding-top: 30px;
+  padding-left: 60px;
+  padding-right: 80px;
+  padding-bottom: 90px;
+  justify-content: center;
+}
+
+@keyframes moveWithin {
+  0% {
+    transform: scale(1.2) translate(0, 0);
+  }
+  25% {
+    transform: scale(1.2) translate(-10px, 10px);
+  }
+  50% {
+    transform: scale(1.2) translate(10px, -10px);
+  }
+  75% {
+    transform: scale(1.2) translate(10px, 10px);
+  }
+  100% {
+    transform: scale(1.2) translate(0, 0);
+  }
+}
+
+.animate-moveWithin {
+  animation: moveWithin 12s ease-in-out infinite;
+}
+.vignette {
+
+}
