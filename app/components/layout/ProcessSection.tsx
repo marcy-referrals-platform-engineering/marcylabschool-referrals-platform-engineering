@@ -9,7 +9,7 @@ const processData = [
               of the person you'd like to refer to the Marcy Lab School
               Fellowship.`,
       color: "#a6c2b4",
-      img: "/marcy2.jpg",
+      img: "/Marcy2.jpg",
       step: 1,
       button: {invert: true, text: 'SUBMIT A REFERRAL'}
     },
