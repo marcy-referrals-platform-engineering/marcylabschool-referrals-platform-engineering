@@ -10,7 +10,7 @@ export default function ErrorPage() {
         <div className="bg-white p-8 rounded-lg shadow-md max-w-lg text-center">
           <h1 className="text-4xl font-bold text-red-600 mb-4">Access Denied</h1>
           <p className="text-gray-700 mb-6">
-            Your email is not authorized to access this application. If you believe this is a mistake, you can request authorization.
+            Your email is not authorized to access The Marcy Lab School Referral Program. If you believe this is a mistake, you can request authorization.
           </p>
           <button
             onClick={handleRequestAuthorization}

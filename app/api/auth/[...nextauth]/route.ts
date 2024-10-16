@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { PrismaClient } from "@prisma/client/extension";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient()
 const handler = NextAuth({
     providers: [
@@ -9,10 +9,15 @@ const handler = NextAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
           }),
     ],
+
+    pages: {
+        error: '/auth/error'
+    },
+
     callbacks: {
         async signIn({user, account, profile}) {
-            const isAuthorizedEmail = await prisma.authorizedEmail.findUnique({
-                where: {email: user.email}
+            const isAuthorizedEmail = await prisma.authorizedEmails.findUnique({
+                where: {email: user.email!}
             })
 
             if (!isAuthorizedEmail) return false
