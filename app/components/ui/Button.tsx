@@ -1,7 +1,12 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
-function Button({ text, invert }: { text: string; invert?: boolean }) {
+interface ButtonProps {
+  text: string;
+  invert?: boolean;
+  className?: string
+}
+function Button({ text, invert, className }: ButtonProps) {
   const [hovered, setHovered] = useState<boolean>(false);
   const bgRef = useRef<HTMLDivElement>(null);
 
@@ -11,8 +16,8 @@ function Button({ text, invert }: { text: string; invert?: boolean }) {
       : (bgRef.current!.style.transform = "translateX(-100%)");
   }, [hovered]);
   return (
-    <div
-      className="w-[10rem] "
+    <button
+      className={`w-[10rem] ${className} `}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -42,7 +47,7 @@ function Button({ text, invert }: { text: string; invert?: boolean }) {
           className="absolute translate-x-[-100%] z-[2] duration-300 inset-0 bg-[#261f1d] w-full h-full"
         ></div>
       </div>
-    </div>
+    </button>
   );
 }
 
