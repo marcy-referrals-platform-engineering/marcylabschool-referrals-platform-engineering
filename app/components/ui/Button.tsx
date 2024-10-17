@@ -5,9 +5,10 @@ interface ButtonProps {
   text: string;
   invert?: boolean;
   className?: string;
+  onClick? : any
 
 }
-function Button({ text, invert, className  }: ButtonProps) {
+function Button({ text, invert, className, onClick  }: ButtonProps) {
   const [hovered, setHovered] = useState<boolean>(false);
   const bgRef = useRef<HTMLDivElement>(null);
 
@@ -21,6 +22,7 @@ function Button({ text, invert, className  }: ButtonProps) {
   
   return (
     <button
+      onClick={() => onClick()}
       className={`w-[10rem] ${className} `}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}

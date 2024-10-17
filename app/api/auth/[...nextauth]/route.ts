@@ -17,7 +17,7 @@ const handler = NextAuth({
 
             if (!isAuthorizedEmail) {
                 const hasRequestedAuthorization = await prisma.authorizationRequests?.findUnique({ where: { email: user.email! } }) ?? null
-                return `/auth/error?email=${encodeURIComponent(user.email!)}&name=${encodeURIComponent(user.name!)}&hasrequested=${hasRequestedAuthorization ? true : false}`;
+                return `/auth/error?email=${encodeURIComponent(user.email!)}&name=${encodeURIComponent(user.name!)}&img=${user.image}&hasrequested=${hasRequestedAuthorization ? true : false}`;
             } else {
                 return true;
             }
