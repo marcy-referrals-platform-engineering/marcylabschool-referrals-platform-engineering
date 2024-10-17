@@ -1,19 +1,19 @@
 import User from '../models/User'
 import { NextApiRequest, NextApiResponse } from 'next';
-
-class UserController {
+import { NextResponse } from 'next/server';
+export class UserController {
 
     
-    static async requestAuthorization(req: NextApiRequest, res: NextApiResponse) {
+    static async requestAuthorization(req: any) {
         try {
           const { email, name, img } = req.body;
+    
           await User.requestEmailAuthorization(email, name, img);
-          return res.status(200).json({ message: 'Authorization request sent successfully' });
+    
+          return NextResponse.json({ message: 'Authorization request sent successfully' }, { status: 200 });
         } catch (error) {
           console.error('Error sending authorization request:', error);
-          return res.status(500).json({ message: 'Failed to send authorization request' });
+          return NextResponse.json({ message: 'Failed to send authorization request' }, { status: 500 });
         }
       }
-
-
-}
+    }

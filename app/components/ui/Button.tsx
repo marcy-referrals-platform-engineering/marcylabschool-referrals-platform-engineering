@@ -4,28 +4,33 @@ import { useState, useEffect, useRef } from "react";
 interface ButtonProps {
   text: string;
   invert?: boolean;
-  className?: string
+  className?: string;
+
 }
-function Button({ text, invert, className }: ButtonProps) {
+function Button({ text, invert, className  }: ButtonProps) {
   const [hovered, setHovered] = useState<boolean>(false);
   const bgRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    hovered && !invert
-      ? (bgRef.current!.style.transform = "translateX(0%)")
-      : (bgRef.current!.style.transform = "translateX(-100%)");
-  }, [hovered]);
+
+    useEffect(() => {
+      hovered && !invert
+        ? (bgRef.current!.style.transform = "translateX(0%)")
+        : (bgRef.current!.style.transform = "translateX(-100%)");
+    }, [hovered]);
+
+  
   return (
     <button
       className={`w-[10rem] ${className} `}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div
+    
+     <div
         className={` m-auto overflow-hidden relative ${
           invert ? "" : "border-[0.2rem]"
         }  z-[1000]  ${
-          invert ? "hover:text-[#261f1d]" : "hover:text-white"
+          invert  ? "hover:text-[#261f1d]" :  "hover:text-white"
         } duration-300 backdrop-blur  w-[12rem] border-[#261f1d] py-2 font-bold ${
           invert ? "" : "text-center"
         }`}
