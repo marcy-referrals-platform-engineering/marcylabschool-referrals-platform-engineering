@@ -23,17 +23,17 @@ function Button({ text, invert, className, onClick  }: ButtonProps) {
   return (
     <button
       onClick={() => onClick()}
-      className={`w-[10rem] ${className} `}
+      className={`w-[10rem] z-[1] ${className} `}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
     
      <div
-        className={` m-auto overflow-hidden relative ${
+        className={` m-auto overflow-hidden  relative ${
           invert ? "" : "border-[0.2rem]"
-        }  z-[1000]  ${
-          invert  ? "hover:text-[#261f1d]" :  "hover:text-white"
-        } duration-300 backdrop-blur  w-[12rem] border-[#261f1d] py-2 font-bold ${
+        }   ${
+          invert  ? "hover:text-[#261f1d]" :  "hover:text-white backdrop-blur"
+        } duration-300   w-[12rem] border-[#261f1d] py-2 font-bold ${
           invert ? "" : "text-center"
         }`}
       >
