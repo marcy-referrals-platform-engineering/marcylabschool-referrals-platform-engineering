@@ -43,7 +43,7 @@ export default function Home() {
           <div className="pb-5 ">
             {pointsData.map((milestone) => {
               return (
-                <div className="relative z-10 w-[90%] m-auto py-5 border-t-[#261f1d] flex gap-3 justify-between border-t-[0.1rem]">
+                <div className="relative  z-10 w-[90%] m-auto py-5 border-t-[#261f1d] flex gap-3 justify-between border-t-[0.1rem]">
                   <div>
                   <h1 className=" w-[12rem] sm:w-[25rem]  font-medium  text-[1.3rem] md:text-[1.8rem] lg:text-[1.8rem] sm:text-[1.6rem]  ">
                     {milestone.action}
