@@ -4,7 +4,9 @@ import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 const links = [
   { text: 'LOG-IN', onClick: () => signIn('google') }, // Pass the provider directly
+  {text: 'DASHBOARD'},
   { text: 'F.A.Q.' },
+  
 ]
 
 const Sidebar = () => {
@@ -18,11 +20,23 @@ const Sidebar = () => {
         <img className="w-[12rem] m-auto mb-4 border-b-white border-b" src='/marcylogo1.png' alt="Logo" />
         <ul>
           {
+            session && session.user && (
+              <div className='flex pb-2 mb-5 border-b  gap-2'>
+                <img className="w-[3rem] h-[3rem] rounded-full m-auto" src={session.user.image!} alt="User Image" />
+                <div className="self-center">
+                  <p className=' text-[1.3rem] text-white text-center'>{session.user.name?.toUpperCase()}</p>
+                </div>
+              </div>
+            )
+          }
+          {
+            
             links.map((link, index) => (
+              
               <li 
                 key={index}
                 onClick={link.onClick} 
-                className="group cursor-pointer"
+                className={`group cursor-pointer  ${(session && session.user && link.text === 'LOG-IN') || (!session && link.text === 'DASHBOARD') ? 'hidden' : ''}`}
               >
                 <p className='pb-3 text-white duration-200 text-[1.5rem]'>
                   {link.text}

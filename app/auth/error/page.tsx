@@ -19,7 +19,6 @@ export default function ErrorPage() {
     
     if (sentRequest) {
         setHasRequested(true);
-
     }
   };
 
