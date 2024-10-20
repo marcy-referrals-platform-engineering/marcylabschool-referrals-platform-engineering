@@ -3,8 +3,8 @@ import { sendAuthorizationRequest } from "@/app/utils/authHelpers";
 import Button from "@/app/components/ui/Button";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
-
-export default function ErrorPage() {
+import { Suspense } from 'react';
+function ErrorPage() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const name = searchParams.get("name");
@@ -57,3 +57,12 @@ export default function ErrorPage() {
     </div>
   );
 }
+
+
+export default function ErrorPageWrapper() {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <ErrorPage />
+      </Suspense>
+    );
+  }
