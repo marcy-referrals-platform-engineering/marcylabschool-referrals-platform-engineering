@@ -1,7 +1,5 @@
 // import { prisma } from '../../../prisma/index'
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from "../../../prisma/client";
 export default class User {
 
     static async requestEmailAuthorization(data: { email: string, name: string, img: string }) {
