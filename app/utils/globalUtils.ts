@@ -20,7 +20,7 @@ export const apiFetch = async (
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(`Error: ${response.statusText}, Details: ${JSON.stringify(errorData)}`);
-        return null
+   
       }
   
       const data = await response.json();

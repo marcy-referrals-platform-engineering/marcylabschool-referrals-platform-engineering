@@ -4,16 +4,14 @@ import { NextResponse } from 'next/server';
 export class UserController {
 
     
-    static async requestAuthorization(req: any) {
+    static async requestAuthorization(data: any) {
 
         try {
-          const { email, name, img } = req.body;
     
           // Log incoming request data to ensure it is correct
-          console.log('Request data:', { email, name, img });
+          console.log('Request data:', data);
     
-          await User.requestEmailAuthorization(email, name, img);
-    
+          const request = await User.requestEmailAuthorization(data);
           return NextResponse.json({ message: 'Authorization request sent successfully' }, { status: 200 });
         } catch (error : any) {
           // Log the error message in more detail
