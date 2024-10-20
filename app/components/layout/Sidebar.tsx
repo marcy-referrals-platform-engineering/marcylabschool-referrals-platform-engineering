@@ -1,16 +1,28 @@
 'use client'
 
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 const links = [
-  { text: 'LOG-IN', onClick: () => signIn('google') }, // Pass the provider directly
+  { text: 'LOG-IN', onClick: () => signIn('google') }, 
   {text: 'DASHBOARD'},
   { text: 'F.A.Q.' },
+  {text: 'LOG-OUT', onClick: () => signOut(), img: '/leave.png' }, 
   
 ]
 
 const Sidebar = () => {
-  const { data: session } = useSession(); // Correct variable name should be 'session'
+  const { data: session } = useSession(); 
+
+  const shouldHideLink = (linkText : string) => {
+    if (session && session.user && linkText === 'LOG-IN') {
+      return true;
+    }
+    if (!session && (linkText === 'DASHBOARD' || linkText === 'LOG-OUT')) {
+      return true;
+    }
+    return false;
+  };
+
   useEffect(() => {
     console.log(session)
   })
@@ -36,11 +48,17 @@ const Sidebar = () => {
               <li 
                 key={index}
                 onClick={link.onClick} 
-                className={`group cursor-pointer  ${(session && session.user && link.text === 'LOG-IN') || (!session && link.text === 'DASHBOARD') ? 'hidden' : ''}`}
+                className={`group cursor-pointer  ${shouldHideLink(link.text) ? 'hidden' : ''}`}
               >
-                <p className='pb-3 text-white duration-200 text-[1.5rem]'>
+                <p className='pb-3 flex text-white duration-200 text-[1.5rem]'>
                   {link.text}
-                  <span className="group-hover:opacity-100 duration-300 group-hover:pl-1 opacity-0">→</span>
+                  {
+                    link.img?
+                    <img src={link.img} className=" self-center ml-3 invert w-[1.5rem] h-[1.5rem]" />
+                    :
+
+                    <span className="group-hover:opacity-100 duration-300 group-hover:pl-1 opacity-0">→</span>
+                  }
                 </p>
               </li>
             ))
