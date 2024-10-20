@@ -10,6 +10,7 @@ const handler = NextAuth({
         }),
     ],
 
+    secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async signIn({ user }) {
             // Check if the user is authorized
