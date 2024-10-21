@@ -28,11 +28,16 @@ function Hb() {
           src="/marcylogo2.png"
         ></img>
         <div className="flex gap-2">
-          <img
-            className="w-[3.3rem] h-[3.3rem] rounded-full m-auto"
-            src={user!.image!}
-            alt="User Image"
-          />
+          {
+            user && (
+              <img
+              className="w-[3.3rem] h-[3.3rem] rounded-full m-auto"
+              src={user!.image!}
+              alt="User Image"
+            />
+            )
+          }
+         
           <h1 className="text-[2rem] text-center rounded-full   bg-[white] mt-2 bg-opacity-50 border-[3px] border-[#261f1d] w-[3.3rem] h-[3.3rem]">
             ↓
           </h1>
