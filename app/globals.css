@@ -11,7 +11,7 @@
   color: #261f1d;
   letter-spacing: -0.05em;
   font-family:'Helvetica Neue', sans-serif;
-  
+  scroll-behavior: smooth;
   font-weight: 400;
 }
 

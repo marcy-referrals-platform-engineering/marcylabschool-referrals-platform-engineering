@@ -2,15 +2,17 @@
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 const links = [
   { text: 'LOG-IN', onClick: () => signIn('google') }, 
   {text: 'DASHBOARD'},
-  { text: 'F.A.Q.' },
+  { text: 'F.A.Q.' , href: '#faq'},
   {text: 'LOG-OUT', onClick: () => signOut(), img: '/leave.png' }, 
   
 ]
 
 const Sidebar = () => {
+ 
   const { data: session } = useSession(); 
 
   const shouldHideLink = (linkText : string) => {
@@ -24,8 +26,11 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
-    console.log(session)
-  })
+    if (window.location.hash) {
+      // Remove the hash from the URL without scrolling the page
+      window.history.replaceState(null, document.title, window.location.pathname);
+    }
+  }, []);
   return (
     <div className="w-[17rem] relative  min-h-full  bg-[#261f1d]">
       <div className='py-6 fixed ml-8 '>
@@ -44,7 +49,7 @@ const Sidebar = () => {
           {
             
             links.map((link, index) => (
-              <a  >
+              <a href={link.href} >
                    <li 
                 key={index}
                 onClick={link.onClick} 
