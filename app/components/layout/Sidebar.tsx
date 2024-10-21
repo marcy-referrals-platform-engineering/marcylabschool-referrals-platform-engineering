@@ -26,6 +26,7 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
+    console.log(session)
     if (window.location.hash) {
       // Remove the hash from the URL without scrolling the page
       window.history.replaceState(null, document.title, window.location.pathname);
