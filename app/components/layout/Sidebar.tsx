@@ -1,8 +1,8 @@
 'use client'
 
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useStore } from "../../state/useStore";
 const links = [
   { text: 'LOG-IN', onClick: () => signIn('google') }, 
   {text: 'DASHBOARD'},
@@ -12,14 +12,14 @@ const links = [
 ]
 
 const Sidebar = () => {
- 
-  const { data: session } = useSession(); 
+  const { user } = useStore();
+
 
   const shouldHideLink = (linkText : string) => {
-    if (session && session.user && linkText === 'LOG-IN') {
+    if (user && linkText === 'LOG-IN') {
       return true;
     }
-    if (!session && (linkText === 'DASHBOARD' || linkText === 'LOG-OUT')) {
+    if (!user && (linkText === 'DASHBOARD' || linkText === 'LOG-OUT')) {
       return true;
     }
     return false;
@@ -37,11 +37,11 @@ const Sidebar = () => {
         <img className="w-[12rem] m-auto mb-4 border-b-white border-b" src='/marcylogo1.png' alt="Logo" />
         <ul>
           {
-            session && session.user && (
+            user && (
               <div className='flex pb-2 mb-5 border-b  gap-2'>
-                <img className="w-[3rem] h-[3rem] rounded-full m-auto" src={session.user.image!} alt="User Image" />
+                <img className="w-[3rem] h-[3rem] rounded-full m-auto" src={user.image!} alt="User Image" />
                 <div className="self-center">
-                  <p className=' text-[1.3rem] text-white text-center'>{session.user.name?.toUpperCase()}</p>
+                  <p className=' text-[1.3rem] text-white text-center'>{user.name?.toUpperCase()}</p>
                 </div>
               </div>
             )
