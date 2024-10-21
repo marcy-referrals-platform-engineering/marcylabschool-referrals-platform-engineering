@@ -6,6 +6,7 @@
 @tailwind utilities;
 
 :root {
+
   font-family: 'Helvetica Neue';
   color: #261f1d;
   letter-spacing: -0.05em;

@@ -1,5 +1,4 @@
 "use client";
-import { useState, useEffect } from "react";
 
 function Accordian({
   title,
@@ -27,7 +26,7 @@ function Accordian({
               isOpen === title ? "flex" : "hidden"
             } text-[1.2rem] whitespace-pre-line`}
           >
-            <p className=" text-[1.2rem]">{body} </p>
+            <span className=" text-[1.2rem]">{body} </span>
           </p>
         </div>
 

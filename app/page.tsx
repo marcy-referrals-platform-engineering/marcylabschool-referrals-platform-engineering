@@ -5,7 +5,7 @@ import Button from "./components/ui/Button";
 import ProcessSection from "./components/layout/ProcessSection";
 import HeroSection from "./components/layout/HeroSection";
 import QuestionsSection from "./components/layout/QuestionsSection";
-import PointMilestones from "./components/layout/PointMilestones";
+import ReferralMilestones from "./components/layout/ReferralMilestones";
 import HomeFooter from "./components/layout/HomeFooter";
 
 export default function Home() {
@@ -19,7 +19,7 @@ export default function Home() {
         <HeroSection />
 
         <ProcessSection />
-        <PointMilestones />
+        <ReferralMilestones />
         <div>
           <QuestionsSection />
           

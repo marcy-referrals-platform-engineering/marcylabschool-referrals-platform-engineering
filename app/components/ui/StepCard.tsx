@@ -1,3 +1,4 @@
+
 import Button from "./Button";
 
 interface StepCardProps {
@@ -7,9 +8,10 @@ interface StepCardProps {
   body: string;
   step: number;
   button?: { text: string; invert: boolean };
+  href?: string;
 }
 
-function StepCard({ color, img, title, body, step, button }: StepCardProps) {
+function StepCard({ color, img, title, body, step, button, href }: StepCardProps) {
   return (
     <div>
       <div className="flex align-middle gap-3 ">
@@ -30,7 +32,8 @@ function StepCard({ color, img, title, body, step, button }: StepCardProps) {
             {body}
           </p>
           <div className="pt-3">
-            {button && <Button text={button.text} invert={button.invert} />}
+
+            {button && <Button text={button.text}  onClick={null} invert={button.invert} />}
           </div>
         </div>
 

@@ -7,9 +7,9 @@ const pointsData = [
     { action: "Prospect Receives an Offer", details:"Prospect is extended a formal offer to join the followship program", points: 100 },
     { action: "Prospect Becomes a Fellow", details:"Prospect starts a fellowship at The Marcy Lab School", points: 200 },
   ];
-export default function PointMilestones() {
+export default function ReferralMilestones() {
   return (
-    <div className="  relative mt-12 w-full">
+    <div id='referral-milestones' className="  relative mt-12 w-full">
       <img
         src="/marcy5.jpg"
         className="absolute opacity-20 top-0 left-0 w-full h-full object-cover grayscale "

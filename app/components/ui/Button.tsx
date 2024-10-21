@@ -5,34 +5,32 @@ interface ButtonProps {
   text: string;
   invert?: boolean;
   className?: string;
-  onClick? : any
-
+  onClick?: any;
+  href?: string;
 }
-function Button({ text, invert, className, onClick  }: ButtonProps) {
+function Button({ text, invert, className, onClick, href }: ButtonProps) {
   const [hovered, setHovered] = useState<boolean>(false);
   const bgRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    hovered && !invert
+      ? (bgRef.current!.style.transform = "translateX(0%)")
+      : (bgRef.current!.style.transform = "translateX(-100%)");
+  }, [hovered]);
 
-    useEffect(() => {
-      hovered && !invert
-        ? (bgRef.current!.style.transform = "translateX(0%)")
-        : (bgRef.current!.style.transform = "translateX(-100%)");
-    }, [hovered]);
-
-  
   return (
+    <a href={href && href}>
     <button
-      onClick={() => onClick()}
+      onClick={ () => onClick? onClick(): null}
       className={`w-[10rem] z-[1] ${className} `}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-    
-     <div
+      <div
         className={` m-auto overflow-hidden  relative ${
           invert ? "" : "border-[0.2rem]"
         }   ${
-          invert  ? "hover:text-[#261f1d]" :  "hover:text-white backdrop-blur"
+          invert ? "hover:text-[#261f1d]" : "hover:text-white backdrop-blur"
         } duration-300   w-[12rem] border-[#261f1d] py-2 font-bold ${
           invert ? "" : "text-center"
         }`}
@@ -44,17 +42,17 @@ function Button({ text, invert, className, onClick  }: ButtonProps) {
               hovered && "pl-1"
             }`}
           >
-            {" "}
             →
           </span>
-        </span>{" "}
-        {/* Higher z-index for the text */}
+        </span>
+
         <div
           ref={bgRef}
           className="absolute translate-x-[-100%] z-[2] duration-300 inset-0 bg-[#261f1d] w-full h-full"
         ></div>
       </div>
     </button>
+    </a>
   );
 }
 

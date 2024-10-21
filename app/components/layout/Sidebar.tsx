@@ -44,8 +44,8 @@ const Sidebar = () => {
           {
             
             links.map((link, index) => (
-              
-              <li 
+              <a  >
+                   <li 
                 key={index}
                 onClick={link.onClick} 
                 className={`group cursor-pointer  ${shouldHideLink(link.text) ? 'hidden' : ''}`}
@@ -61,6 +61,8 @@ const Sidebar = () => {
                   }
                 </p>
               </li>
+              </a>
+             
             ))
           }
         </ul>
