@@ -3,7 +3,7 @@ import StepCard from "../ui/StepCard"
 
 const processData = [
     {
-      title: "SUBMIT YOUR REFERAL",
+      title: "SUBMIT YOUR REFERRAL",
       body: `Fill out the referral form here to start the process. You'll
               be directed to a simple form where you can enter the details
               of the person you'd like to refer to the Marcy Lab School

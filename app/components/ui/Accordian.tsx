@@ -21,13 +21,13 @@ function Accordian({
     >
       <div className="flex justify-between">
         <div className="flex flex-col md:flex-row ">
-          <h1 className="  w-[90%] md:w-[70%] font-medium  text-[1.6rem] md:text-[1.8rem]">{title}</h1>
+          <h1 className="  w-[90%] md:w-[68%] font-medium  text-[1.6rem] md:text-[1.8rem]">{title}</h1>
           <p
             className={`font-medium md:w-[50%] pt-5 ml-auto pb-5 ${
               isOpen === title ? "flex" : "hidden"
             } text-[1.2rem] whitespace-pre-line`}
           >
-            {body}
+            <p className=" text-[1.2rem]">{body} </p>
           </p>
         </div>
 

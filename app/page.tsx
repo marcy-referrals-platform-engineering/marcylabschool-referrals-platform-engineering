@@ -6,7 +6,7 @@ import ProcessSection from "./components/layout/ProcessSection";
 import HeroSection from "./components/layout/HeroSection";
 import QuestionsSection from "./components/layout/QuestionsSection";
 import PointMilestones from "./components/layout/PointMilestones";
-
+import HomeFooter from "./components/layout/HomeFooter";
 
 export default function Home() {
   return (
@@ -23,9 +23,7 @@ export default function Home() {
         <div>
           <QuestionsSection />
           
-          <h1 className="text-[#261f1d] text-[1.3rem]  bg-[#a6c2b4] text-center py-6">
-            &copy; 2024 THE MARCY LAB SCHOOL
-          </h1>
+          <HomeFooter />
         </div>
       </div>
     </div>
