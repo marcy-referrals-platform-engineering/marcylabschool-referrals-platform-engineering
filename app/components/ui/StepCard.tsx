@@ -11,7 +11,7 @@ interface StepCardProps {
   href?: string;
 }
 
-function StepCard({ color, img, title, body, step, button, href }: StepCardProps) {
+function StepCard({ color, img, title, body, step, button }: StepCardProps) {
   return (
     <div>
       <div className="flex align-middle gap-3 ">
@@ -33,7 +33,7 @@ function StepCard({ color, img, title, body, step, button, href }: StepCardProps
           </p>
           <div className="pt-3">
 
-            {button && <Button text={button.text}  onClick={null} invert={button.invert} />}
+            {button && <Button text={button.text} href={(button as any).href}  onClick={null} invert={button.invert} />}
           </div>
         </div>
 

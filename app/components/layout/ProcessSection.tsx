@@ -1,6 +1,7 @@
 import StepCard from "../ui/StepCard"
 
 
+  
 const processData = [
     {
       title: "SUBMIT YOUR REFERRAL",
@@ -11,7 +12,7 @@ const processData = [
       color: "#a6c2b4",
       img: "/Marcy2.jpg",
       step: 1,
-      button: {invert: true, text: 'SUBMIT A REFERRAL'}
+      button: {invert: true, text: 'SUBMIT A REFERRAL', }
 
     },
   
@@ -22,7 +23,7 @@ const processData = [
       color: '#c6d7e8',
       img: 'marcy3.jpg',
       step: 2,
-      button: {invert: true, text: 'VIEW MILESTONES'},
+      button: {invert: true, text: 'VIEW MILESTONES' , href: '#referral-milestones'}
 
     },
     {
@@ -52,11 +53,10 @@ function ProcessSection() {
       support our community and get rewarded along the way.
     </p>
     <div>
-      {processData.map(({ img, color, body, title, step, button,  }) => {
+      {processData.map(({ img, color, body, title, step, button  }) => {
         return (
           <div key={title} className="border-t-[0.1rem] pb-10 border-t-[#261f1d]">
             <StepCard
-         
               step={step}
               img={img}
               color={color}
