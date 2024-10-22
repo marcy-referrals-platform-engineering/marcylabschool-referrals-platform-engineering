@@ -22,7 +22,7 @@ export default function Home() {
         <ReferralMilestones />
         <div>
           <QuestionsSection />
-          
+
           <HomeFooter />
         </div>
       </div>
