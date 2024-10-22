@@ -1,15 +1,37 @@
 import Milestone from "../ui/Milestone";
 
 const pointsData = [
-    { action: "Referral Submission", details: 'Submit a referral through our form', points: 10 },
-    { action: "Campus Tour", details: 'Prospect schedules and attends a tour of our campus',  points: 20 },
-    { action: "Prospect Completes Application", details: "Prospect submits a fellowship application through the official application portal", points: 50 },
-    { action: "Prospect Receives an Offer", details:"Prospect is extended a formal offer to join the followship program", points: 100 },
-    { action: "Prospect Becomes a Fellow", details:"Prospect starts a fellowship at The Marcy Lab School", points: 200 },
-  ];
+  {
+    action: "Referral Submission",
+    details: "Submit a referral through our form",
+    points: 10,
+  },
+  {
+    action: "Campus Tour",
+    details: "Prospect schedules and attends a tour of our campus",
+    points: 20,
+  },
+  {
+    action: "Prospect Completes Application",
+    details:
+      "Prospect submits a fellowship application through the official application portal",
+    points: 50,
+  },
+  {
+    action: "Prospect Receives an Offer",
+    details:
+      "Prospect is extended a formal offer to join the followship program",
+    points: 100,
+  },
+  {
+    action: "Prospect Becomes a Fellow",
+    details: "Prospect starts a fellowship at The Marcy Lab School",
+    points: 200,
+  },
+];
 export default function ReferralMilestones() {
   return (
-    <div id='referral-milestones' className="  relative mt-12 w-full">
+    <div id="referral-milestones" className="  relative mt-12 w-full">
       <img
         src="/marcy5.jpg"
         className="absolute opacity-20 top-0 left-0 w-full h-full object-cover grayscale "
@@ -27,9 +49,7 @@ export default function ReferralMilestones() {
       </div>
       <div className="pb-5 ">
         {pointsData.map((milestone) => {
-          return (
-            <Milestone key={milestone.action} milestone={milestone} />
-          );
+          return <Milestone key={milestone.action} milestone={milestone} />;
         })}
       </div>
     </div>
