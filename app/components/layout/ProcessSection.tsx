@@ -10,7 +10,7 @@ const processData = [
     color: "#a6c2b4",
     img: "/Marcy2.jpg",
     step: 1,
-    button: { invert: true, text: "SUBMIT A REFERRAL" },
+    button: { invert: true, text: "SUBMIT A REFERRAL", href: "/referral-form" },
   },
 
   {

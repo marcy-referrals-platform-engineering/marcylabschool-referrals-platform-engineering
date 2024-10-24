@@ -9,7 +9,7 @@ export const links = [
   { text: "F.A.Q.", href: "#faq" },
   { text: "LOG-OUT", onClick: () => signOut(), img: "/leave.png" },
 ];
-
+// sidebar
 const Sidebar = () => {
   const { user } = useStore();
 
