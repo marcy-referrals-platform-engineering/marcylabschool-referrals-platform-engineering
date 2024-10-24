@@ -1,6 +1,6 @@
 export default function page() {
   return (
-    <div className=" bg-gray-100 w-screen h-screen">
+    <div className=" bg-gray-100  w-screen h-screen">
       <div className="flex relative justify-center ">
         <img
           className="w-screen rounded absolute  z-[149]  object-[50%_30%]  object-cover h-[13rem]"
@@ -23,11 +23,11 @@ export default function page() {
 
 
       <div className="w-[60%] mt-10 relative    p-5 m-auto z-[150]  bg-white ">
-        <h1 className=" font-medium w-[90%] m-auto   mb-2 text-[1.5rem]">
+        <h1 className=" font-medium w-[90%] m-auto   mb-2 text-[1rem]">
           {" "}
           FULL NAME:
         </h1>
-        <p className="w-[70%] mt-10 border-b ml-[5%]">
+        <p className="w-[50%] mt-10 border-b ml-[5%]">
          
         </p>
       </div>
