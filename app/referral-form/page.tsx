@@ -13,6 +13,7 @@ export default function page() {
   };
   return (
     <form onSubmit={handleSubmit}>
+      <h1>Referrer Info</h1>
       <div>
         <label htmlFor="name">Full Name:</label>
         <input
@@ -71,6 +72,94 @@ export default function page() {
           Staff
         </label>
       </div>
+
+      <div>
+        <p>How did you hear about this referral opportunity? </p>
+        <label>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="email"
+            name="how"
+            required
+          />
+          Email
+        </label>
+
+        <label>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="slack"
+            name="how"
+            required
+          />
+          Slack
+        </label>
+
+        <label>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="website"
+            name="how"
+            required
+          />
+          Website
+        </label>
+
+        <label>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="other"
+            name="how"
+            required
+          />
+          Other
+        </label>
+      </div>
+
+      <h1>Canidate Info</h1>
+      <div>
+        <label htmlFor="name">Full Name:</label>
+        <input
+          onChange={handleChange}
+          type="text"
+          value={formData.referreeName}
+          id="referreeName"
+          name="referreeName"
+          required
+        />
+      </div>
+
+      <div>
+        <label htmlFor="email">Email Address:</label>
+        <input
+          onChange={handleChange}
+          type="email"
+          value={formData.referreeEmail}
+          id="referreeEmail"
+          name="referreeEmail"
+          required
+        />
+      </div>
+
+      <div>
+        <label htmlFor='gender'>Gender Identification: (Optional)</label>
+        <input
+          onChange={handleChange}
+          type="text"
+            value={formData.refereeGender}
+            id="refereeGender"
+            name="refereeGender"
+        />
+      </div>
+
+        <div>
+            <label htmlFor='refereeLinkedIn'>LinkedIn Profile: (Optional)</label>
+            <input type='text' onChange={handleChange} id='refereeLinkedIn' name='refereeLinkedIn' value={formData.refereeLinkedIn} />
+        </div>
     </form>
   );
 }
