@@ -1,5 +1,5 @@
 "use client";
-
+// Accordian with no transition
 function Accordian({
   title,
   body,
