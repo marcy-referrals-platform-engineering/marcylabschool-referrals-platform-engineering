@@ -160,6 +160,12 @@ export default function page() {
             <label htmlFor='refereeLinkedIn'>LinkedIn Profile: (Optional)</label>
             <input type='text' onChange={handleChange} id='refereeLinkedIn' name='refereeLinkedIn' value={formData.refereeLinkedIn} />
         </div>
+
+        <div>
+            <p>Resume (Optional But Encoraged)</p>
+            <input  type='file' id='resume' name='resume' />
+
+        </div>
     </form>
   );
 }
