@@ -1,19 +1,23 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useStore } from "@/app/state/useStore";
+import { uploadFile } from "../utils/supabase";
 export default function page() {
   const user = useStore((state) => state.user);
   console.log(user);
   const [formData, setFormData] = useState<any>({});
   const handleSubmit = async (e: any) => {
-    event?.preventDefault();
+    e?.preventDefault();
+    const resumeUrl = await uploadFile(e.target.resume.files[0], "resumes");
+    setFormData({ ...formData, resume: resumeUrl });
+    console.log(formData);
   };
 
   useEffect(() => {
     if (user) {
       setFormData({ ...formData, email: user.email, name: user.name });
     }
-  }, [user])
+  }, [user]);
 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -154,27 +158,32 @@ export default function page() {
       </div>
 
       <div>
-        <label htmlFor='gender'>Gender Identification: (Optional)</label>
+        <label htmlFor="gender">Gender Identification: (Optional)</label>
         <input
           onChange={handleChange}
           type="text"
-            value={formData.refereeGender}
-            id="refereeGender"
-            name="refereeGender"
+          value={formData.refereeGender}
+          id="refereeGender"
+          name="refereeGender"
         />
       </div>
 
-        <div>
-            <label htmlFor='refereeLinkedIn'>LinkedIn Profile: (Optional)</label>
-            <input type='text' onChange={handleChange} id='refereeLinkedIn' name='refereeLinkedIn' value={formData.refereeLinkedIn} />
-        </div>
+      <div>
+        <label htmlFor="refereeLinkedIn">LinkedIn Profile: (Optional)</label>
+        <input
+          type="text"
+          onChange={handleChange}
+          id="refereeLinkedIn"
+          name="refereeLinkedIn"
+          value={formData.refereeLinkedIn}
+        />
+      </div>
 
-        <div>
-            <p>Resume (Optional But Encoraged)</p>
-            <input  type='file' id='resume' name='resume' />
-
-        </div>
-       <button type='submit'>Submit</button>
+      <div>
+        <p>Resume (Optional But Encoraged)</p>
+        <input onChange={handleChange} type="file" id="resume" name="resume" />
+      </div>
+      <button type="submit">Submit</button>
     </form>
   );
 }
