@@ -6,13 +6,17 @@ export default function page() {
   const user = useStore((state) => state.user);
   console.log(user);
   const [formData, setFormData] = useState<any>({});
+
   const handleSubmit = async (e: any) => {
     e?.preventDefault();
+    // Upload resume file to cloud storage and get url
     const resumeUrl = await uploadFile(e.target.resume.files[0], "resumes");
     setFormData({ ...formData, resume: resumeUrl });
-    console.log(formData);
   };
 
+  useEffect(() => {
+    console.log(formData);
+  }, [handleSubmit]);
   useEffect(() => {
     if (user) {
       setFormData({ ...formData, email: user.email, name: user.name });
