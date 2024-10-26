@@ -1,11 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
-
+import { useStore } from "@/app/state/useStore";
 export default function page() {
+  const user = useStore((state) => state.user);
+  console.log(user);
   const [formData, setFormData] = useState<any>({});
   const handleSubmit = async (e: any) => {
     event?.preventDefault();
   };
+
+  useEffect(() => {
+    if (user) {
+      setFormData({ ...formData, email: user.email, name: user.name });
+    }
+  }, [user])
 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -166,6 +174,7 @@ export default function page() {
             <input  type='file' id='resume' name='resume' />
 
         </div>
+       <button type='submit'>Submit</button>
     </form>
   );
 }
