@@ -4,7 +4,7 @@ export default class User {
 
     static async requestEmailAuthorization(data: { email: string, name: string, img: string }) {
         console.log('Request data raw:', data);
-         const request = await prisma.authorizationRequests.create({
+        const request = await prisma.authorizationRequests.create({
             data: {
                 email: data.email,
                 name: data.name,
@@ -16,5 +16,5 @@ export default class User {
         }
         return request;
     }
-    
+
 }

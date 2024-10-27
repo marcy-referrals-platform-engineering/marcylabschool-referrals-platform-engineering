@@ -7,8 +7,13 @@ export default class Referral {
                 email: data.recruitEmail,
                 resume: data.recruitResume || null,
                 gender: data.recruitGender || null,
-                referrerEmail: data.r
+                linkedIn: data.recruitLinkedIn || null,
+                referrerEmail: data.email,
             }
         })
+
+        if (!referral) {
+            throw new Error('Failed to create referral');
+        }
     }
 }
