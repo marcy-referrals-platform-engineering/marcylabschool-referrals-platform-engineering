@@ -9,12 +9,22 @@ datasource db {
 }
 
 model AuthorizedEmails {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  createdAt DateTime @default(now())
-  role      Role     @default(USER)
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  createdAt DateTime   @default(now())
+  role      Role       @default(USER)
   referrals Referral[]
+}
 
+model Referral {
+  id            Int              @id @default(autoincrement())
+  email         String
+  name          String
+  resume        String?
+  gender        String?
+  linkedIn      String?
+  referrerEmail String
+  referrer      AuthorizedEmails @relation(fields: [referrerEmail], references: [email])
 }
 
 model AuthorizationRequests {
@@ -24,23 +34,10 @@ model AuthorizationRequests {
   img   String
 }
 
-
-model Referral {
-  id       Int      @id @default(autoincrement())
-  email   String
-  name    String
-  resume String?
-  gender String?
-  linkedIn String?
-  referrerEmail AuthorizedEmails? @relation(fields: [email], references: [email])
-}
-
 enum Role {
   ADMIN
   USER
 }
-
-
 
 // const newReferral = await prisma.referral.create({
 //   data: {

@@ -2,31 +2,37 @@
 import { useState, useEffect } from "react";
 import { useStore } from "@/app/state/useStore";
 import { uploadFile } from "../utils/supabase";
+import ReferralService from "../services/ReferralService";
 export default function page() {
   const user = useStore((state) => state.user);
-  console.log(user);
   const [formData, setFormData] = useState<any>({});
-
-  const handleSubmit = async (e: any) => {
-    e?.preventDefault();
-    // Upload resume file to cloud storage and get url
-    const resumeUrl = await uploadFile(e.target.resume.files[0], "resumes");
-    setFormData({ ...formData, resume: resumeUrl });
-  };
-
-  useEffect(() => {
-    console.log(formData);
-  }, [handleSubmit]);
   useEffect(() => {
     if (user) {
       setFormData({ ...formData, email: user.email, name: user.name });
     }
   }, [user]);
 
+
+  const handleSubmit = async (e: any) => {
+    e?.preventDefault();
+    let updatedFormData = { ...formData };
+    if (e.target.resume.files.length !== 0) {
+    const resumeUrl = await uploadFile(e.target.resume.files[0], "resumes");
+    updatedFormData = { ...formData, resume: resumeUrl };
+    }
+    ReferralService.sendReferralRequest(updatedFormData);
+  };
+
+
+
+
+ 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     console.log(formData);
   };
+
+
   return (
     <form onSubmit={handleSubmit}>
       <h1>Referrer Info</h1>
@@ -85,7 +91,7 @@ export default function page() {
           type="text"
           value={formData.referreeName}
           id="recruitName"
-          name="recruiteName"
+          name="recruitName"
           required
         />
       </div>

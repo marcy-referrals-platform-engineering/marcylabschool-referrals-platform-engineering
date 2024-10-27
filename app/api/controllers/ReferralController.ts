@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 export default class ReferralController {
     static async create(data: any) {
         try {
-            await Referral.create(data);
+            await Referral!.create(data);
             return NextResponse.json({ message: 'Referral created successfully' }, { status: 200 });
 
         } catch (error: any) {

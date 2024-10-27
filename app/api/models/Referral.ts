@@ -1,6 +1,7 @@
-import prisma from "../../../prisma/client";
+import prisma from '../../../prisma/client'
 export default class Referral {
     static async create(data: any) {
+        console.log(Object.keys(prisma))
         const referral = await prisma.referral.create({
             data: {
                 name: data.recruitName,
@@ -15,5 +16,6 @@ export default class Referral {
         if (!referral) {
             throw new Error('Failed to create referral');
         }
+        return referral;
     }
 }

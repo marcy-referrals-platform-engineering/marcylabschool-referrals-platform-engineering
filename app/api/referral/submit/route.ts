@@ -1,4 +1,4 @@
-import ReferralController from "../controllers/ReferralController";
+import ReferralController from '../../controllers/ReferralController';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
