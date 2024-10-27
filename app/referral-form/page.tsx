@@ -1,36 +1,140 @@
+"use client";
+import { useState, useEffect } from "react";
+import { useStore } from "@/app/state/useStore";
+import { uploadFile } from "../utils/supabase";
+import ReferralService from "../services/ReferralService";
 export default function page() {
+  const user = useStore((state) => state.user);
+  const [formData, setFormData] = useState<any>({});
+  useEffect(() => {
+    if (user) {
+      setFormData({ ...formData, email: user.email, name: user.name });
+    }
+  }, [user]);
+
+
+  const handleSubmit = async (e: any) => {
+    e?.preventDefault();
+    let updatedFormData = { ...formData };
+    if (e.target.resume.files.length !== 0) {
+    const resumeUrl = await uploadFile(e.target.resume.files[0], "resumes");
+    updatedFormData = { ...formData, resume: resumeUrl };
+    }
+    ReferralService.sendReferralRequest(updatedFormData);
+  };
+
+
+
+
+ 
+  const handleChange = (e: any) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log(formData);
+  };
+
+
   return (
-    <div className=" bg-gray-100  w-screen h-screen">
-      <div className="flex relative justify-center ">
-        <img
-          className="w-screen rounded absolute  z-[149]  object-[50%_30%]  object-cover h-[13rem]"
-          src="fellows1.png"
-        ></img>
+    <form onSubmit={handleSubmit}>
+      <h1>Referrer Info</h1>
+      <div>
+        <p>How did you hear about this referral opportunity? </p>
+        <label>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="email"
+            name="how"
+            required
+          />
+          Email
+        </label>
+
+        <label>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="slack"
+            name="how"
+            required
+          />
+          Slack
+        </label>
+
+        <label>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="website"
+            name="how"
+            required
+          />
+          Website
+        </label>
+
+        <label>
+          <input
+            onChange={handleChange}
+            type="radio"
+            value="other"
+            name="how"
+            required
+          />
+          Other
+        </label>
       </div>
 
-      <div className="w-[60%] mt-[10rem]  relative  border-t-[0.6rem] border-t-[#327a5f] p-5 m-auto z-[150]  bg-white ">
-        <h1 className=" font-medium w-[90%] m-auto  border-b mb-2 text-[2rem]">
-          {" "}
-          MARCY LAB SCHOOL REFERRAL SUBMITION FORM
-        </h1>
-        <p className="w-[90%] m-auto">
-          Help us connect with new talent by submitting a referral. Please
-          provide accurate contact details and any helpful information. LinkedIn
-          profiles and resumes are encouraged. For more details, check the FAQ
-          section.
-        </p>
+      <h1>Canidate Info</h1>
+      <div>
+        <label htmlFor="recruitName">Full Name:</label>
+        <input
+          onChange={handleChange}
+          type="text"
+          value={formData.referreeName}
+          id="recruitName"
+          name="recruitName"
+          required
+        />
       </div>
 
-
-      <div className="w-[60%] mt-10 relative    p-5 m-auto z-[150]  bg-white ">
-        <h1 className=" font-medium w-[90%] m-auto   mb-2 text-[1rem]">
-          {" "}
-          FULL NAME:
-        </h1>
-        <p className="w-[50%] mt-10 border-b ml-[5%]">
-         
-        </p>
+      <div>
+        <label htmlFor="recruitEmail">Email Address:</label>
+        <input
+          onChange={handleChange}
+          type="email"
+          value={formData.referreeEmail}
+          id="recruitEmail"
+          name="recruitEmail"
+          required
+        />
       </div>
-    </div>
+
+      <div>
+        <label htmlFor="recruitGender">Gender Identification: (Optional)</label>
+        <input
+          onChange={handleChange}
+          type="text"
+          value={formData.refereeGender}
+          id="recruitGender"
+          name="recruitGender"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="recruitLinkedIn">LinkedIn Profile: (Optional)</label>
+        <input
+          type="text"
+          onChange={handleChange}
+          id="recruitLinkedIn"
+          name="recruitLinkedIn"
+          value={formData.refereeLinkedIn}
+        />
+      </div>
+
+      <div>
+        <p>Resume (Optional But Encoraged)</p>
+        <input onChange={handleChange} type="file" id="resume" name="resume" />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
   );
 }

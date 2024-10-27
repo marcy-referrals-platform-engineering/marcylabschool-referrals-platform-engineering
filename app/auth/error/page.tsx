@@ -1,5 +1,5 @@
 "use client";
-import { sendAuthorizationRequest } from "@/app/utils/authHelpers";
+import AuthService from "@/app/services/AuthService";
 import Button from "@/app/components/ui/Button";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -15,7 +15,7 @@ function ErrorPage() {
 
   const handleRequestAuthorization = async () => {
     console.log(email!, name!, img!)
-    const sentRequest = await sendAuthorizationRequest(email!, name!, img!);
+    const sentRequest = await AuthService.sendAuthorizationRequest(email!, name!, img!);
     
     if (sentRequest) {
         setHasRequested(true);

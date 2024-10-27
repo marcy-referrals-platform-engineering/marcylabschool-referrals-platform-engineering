@@ -9,10 +9,22 @@ datasource db {
 }
 
 model AuthorizedEmails {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  createdAt DateTime @default(now())
-  role      Role     @default(USER)
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  createdAt DateTime   @default(now())
+  role      Role       @default(USER)
+  referrals Referral[]
+}
+
+model Referral {
+  id            Int              @id @default(autoincrement())
+  email         String
+  name          String
+  resume        String?
+  gender        String?
+  linkedIn      String?
+  referrerEmail String
+  referrer      AuthorizedEmails @relation(fields: [referrerEmail], references: [email])
 }
 
 model AuthorizationRequests {
@@ -26,3 +38,17 @@ enum Role {
   ADMIN
   USER
 }
+
+// const newReferral = await prisma.referral.create({
+//   data: {
+//     email: 'user@example.com',  // This is the email of the existing AuthorizedEmails record
+//     name: 'John Doe',
+//     resume: 'resume-url.pdf',
+//     gender: 'Male',
+//     authorizedEmail: {
+//       connect: {
+//         email: 'user@example.com',  // Connect this referral to the AuthorizedEmails record with this email
+//       },
+//     },
+//   },
+// });
