@@ -138,19 +138,19 @@ export default function page() {
 
       <h1>Canidate Info</h1>
       <div>
-        <label htmlFor="name">Full Name:</label>
+        <label htmlFor="recruitName">Full Name:</label>
         <input
           onChange={handleChange}
           type="text"
           value={formData.referreeName}
-          id="referreeName"
-          name="referreeName"
+          id="recruitName"
+          name="recruiteName"
           required
         />
       </div>
 
       <div>
-        <label htmlFor="email">Email Address:</label>
+        <label htmlFor="recruitEmail">Email Address:</label>
         <input
           onChange={handleChange}
           type="email"
@@ -162,7 +162,7 @@ export default function page() {
       </div>
 
       <div>
-        <label htmlFor="gender">Gender Identification: (Optional)</label>
+        <label htmlFor="recruitGender">Gender Identification: (Optional)</label>
         <input
           onChange={handleChange}
           type="text"
