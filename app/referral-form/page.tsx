@@ -155,8 +155,8 @@ export default function page() {
           onChange={handleChange}
           type="email"
           value={formData.referreeEmail}
-          id="referreeEmail"
-          name="referreeEmail"
+          id="recruitEmail"
+          name="recruitEmail"
           required
         />
       </div>
@@ -167,18 +167,18 @@ export default function page() {
           onChange={handleChange}
           type="text"
           value={formData.refereeGender}
-          id="refereeGender"
-          name="refereeGender"
+          id="recruitGender"
+          name="recruitGender"
         />
       </div>
 
       <div>
-        <label htmlFor="refereeLinkedIn">LinkedIn Profile: (Optional)</label>
+        <label htmlFor="recruitLinkedIn">LinkedIn Profile: (Optional)</label>
         <input
           type="text"
           onChange={handleChange}
-          id="refereeLinkedIn"
-          name="refereeLinkedIn"
+          id="recruitLinkedIn"
+          name="recruitLinkedIn"
           value={formData.refereeLinkedIn}
         />
       </div>
