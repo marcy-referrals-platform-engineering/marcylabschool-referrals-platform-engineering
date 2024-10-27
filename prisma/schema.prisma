@@ -13,6 +13,7 @@ model AuthorizedEmails {
   email     String   @unique
   createdAt DateTime @default(now())
   role      Role     @default(USER)
+
 }
 
 model AuthorizationRequests {
@@ -22,7 +23,20 @@ model AuthorizationRequests {
   img   String
 }
 
+
+model Referral {
+  id       Int      @id @default(autoincrement())
+  email   String
+  name    String
+  resume String?
+  gender String?
+  
+}
+
 enum Role {
   ADMIN
   USER
 }
+
+
+
