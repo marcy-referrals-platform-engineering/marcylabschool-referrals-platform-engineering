@@ -27,12 +27,12 @@ export default function HbActive({
     <div
       className={` ${
         active ? "translate-y-[0]" : "translate-y-[-100vh]"
-      }  duration-300 z-[130] inset-0   absolute w-screen h-screen bg-opacity-80 backdrop-blur bg-black`}
+      }  duration-300 z-[130] inset-0   absolute w-screen h-screen bg-opacity-70 backdrop-blur bg-[#261f1d]`}
     >
       <div className=" relative ">
         <div className="   w-[80vw]    scale-125 py-2">
           <HbButton
-            className="bg-transparent mb-2  border-white text-white"
+            className="bg-transparent text-white border-white mb-2 "
             setIsActive={setIsActive}
             direction="up"
             isActive={active}
@@ -40,7 +40,7 @@ export default function HbActive({
         </div>
 
         <div className="pt-2">
-          <div className="border-t-[0.3rem]  w-[80%] m-auto">
+          <div className="border-t-[0.3rem] border-white w-[80%] m-auto">
             {links.map((link, index) => {
               return (
                 <a onClick={() => setIsActive(!active)} href={link.href}>
@@ -48,7 +48,7 @@ export default function HbActive({
                     onClick={() => link.onClick && link.onClick()}
                     className={
                       `${shouldHideLink(link.text) ? "hidden" : ""}` +
-                      " pb-5 border-b-[0.3rem] o group cursor-pointer    m-auto text-white "
+                      " pb-5 border-b-[0.3rem] border-white text-white  group cursor-pointer    m-auto  "
                     }
                   >
                     {link.text}{" "}
