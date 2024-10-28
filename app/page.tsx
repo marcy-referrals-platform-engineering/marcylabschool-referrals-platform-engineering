@@ -1,4 +1,5 @@
 import Image from "next/image";
+import './globals.css'
 import Sidebar from "./components/layout/Sidebar";
 import StepCard from "./components/ui/StepCard";
 import Button from "./components/ui/Button";
@@ -10,8 +11,8 @@ import HomeFooter from "./components/layout/HomeFooter";
 
 export default function Home() {
   return (
-    <div className="flex bg-[#fffcf7] ">
-      <div className="[@media(max-width:1245px)]:hidden duration-300  ">
+    <div  className="flex bg-[#fffcf7] ">
+      <div className="[@media(max-width:1245px)]:hidden  duration-300  ">
         <Sidebar />
       </div>
 

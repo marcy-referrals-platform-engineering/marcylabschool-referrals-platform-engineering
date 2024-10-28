@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useStore } from "../../state/useStore";
 export const links = [
   { text: "LOG-IN", onClick: () => signIn("google") },
-  { text: "DASHBOARD" },
+  { text: "DASHBOARD", href: "/dashboard" },
   { text: "F.A.Q.", href: "#faq" },
   { text: "LOG-OUT", onClick: () => signOut(), img: "/leave.png" },
 ];

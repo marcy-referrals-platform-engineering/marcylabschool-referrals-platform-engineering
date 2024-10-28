@@ -69,3 +69,11 @@ h2{
 .vignette {
 
 }
+
+.marcy-transparent {
+  background: url('../public/marcy1.jpg') no-repeat center center fixed;
+  background-size: cover; /* Ensures the image covers the container */
+  position: relative; /* To allow the use of a positioned ::after element */
+  filter: grayscale(100%);
+}
+
