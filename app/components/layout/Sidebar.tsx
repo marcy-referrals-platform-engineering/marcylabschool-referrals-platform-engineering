@@ -13,15 +13,7 @@ export const links = [
 const Sidebar = () => {
   const { user } = useStore();
 
-  const shouldHideLink = (linkText: string) => {
-    if (user && linkText === "LOG-IN") {
-      return true;
-    }
-    if (!user && (linkText === "DASHBOARD" || linkText === "LOG-OUT")) {
-      return true;
-    }
-    return false;
-  };
+  
 
   useEffect(() => {
     if (window.location.hash) {

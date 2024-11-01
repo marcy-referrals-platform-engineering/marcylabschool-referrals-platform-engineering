@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react";
 import Link from "next/link";
-import ClickOutside from "../../components/ClickOutside";
+import ClickOutside from "@/app/dashboard/components/ClickOutside";
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);

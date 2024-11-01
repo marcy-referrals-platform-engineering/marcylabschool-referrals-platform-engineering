@@ -77,3 +77,19 @@ h2{
   filter: grayscale(100%);
 }
 
+
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.1s ease-in-out forwards;
+}
+
+

@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, ReactNode } from "react";
-import Sidebar from "../../components/Sidebar";
-import Header from "../../components/Header";
+import Sidebar from "@/app/components/layout/Sidebar/index";
+import Header from "@/app/components/layout/Header";
+
 
 export default function DefaultLayout({
   children,
@@ -18,7 +19,7 @@ export default function DefaultLayout({
         {/* <!-- ===== Sidebar End ===== --> */}
 
         {/* <!-- ===== Content Area Start ===== --> */}
-        <div className="relative flex flex-1 flex-col lg:ml-72.5">
+        <div className={`relative flex flex-1 flex-col ${sidebarOpen ? "translate-x-0" : "translate-x-0"} `}>
           {/* <!-- ===== Header Start ===== --> */}
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           {/* <!-- ===== Header End ===== --> */}

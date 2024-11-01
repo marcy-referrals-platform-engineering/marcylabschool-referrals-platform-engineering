@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Chat } from "../../types/chat";
+import { Chat } from "@/app/types/dashboard/chat";
 
-const chatData: Chat[] = [
+const chatData: any[] = [
   {
     avatar: "/images/user/user-01.png",
     name: "Devid Heilo",
