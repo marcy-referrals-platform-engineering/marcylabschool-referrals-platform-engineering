@@ -3,6 +3,7 @@ import React, { useState, ReactNode } from "react";
 import Sidebar from "@/app/components/layout/Sidebar/index";
 import Header from "@/app/components/layout/Header";
 import FocusBackdrop from "../../ui/FocusBackdrop";
+
 export default function DefaultLayout({
   children,
 }: {

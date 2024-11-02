@@ -18,4 +18,18 @@ export default class Referral {
         }
         return referral;
     }
+
+    static async fetchAll(email: string) {
+        const referrals = await prisma.referral.findMany({
+            where: {
+                referrerEmail: email,
+            },
+        });
+
+        if (!referrals) {
+            throw new Error('Failed to fetch referrals');
+        }
+        return referrals;
+
+    }
 }

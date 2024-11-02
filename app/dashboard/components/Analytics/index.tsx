@@ -1,25 +1,87 @@
 "use client";
 import dynamic from "next/dynamic";
-import React from "react";
-import ChartOne from "../Charts/ChartOne";
-import ChartTwo from "../Charts/ChartTwo";
+import React, { useState, useEffect } from "react";
+import ChartOne from "../Charts/ChartOne/ChartOne";
+import ChartTwo from "../Charts/ChartTwo/ChartTwo";
+import Loader from "@/app/components/ui/Loader";
+import { useReferralStatsStore } from "@/app/state/useStore";
 import CardDataStats from "../DataCard/CardDataStats";
-import CardDataLoading from "../DataCard/CardDataLoading";
-
-const MapOne = dynamic(() => import("../Maps/MapOne"), {
-  ssr: false,
-});
-
-const ChartThree = dynamic(() => import("../Charts/ChartThree"), {
-  ssr: false,
-});
-
 const Analytics: React.FC = () => {
+  const { userStats } = useReferralStatsStore();
+  const [percentIncrease, setPercentIncrease] = useState<{
+    referrals: number;
+    points: number;
+  }>({ referrals: 0, points: 0 });
+  const [hydrated, setHydrated] = useState(false);
+
+  // Set hydration state to true once the component is mounted on the client
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (userStats) {
+      console.log(userStats);
+      const weeklyData = userStats.weeklyData;
+
+      const daysWithData = weeklyData.filter(
+        (day: any) => day.points > 0 || day.referrals > 0
+      );
+      const baselinePoints = daysWithData.reduce(
+        (total: any, day: any) => total + day.points,
+        0
+      );
+      const baselineReferrals = daysWithData.reduce(
+        (total: any, day: any) => total + day.referrals,
+        0
+      );
+
+      const currentWeekPoints = weeklyData.reduce(
+        (total: any, day: any) => total + day.points,
+        0
+      );
+      const currentWeekReferrals = weeklyData.reduce(
+        (total: any, day: any) => total + day.referrals,
+        0
+      );
+
+      const pointsIncreasePercentage =
+        baselinePoints > 0
+          ? Math.round(
+              ((currentWeekPoints - baselinePoints) / baselinePoints) * 100
+            )
+          : 0;
+
+      const referralsIncreasePercentage =
+        baselineReferrals > 0
+          ? Math.round(
+              ((currentWeekReferrals - baselineReferrals) / baselineReferrals) *
+                100
+            )
+          : 0;
+
+      setPercentIncrease({
+        referrals: referralsIncreasePercentage,
+        points: pointsIncreasePercentage,
+      });
+    }
+  }, [userStats]);
+
+  // Show Loader until the component is hydrated and userStats is available
+  if (!hydrated || !userStats) {
+    return <Loader />;
+  }
   return (
-    <div className='  flex-col justify-center  h-screen'>
-      <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
-        
-        <CardDataStats title="Total Points" total="300" rate="50%" levelUp>
+    <div className="  flex-col justify-center  h-screen">
+      <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
+        <CardDataStats
+          title="Total Points"
+          total={userStats?.totalPoints}
+          rate={`${percentIncrease.points}%`}
+          {...(percentIncrease.points > 0
+            ? { levelUp: true }
+            : { levelDown: true })}
+        >
           <svg
             stroke="currentColor"
             fill="currentColor"
@@ -38,7 +100,14 @@ const Analytics: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Referrals" total="10" rate="20%" levelDown>
+        <CardDataStats
+          title="Total Referrals"
+          total={userStats?.totalReferrals}
+          rate={`${percentIncrease.referrals}%`}
+          {...(percentIncrease.referrals > 0
+            ? { levelUp: true }
+            : { levelDown: true })}
+        >
           <svg
             stroke="currentColor"
             width="22"
@@ -62,7 +131,7 @@ const Analytics: React.FC = () => {
           </svg>
         </CardDataStats>
 
-        <CardDataStats title="Pending Points" total="50" rate="0%" levelUp>
+        {/* <CardDataStats title="Pending Points" total="0" rate="0%" levelUp>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="25"
@@ -81,14 +150,12 @@ const Analytics: React.FC = () => {
             <path d="M7 2a5 5 0 0 0 5 5 5 5 0 0 0 5-5"></path>
             <path d="M7 22a5 5 0 0 1 5-5 5 5 0 0 1 5 5"></path>
           </svg>
-        </CardDataStats>
+        </CardDataStats> */}
       </div>
 
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         <ChartOne />
         <ChartTwo />
-        {/* <ChartThree />
-        <MapOne /> */}
       </div>
     </div>
   );

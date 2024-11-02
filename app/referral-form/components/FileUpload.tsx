@@ -8,14 +8,27 @@ interface Props {
 const FileUpload: React.FC<Props> = ({ formData, setFormData }) => {
   const [selectedFileName, setSelectedFileName] = useState<string>("");
   const [isDragging, setIsDragging] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileClick = () => fileInputRef.current?.click();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFileName(e.target.files[0].name);
-      setFormData({ ...formData, resume: e.target.files[0] });
+    const file = e.target.files?.[0];
+    if (file) {
+      if (
+        [
+          "application/pdf",
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ].includes(file.type)
+      ) {
+        setSelectedFileName(file.name);
+        setFormData({ ...formData, resume: file });
+        setErrorMessage(""); // Clear any previous error
+      } else {
+        setErrorMessage("Please upload a PDF, DOC, or DOCX file.");
+      }
     }
   };
 
@@ -29,10 +42,21 @@ const FileUpload: React.FC<Props> = ({ formData, setFormData }) => {
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-    const files = e.dataTransfer.files;
-    if (files && files[0]) {
-      setSelectedFileName(files[0].name);
-      setFormData({ ...formData, resume: files[0] });
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      if (
+        [
+          "application/pdf",
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ].includes(file.type)
+      ) {
+        setSelectedFileName(file.name);
+        setFormData({ ...formData, resume: file });
+        setErrorMessage("");
+      } else {
+        setErrorMessage("Please upload a PDF, DOC, or DOCX file.");
+      }
     }
   };
 
@@ -43,7 +67,6 @@ const FileUpload: React.FC<Props> = ({ formData, setFormData }) => {
       </label>
       <p className="text-sm text-gray-500 mb-3">For quick evaluation.</p>
 
-      {/* Drag-and-Drop Zone */}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -56,6 +79,7 @@ const FileUpload: React.FC<Props> = ({ formData, setFormData }) => {
           type="file"
           id="resume"
           name="resume"
+          accept=".pdf, .doc, .docx"
           onChange={handleFileChange}
           ref={fileInputRef}
           className="hidden"
@@ -65,9 +89,9 @@ const FileUpload: React.FC<Props> = ({ formData, setFormData }) => {
           <button
             type="button"
             onClick={handleFileClick}
-            className="p-2 flex w-[7.5rem] m-auto justify-center gap-2 px-4 border   text-[#808080db] rounded"
+            className="p-2 flex w-[7.5rem] m-auto justify-center gap-2 px-4 border text-[#808080db] rounded"
           >
-            <img className=' opacity-60 w-[1.3rem]' src="/add_file.png" />
+            <img className="opacity-60 w-[1.3rem]" src="/add_file.png" />
             <span>Add File</span>
           </button>
           <p className="text-gray-600 mt-2">or drag and drop your file here</p>
@@ -76,6 +100,7 @@ const FileUpload: React.FC<Props> = ({ formData, setFormData }) => {
               Selected file: {selectedFileName}
             </p>
           )}
+          {errorMessage && <p className="text-red-600 mt-2">{errorMessage}</p>}
         </div>
       </div>
     </div>

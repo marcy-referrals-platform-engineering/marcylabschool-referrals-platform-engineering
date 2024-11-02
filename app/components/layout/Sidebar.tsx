@@ -6,7 +6,7 @@ import { useStore } from "../../state/useStore";
 export const links = [
   { text: "LOG-IN", onClick: () => signIn("google") },
   { text: "DASHBOARD", href: "/dashboard" },
-  { text: "F.A.Q.", href: "#faq" },
+  { text: "F.A.Q.", href: "/#faq" },
   { text: "LOG-OUT", onClick: () => signOut(), img: "/leave.png" },
 ];
 // sidebar
