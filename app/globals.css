@@ -82,3 +82,28 @@ h2 {
 .fade-in {
   animation: fadeIn 0.1s ease-in-out forwards;
 }
+
+
+sticky-link {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: white;
+  padding: 0.75rem 1rem;
+}
+
+.sticky-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px; /* Adjust based on the shadow size */
+  width: 100%;
+  height: 8px; /* Height of shadow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow properties */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.sticky-link.stuck::after {
+  opacity: 1;
+}

@@ -7,7 +7,7 @@ import Image from "next/image";
 import SidebarItem from "./SidebarItem";
 import ClickOutside from "@/app/dashboard/components/ClickOutside";
 import useLocalStorage from "@/app/dashboard/hooks/useLocalStorage";
-import { menuGroups } from "./data";
+import { useMenuGroups } from "./data";
 import { useSidebarStore } from "@/app/state/useStore";
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -15,6 +15,7 @@ interface SidebarProps {
 }
 
 const Sidebar = () => {
+  const menuGroups = useMenuGroups();
   const { sidebarOpen, setSidebarOpen } = useSidebarStore();
   const [pageName, setPageName] = useLocalStorage("selectedMenu", "dashboard");
 
@@ -71,9 +72,13 @@ const Sidebar = () => {
                 <ul className="mb-6 flex flex-col gap-1.5">
                   {group.menuItems.map((menuItem, menuIndex) => (
                     <div
-                      onClick={() =>
-                        setTimeout(() => setSidebarOpen(false), 100)
-                      }
+                      key={menuIndex}
+                      onClick={() => {
+                        if ((menuItem as any).onClick) {
+                          (menuItem as any).onClick();
+                        }
+                        setTimeout(() => setSidebarOpen(false), 100);
+                      }}
                     >
                       <SidebarItem
                         key={menuIndex}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Button from "./Button";
 import Image from "next/image";
 interface StepCardProps {
@@ -32,12 +33,15 @@ function StepCard({ color, img, title, body, step, button }: StepCardProps) {
           </p>
           <div className="pt-3">
             {button && (
-              <Button
+              <Link href={(button as any).href || ''}>
+                <Button
                 text={button.text}
                 href={(button as any).href}
                 onClick={null}
                 invert={button.invert}
               />
+              </Link>
+              
             )}
           </div>
         </div>
