@@ -7,6 +7,7 @@ import ReferralMilestones from "./components/layout/Home/ReferralMilestones";
 import HomeFooter from "./components/layout/Home/HomeFooter";
 import Header from "./components/layout/Header";
 import FocusBackdrop from "./dashboard/ui/FocusBackdrop";
+import { links } from "./components/layout/Sidebar";
 
 export default function Home() {
   return (
@@ -17,7 +18,7 @@ export default function Home() {
 
       {/* Main content area */}
       <div className="flex-1 overflow-y-auto ml-auto">
-        <Header />
+        <Header  links={links } />
         <HeroSection />
         <ProcessSection />
         <ReferralMilestones />
