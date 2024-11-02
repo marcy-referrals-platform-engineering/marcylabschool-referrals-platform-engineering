@@ -28,7 +28,7 @@ export default function ReferralForm() {
   };
 
   return (
-    <div className="w-screen relative bg-white h-full">
+    <div className="w-screen relative bg-slate-50 h-full">
       <Image
         width={900}
         height={900}
@@ -39,23 +39,27 @@ export default function ReferralForm() {
       <div className="z-[120] relative bg-opacity-10 w-[full] m-auto">
         <form
           onSubmit={handleSubmit}
-          className="p-8  pt-1 z-[130] flex flex-col  bg-white relative bg-cover overflow-visible bg-center max-w-[90%] mx-auto  "
+          className="p-8 translate-y-[-5rem] border relative  pt-1 z-[130] flex flex-col   bg-white bg-cover overflow-visible bg-center max-w-[900px] mx-auto  "
         >
-          <Link
-            href="/"
-            className="text-[1.3rem]  font-medium sticky border-b top-0 z-10 bg-white bg-opacity-90  backdrop-blur-sm py-2 "
-          >
-            ← Back Home
-          </Link>
-          <h1 className="text-[1.8rem] pt-5 font-medium mb-4">
-            MARCY LAB SCHOOL REFERRAL FORM
-          </h1>
-          <p className="border-b pb-6">
-            Help us connect with the next generation of talent. Please use this
-            form to submit a referral. Remember, LinkedIn profiles and resumes
-            are highly encouraged.
+          <div className="flex  sticky  top-0 justify-between border-b p-5 py-2 pt-4">
+            <img src="/marcylogo2.png" className="w-[11rem] h-auto" />
+            <Link
+              href="/"
+              className="text-[1.3rem] duration-300 hover:opacity-50  font-normal z-10 bg-white bg-opacity-90  backdrop-blur-sm py-2 "
+            >
+              ← Back Home
+            </Link>
+          </div>
+
+          {/* <h1 className="text-[1.8rem] text-center pt-5 font-medium mb-4">
+            REFERRAL FORM
+          </h1> */}
+          <p className=" w-[95%]  m-auto pt-5">
+            Help us connect with the next generation of Marcy talent. Please use
+            this form to submit a referral. Remember, LinkedIn profiles and
+            resumes are highly encouraged.
           </p>
-          <div className="bg-white p-6 rounded-lg  mb-6">
+          <div className="bg-white pt-10 p-6 rounded-lg  mb-6">
             <CandidateInfo formData={formData} handleChange={handleChange} />
             <FileUpload formData={formData} setFormData={setFormData} />
           </div>
