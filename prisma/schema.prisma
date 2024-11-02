@@ -17,14 +17,19 @@ model AuthorizedEmails {
 }
 
 model Referral {
-  id            Int              @id @default(autoincrement())
-  email         String
-  name          String
-  resume        String?
-  gender        String?
-  linkedIn      String?
-  referrerEmail String
-  referrer      AuthorizedEmails @relation(fields: [referrerEmail], references: [email])
+  id              Int              @id @default(autoincrement())
+  email           String
+  name            String
+  resume          String?
+  gender          String?
+  linkedIn        String?
+  referrerEmail   String
+  referrer        AuthorizedEmails @relation(fields: [referrerEmail], references: [email])
+  hasToured       DateTime?
+  hasApplied      DateTime?
+  hasBeenAccepted DateTime?
+  hasEnrolled     DateTime?
+  dateCreated     DateTime         @default(now())
 }
 
 model AuthorizationRequests {
@@ -32,23 +37,10 @@ model AuthorizationRequests {
   email String @unique
   name  String
   img   String
+  date  DateTime @default(now())
 }
 
 enum Role {
   ADMIN
   USER
 }
-
-// const newReferral = await prisma.referral.create({
-//   data: {
-//     email: 'user@example.com',  // This is the email of the existing AuthorizedEmails record
-//     name: 'John Doe',
-//     resume: 'resume-url.pdf',
-//     gender: 'Male',
-//     authorizedEmail: {
-//       connect: {
-//         email: 'user@example.com',  // Connect this referral to the AuthorizedEmails record with this email
-//       },
-//     },
-//   },
-// });

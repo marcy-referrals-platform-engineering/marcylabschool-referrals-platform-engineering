@@ -1,0 +1,9 @@
+-- AlterTable
+ALTER TABLE "AuthorizationRequests" ADD COLUMN     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "Referral" ADD COLUMN     "dateCreated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "hasApplied" TIMESTAMP(3),
+ADD COLUMN     "hasBeenAccepted" TIMESTAMP(3),
+ADD COLUMN     "hasEnrolled" TIMESTAMP(3),
+ADD COLUMN     "hasToured" TIMESTAMP(3);
