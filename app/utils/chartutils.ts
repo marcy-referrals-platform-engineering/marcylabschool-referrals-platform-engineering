@@ -1,38 +1,44 @@
+
+export interface ChartData {
+    series: {
+      name: string;
+      data: number[];
+    }[];
+    categories: string[];
+  }
+
 export function formatLineChartData(monthlyData: { points: number, referrals: number }[]) {
     return {
-        labels: ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
-        datasets: [
+        series: [
             {
-                label: "Total Points",
+                name: "Total Points",
                 data: monthlyData.map(item => item.points),
-                borderColor: "blue",
-                fill: true,
             },
             {
-                label: "Total Referrals",
+                name: "Total Referrals",
                 data: monthlyData.map(item => item.referrals),
-                borderColor: "lightblue",
-                fill: true,
             },
         ],
+        categories: ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
     };
 }
 
-
 export function formatBarChartData(weeklyData: { day: string, points: number, referrals: number }[]) {
+   
+    const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    
     return {
-        labels: weeklyData.map(item => item.day),
-        datasets: [
+        series: [
             {
-                label: "Points",
+                name: "Points",
                 data: weeklyData.map(item => item.points),
-                backgroundColor: "blue",
             },
             {
-                label: "Referrals",
+                name: "Referrals",
                 data: weeklyData.map(item => item.referrals),
-                backgroundColor: "lightblue",
             },
         ],
+        // Map each day's index in `weeklyData` to its respective abbreviation
+        categories: weeklyData.map((_, index) => dayNames[index]),
     };
 }

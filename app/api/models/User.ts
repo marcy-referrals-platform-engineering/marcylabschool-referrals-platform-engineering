@@ -26,8 +26,10 @@ export default class User {
             let userReferrals;
 
             userReferrals = (userRole as any) === 'ADMIN' ? await prisma.referral.findMany() : await prisma.referral.findMany({
-                where: { email }
+                where: { referrerEmail: email }
             });
+
+            console.log(userReferrals);
 
 
             const monthlyData = aggregateMonthlyData(userReferrals);

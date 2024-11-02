@@ -1,9 +1,11 @@
 "use client";
 
 import { ApexOptions } from "apexcharts";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { useReferralStatsStore } from "@/app/state/useStore";
 import ChartOneLoading from "./ChartOneLoading";
+import { ChartData, formatLineChartData } from "@/app/utils/chartutils";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -28,7 +30,6 @@ const options: ApexOptions = {
       left: 0,
       opacity: 0.1,
     },
-
     toolbar: {
       show: false,
     },
@@ -55,10 +56,6 @@ const options: ApexOptions = {
     width: [2, 2],
     curve: "straight",
   },
-  // labels: {
-  //   show: false,
-  //   position: "top",
-  // },
   grid: {
     xaxis: {
       lines: {
@@ -90,20 +87,7 @@ const options: ApexOptions = {
   },
   xaxis: {
     type: "category",
-    categories: [
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-    ],
+    categories: [], // Will be set dynamically
     axisBorder: {
       show: false,
     },
@@ -122,36 +106,38 @@ const options: ApexOptions = {
   },
 };
 
-interface ChartOneState {
-  series: {
-    name: string;
-    data: number[];
-  }[];
-}
-
 const ChartOne: React.FC = () => {
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const series = [
-      {
-        name: "Product One",
-        data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 45],
-      },
+  const { userStats } = useReferralStatsStore();
+  const [chartData, setChartData] = useState<ChartData>({
+    series: [],
+    categories: [],
+  });
+  const [loading, setLoading] = useState(true);
 
-      {
-        name: "Product Two",
-        data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51],
-      },
-    ]
+  useEffect(() => {
+    if (userStats?.monthlyData) {
+      const { series, categories } = formatLineChartData(userStats.monthlyData);
+      setChartData({ series: series || [], categories: categories || [] });
+    }
+  }, [userStats]);
 
-      useEffect(() => {
-        setTimeout(() => {
-          setIsLoading(false);
-        } , 500)
-      }, [])
-  return isLoading?
-  (<ChartOneLoading />)
-  :
-  (
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Log chartData to check for structure issues
+  useEffect(() => {
+    console.log("Chart Data:", chartData);
+  }, [chartData]);
+
+  if (loading || chartData.series.length === 0 || chartData.categories.length === 0) {
+    return <ChartOneLoading />;
+  }
+
+  return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
       <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
         <div className="flex w-full flex-wrap gap-3 sm:gap-5">
@@ -175,18 +161,18 @@ const ChartOne: React.FC = () => {
           </div>
         </div>
         <div className="flex w-full max-w-45 justify-end">
-         
+          {/* Additional content for the top-right */}
         </div>
       </div>
 
       <div>
         <div id="chartOne" className="-ml-5">
           <ReactApexChart
-            options={options}
-            series={series}
+            options={{ ...options, xaxis: { ...options.xaxis, categories: chartData.categories } }}
+            series={chartData.series}
             type="area"
             height={350}
-            width={"100%"}
+            width="100%"
           />
         </div>
       </div>

@@ -24,17 +24,17 @@ model Referral {
   gender          String?
   linkedIn        String?
   referrerEmail   String
-  referrer        AuthorizedEmails @relation(fields: [referrerEmail], references: [email])
-  hasToured       DateTime?
+  dateCreated     DateTime         @default(now())
   hasApplied      DateTime?
   hasBeenAccepted DateTime?
   hasEnrolled     DateTime?
-  dateCreated     DateTime         @default(now())
+  hasToured       DateTime?
+  referrer        AuthorizedEmails @relation(fields: [referrerEmail], references: [email])
 }
 
 model AuthorizationRequests {
-  id    Int    @id @default(autoincrement())
-  email String @unique
+  id    Int      @id @default(autoincrement())
+  email String   @unique
   name  String
   img   String
   date  DateTime @default(now())

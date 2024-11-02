@@ -32,6 +32,7 @@ export function aggregateMonthlyData(referrals: any[]): { points: number, referr
     const monthlyData = Array.from({ length: 12 }, () => ({ points: 0, referrals: 0 }));
 
     referrals.forEach(referral => {
+        console.log(referral.dateCreated)
         const month = referral.dateCreated.getMonth();
         const referralPoints = calculateReferralPoints(referral);
         monthlyData[month].points += referralPoints;

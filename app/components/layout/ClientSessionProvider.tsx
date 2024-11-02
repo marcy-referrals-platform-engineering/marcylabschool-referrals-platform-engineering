@@ -2,9 +2,10 @@
 'use client';
 
 import { SessionProvider } from "next-auth/react";
-import { useStore } from "@/app/state/useStore";
+import { useStore, useReferralStatsStore } from "@/app/state/useStore";
 import { useEffect, useState } from "react";
 import Loader from "../ui/Loader";
+import ReferralService from "@/app/services/ReferralService";
 
 export default function ClientSessionProvider({
   children,
@@ -32,6 +33,9 @@ export default function ClientSessionProvider({
 function StateInitializerWrapper({ children, session }: { children: React.ReactNode; session: any }) {
   const setUser = useStore((state) => state.setUser);
 
+  const {userStats} = useReferralStatsStore();
+  const setUserStats = useReferralStatsStore((state) => state.setUserStats);
+
   useEffect(() => {
     if (session?.user) {
       setUser({
@@ -40,6 +44,19 @@ function StateInitializerWrapper({ children, session }: { children: React.ReactN
         image: session.user.image || '',
         role: session.user.role || '',
       });
+
+      const getUserStats = async () => {
+       try {
+        const stats = await ReferralService.getReferralStats(session.user.email);
+        setUserStats(stats);
+        console.log("User stats fetched")
+       } catch {
+          console.log("Failed to fetch user stats")
+       }
+      }
+
+      getUserStats();
+
     } else {
       setUser(null);
     }

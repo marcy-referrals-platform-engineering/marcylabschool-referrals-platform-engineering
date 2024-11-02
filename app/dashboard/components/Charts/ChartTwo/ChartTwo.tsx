@@ -1,9 +1,12 @@
 "use client";
+
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useReferralStatsStore } from "@/app/state/useStore";
 import ChartTwoLoading from "./ChartTwoLoading";
+import { formatBarChartData } from "@/app/utils/chartutils";
+
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
@@ -21,7 +24,6 @@ const options: ApexOptions = {
       enabled: false,
     },
   },
-
   responsive: [
     {
       breakpoint: 1536,
@@ -47,9 +49,8 @@ const options: ApexOptions = {
   dataLabels: {
     enabled: false,
   },
-
   xaxis: {
-    categories: ["M", "T", "W", "T", "F", "S", "S"],
+    categories: [], // Will be set dynamically
   },
   legend: {
     fontFamily: "Helvetica Neue",
@@ -57,43 +58,42 @@ const options: ApexOptions = {
     horizontalAlign: "left",
     fontWeight: 500,
     fontSize: "14px",
-
-    markers: {},
   },
   fill: {
     opacity: 1,
   },
 };
 
-interface ChartTwoState {
+interface ChartData {
   series: {
     name: string;
     data: number[];
   }[];
+  categories: string[];
 }
 
 const ChartTwo: React.FC = () => {
-  const [isLoading, setIsLoading] = React.useState(true);
-  const series = [
-    {
-      name: "Points",
-      data: [44, 55, 41, 67, 22, 43, 65],
-    },
-    {
-      name: "Referrals",
-      data: [13, 23, 20, 8, 13, 27, 15],
-    },
-  ];
+  const { userStats } = useReferralStatsStore();
+  const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState<ChartData>({ series: [], categories: [] });
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-  });
+    // Setting loading to false after a delay
+    const timer = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
-  return isLoading? 
-  (<ChartTwoLoading />)
-  : (
+  useEffect(() => {
+    const weeklyData = userStats?.weeklyData;
+    if (weeklyData && !loading) {
+      const { series, categories } = formatBarChartData(weeklyData);
+      setChartData({ series, categories });
+    }
+  }, [userStats, loading]);
+
+  return loading || chartData.series.length === 0 || chartData.categories.length === 0 ? (
+    <ChartTwoLoading />
+  ) : (
     <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
       <div className="mb-4 justify-between gap-4 sm:flex">
         <div>
@@ -127,12 +127,6 @@ const ChartTwo: React.FC = () => {
                   d="M0.47072 1.08816C0.47072 1.02932 0.500141 0.955772 0.54427 0.911642C0.647241 0.808672 0.809051 0.808672 0.912022 0.896932L4.85431 4.60386C4.92785 4.67741 5.06025 4.67741 5.14851 4.60386L9.09079 0.896932C9.19376 0.793962 9.35557 0.808672 9.45854 0.911642C9.56151 1.01461 9.5468 1.17642 9.44383 1.27939L5.50155 4.98632C5.22206 5.23639 4.78076 5.23639 4.51598 4.98632L0.558981 1.27939C0.50014 1.22055 0.47072 1.16171 0.47072 1.08816Z"
                   fill="#637381"
                 />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M1.22659 0.546578L5.00141 4.09604L8.76422 0.557869C9.08459 0.244537 9.54201 0.329403 9.79139 0.578788C10.112 0.899434 10.0277 1.36122 9.77668 1.61224L9.76644 1.62248L5.81552 5.33722C5.36257 5.74249 4.6445 5.7544 4.19352 5.32924C4.19327 5.32901 4.19377 5.32948 4.19352 5.32924L0.225953 1.61241C0.102762 1.48922 -4.20186e-08 1.31674 -3.20269e-08 1.08816C-2.40601e-08 0.905899 0.0780105 0.712197 0.211421 0.578787C0.494701 0.295506 0.935574 0.297138 1.21836 0.539529L1.22659 0.546578ZM4.51598 4.98632C4.78076 5.23639 5.22206 5.23639 5.50155 4.98632L9.44383 1.27939C9.5468 1.17642 9.56151 1.01461 9.45854 0.911642C9.35557 0.808672 9.19376 0.793962 9.09079 0.896932L5.14851 4.60386C5.06025 4.67741 4.92785 4.67741 4.85431 4.60386L0.912022 0.896932C0.809051 0.808672 0.647241 0.808672 0.54427 0.911642C0.500141 0.955772 0.47072 1.02932 0.47072 1.08816C0.47072 1.16171 0.50014 1.22055 0.558981 1.27939L4.51598 4.98632Z"
-                  fill="#637381"
-                />
               </svg>
             </span>
           </div>
@@ -142,8 +136,8 @@ const ChartTwo: React.FC = () => {
       <div>
         <div id="chartTwo" className="-mb-9 -ml-5">
           <ReactApexChart
-            options={options}
-            series={series}
+            options={{ ...options, xaxis: { ...options.xaxis, categories: chartData.categories } }}
+            series={chartData.series}
             type="bar"
             height={350}
             width={"100%"}

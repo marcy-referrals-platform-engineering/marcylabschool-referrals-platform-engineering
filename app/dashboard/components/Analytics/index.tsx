@@ -1,19 +1,80 @@
 "use client";
 import dynamic from "next/dynamic";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ChartOne from "../Charts/ChartOne/ChartOne";
 import ChartTwo from "../Charts/ChartTwo/ChartTwo";
 import CardDataStats from "../DataCard/CardDataStats";
 import ChartTwoLoading from "../Charts/ChartTwo/ChartTwoLoading";
-
-
-
+import { useReferralStatsStore } from "@/app/state/useStore";
 
 const Analytics: React.FC = () => {
+  const { userStats } = useReferralStatsStore();
+  const [percentIncrease, setPercentIncrease] = useState<{
+    referrals: number;
+    points: number;
+  }>({ referrals: 0, points: 0 });
+
+  useEffect(() => {
+    console.log(userStats);
+    if (userStats) {
+      const weeklyData = userStats.weeklyData;
+
+      // Cumulative points and referrals up to the current day (baseline)
+      const daysWithData = weeklyData.filter(
+        (day: any) => day.points > 0 || day.referrals > 0
+      ); // Filter to get days with actual data
+      const baselinePoints = daysWithData.reduce(
+        (total: any, day: any) => total + day.points,
+        0
+      );
+      const baselineReferrals = daysWithData.reduce(
+        (total: any, day: any) => total + day.referrals,
+        0
+      );
+
+      // Total points and referrals for the current week
+      const currentWeekPoints = weeklyData.reduce(
+        (total: any, day: any) => total + day.points,
+        0
+      );
+      const currentWeekReferrals = weeklyData.reduce(
+        (total: any, day: any) => total + day.referrals,
+        0
+      );
+
+      // Calculate the rate of increase for points and referrals
+      const pointsIncreasePercentage =
+        baselinePoints > 0
+          ? Math.round(
+              ((currentWeekPoints - baselinePoints) / baselinePoints) * 100
+            )
+          : "N/A";
+
+      const referralsIncreasePercentage =
+        baselineReferrals > 0
+          ? Math.round(
+              ((currentWeekReferrals - baselineReferrals) / baselineReferrals) *
+                100
+            )
+          : "N/A";
+
+      setPercentIncrease({
+        referrals: Number(referralsIncreasePercentage),
+        points: Number(pointsIncreasePercentage),
+      });
+    }
+  }, [userStats]);
   return (
     <div className="  flex-col justify-center  h-screen">
-      <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
-        <CardDataStats title="Total Points" total="300" rate="50%" levelUp>
+      <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
+        <CardDataStats
+          title="Total Points"
+          total={userStats?.totalPoints}
+          rate={`${percentIncrease.points}%`}
+          {...(percentIncrease.points > 0
+            ? { levelUp: true }
+            : { levelDown: true })}
+        >
           <svg
             stroke="currentColor"
             fill="currentColor"
@@ -32,7 +93,14 @@ const Analytics: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Referrals" total="10" rate="20%" levelDown>
+        <CardDataStats
+          title="Total Referrals"
+          total={userStats?.totalReferrals }
+          rate={`${percentIncrease.referrals}%`}
+          {...(percentIncrease.referrals > 0
+            ? { levelUp: true }
+            : { levelDown: true })}
+        >
           <svg
             stroke="currentColor"
             width="22"
@@ -56,7 +124,7 @@ const Analytics: React.FC = () => {
           </svg>
         </CardDataStats>
 
-        <CardDataStats title="Pending Points" total="50" rate="0%" levelUp>
+        {/* <CardDataStats title="Pending Points" total="0" rate="0%" levelUp>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="25"
@@ -75,14 +143,12 @@ const Analytics: React.FC = () => {
             <path d="M7 2a5 5 0 0 0 5 5 5 5 0 0 0 5-5"></path>
             <path d="M7 22a5 5 0 0 1 5-5 5 5 0 0 1 5 5"></path>
           </svg>
-        </CardDataStats>
+        </CardDataStats> */}
       </div>
 
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-    
         <ChartOne />
         <ChartTwo />
-  
       </div>
     </div>
   );

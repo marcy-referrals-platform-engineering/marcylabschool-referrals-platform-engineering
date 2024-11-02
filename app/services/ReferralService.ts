@@ -10,4 +10,13 @@ export default class ReferralService {
         return wasRequestSuccessful
     }
 
+    static async getReferralStats(email: string): Promise<any> {
+        const response = await apiFetch(`api/user/referral-stats?email=${email}`);
+        if (!response) {
+            console.log("Failed to fetch referral stats")
+            return null;
+        }
+        return response;    
+    }
+
 }
