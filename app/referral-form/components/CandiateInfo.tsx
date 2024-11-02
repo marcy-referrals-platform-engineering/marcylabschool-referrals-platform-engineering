@@ -11,7 +11,7 @@ const CandidateInformation: React.FC<CandidateInformationProps> = ({
 }) => {
   return (
     <div>
-      <h1 className="font-bold text-2xl text-gray-800 mb-3">
+      <h1 className="font-bold text-2xl text-[#261f1d] mb-3">
         Candidate Information
       </h1>
 

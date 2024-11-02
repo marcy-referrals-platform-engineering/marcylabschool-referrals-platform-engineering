@@ -1,11 +1,11 @@
 "use client";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
-import ChartOne from "./ChartOne";
-import ChartTwo from "./ChartTwo";
+import ChartOne from "./ChartOne/ChartOne";
+import ChartTwo from "./ChartTwo/ChartTwo";
 import dynamic from "next/dynamic";
 import React from "react";
 
-const ChartThree = dynamic(() => import("./ChartThree"), {
+const ChartThree = dynamic(() => import("./ChartThree/ChartThree"), {
   ssr: false,
 });
 

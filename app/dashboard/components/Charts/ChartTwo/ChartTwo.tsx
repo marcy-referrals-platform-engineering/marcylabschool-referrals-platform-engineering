@@ -1,9 +1,9 @@
 "use client";
-
 import { ApexOptions } from "apexcharts";
-import React from "react";
 import dynamic from "next/dynamic";
-
+import React from "react";
+import { useEffect } from "react";
+import ChartTwoLoading from "./ChartTwoLoading";
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
@@ -11,7 +11,6 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
 const options: ApexOptions = {
   colors: ["#3C50E0", "#80CAEE"],
   chart: {
-    
     type: "bar",
     height: 335,
     stacked: true,
@@ -53,15 +52,13 @@ const options: ApexOptions = {
     categories: ["M", "T", "W", "T", "F", "S", "S"],
   },
   legend: {
-    fontFamily: 'Helvetica Neue',
+    fontFamily: "Helvetica Neue",
     position: "top",
     horizontalAlign: "left",
     fontWeight: 500,
     fontSize: "14px",
 
-    markers: {
-      
-    },
+    markers: {},
   },
   fill: {
     opacity: 1,
@@ -76,6 +73,7 @@ interface ChartTwoState {
 }
 
 const ChartTwo: React.FC = () => {
+  const [isLoading, setIsLoading] = React.useState(true);
   const series = [
     {
       name: "Points",
@@ -87,7 +85,15 @@ const ChartTwo: React.FC = () => {
     },
   ];
 
-  return (
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+  });
+
+  return isLoading? 
+  (<ChartTwoLoading />)
+  : (
     <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
       <div className="mb-4 justify-between gap-4 sm:flex">
         <div>

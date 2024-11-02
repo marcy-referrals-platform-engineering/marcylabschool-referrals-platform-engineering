@@ -1,8 +1,9 @@
 "use client";
 
 import { ApexOptions } from "apexcharts";
-import React from "react";
+import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
+import ChartOneLoading from "./ChartOneLoading";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -129,6 +130,7 @@ interface ChartOneState {
 }
 
 const ChartOne: React.FC = () => {
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const series = [
       {
         name: "Product One",
@@ -141,7 +143,15 @@ const ChartOne: React.FC = () => {
       },
     ]
 
-  return (
+      useEffect(() => {
+        setTimeout(() => {
+          setIsLoading(false);
+        } , 500)
+      }, [])
+  return isLoading?
+  (<ChartOneLoading />)
+  :
+  (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
       <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
         <div className="flex w-full flex-wrap gap-3 sm:gap-5">

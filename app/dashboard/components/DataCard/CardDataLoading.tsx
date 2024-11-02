@@ -4,7 +4,7 @@ function CardDataLoading() {
   return (
         <div
           
-          className="rounded-sm border border-stroke bg-white px-7.5 py-1  shadow-default animate-pulse"
+          className="rounded-sm border border-stroke bg-white px-7.5 py-1.5  shadow-default animate-pulse"
         >
           <div className="scale-[80%] translate-x-[-2rem]">
             <div className="flex items-center space-x-4">

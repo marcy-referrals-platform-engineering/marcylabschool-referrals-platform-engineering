@@ -30,7 +30,7 @@ function ReferralForm() {
 
   return (
     user && (
-      <div className="w-screen relative bg-slate-50 h-full">
+      <div className="w-screen bg-slate-50">
         {/* Header with sticky positioning */}
         <Header
           className="py-2.5"
@@ -38,7 +38,6 @@ function ReferralForm() {
           mobile={false}
           links={[{ text: "← Back Home ", href: "/" }]}
         />
-        {/*   ← Back Home */}
         {/* Background Image */}
         <Image
           width={900}
@@ -50,17 +49,18 @@ function ReferralForm() {
         />
 
         {/* Main Form Content */}
-        <div className="z-[120] relative bg-opacity-10 w-[full] m-auto">
+        <div className="relative bg-opacity-10 max-w-[900px] mx-auto mt-[-5rem]">
           <form
             onSubmit={handleSubmit}
-            className="p-8 translate-y-[-5rem] border relative pt-1 z-[130] flex flex-col bg-white bg-cover overflow-visible bg-center max-w-[900px] mx-auto"
+            className="p-8 border bg-white  z-[130] flex flex-col"
           >
-            <p className="w-[95%] m-auto pt-5">
+          
+            <p className="w-[95%] font-medium m-auto border-b-[#261f1d] pb-3  border-b-[0.2rem] pt-1">
               Help us connect with the next generation of Marcy talent. Please
               use this form to submit a referral. Remember, LinkedIn profiles
               and resumes are highly encouraged.
             </p>
-            <div className="bg-white pt-10 p-6 rounded-lg mb-6">
+            <div className="pt-8 p-6">
               <CandidateInfo formData={formData} handleChange={handleChange} />
               <FileUpload formData={formData} setFormData={setFormData} />
             </div>
