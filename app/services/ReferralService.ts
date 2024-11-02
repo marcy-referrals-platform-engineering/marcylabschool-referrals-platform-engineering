@@ -19,4 +19,18 @@ export default class ReferralService {
         return response;    
     }
 
+    static async fetchReferrals(email: string): Promise<any> {
+        try {
+            const response = await fetch(`/api/referral/get-all?email=${email}`);
+            if (!response.ok) {
+                console.log("Failed to fetch referrals");
+                return null;
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Error fetching referrals:", error);
+            return null;
+        }
+    }
+
 }

@@ -19,7 +19,7 @@ export function formatLineChartData(monthlyData: { points: number, referrals: nu
                 data: monthlyData.map(item => item.referrals),
             },
         ],
-        categories: ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
+        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     };
 }
 

@@ -3,26 +3,30 @@ import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
 import ChartOne from "../Charts/ChartOne/ChartOne";
 import ChartTwo from "../Charts/ChartTwo/ChartTwo";
-import CardDataStats from "../DataCard/CardDataStats";
-import ChartTwoLoading from "../Charts/ChartTwo/ChartTwoLoading";
+import Loader from "@/app/components/ui/Loader";
 import { useReferralStatsStore } from "@/app/state/useStore";
-
+import CardDataStats from "../DataCard/CardDataStats";
 const Analytics: React.FC = () => {
   const { userStats } = useReferralStatsStore();
   const [percentIncrease, setPercentIncrease] = useState<{
     referrals: number;
     points: number;
   }>({ referrals: 0, points: 0 });
+  const [hydrated, setHydrated] = useState(false);
+
+  // Set hydration state to true once the component is mounted on the client
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   useEffect(() => {
-    console.log(userStats);
     if (userStats) {
+      console.log(userStats);
       const weeklyData = userStats.weeklyData;
 
-      // Cumulative points and referrals up to the current day (baseline)
       const daysWithData = weeklyData.filter(
         (day: any) => day.points > 0 || day.referrals > 0
-      ); // Filter to get days with actual data
+      );
       const baselinePoints = daysWithData.reduce(
         (total: any, day: any) => total + day.points,
         0
@@ -32,7 +36,6 @@ const Analytics: React.FC = () => {
         0
       );
 
-      // Total points and referrals for the current week
       const currentWeekPoints = weeklyData.reduce(
         (total: any, day: any) => total + day.points,
         0
@@ -42,13 +45,12 @@ const Analytics: React.FC = () => {
         0
       );
 
-      // Calculate the rate of increase for points and referrals
       const pointsIncreasePercentage =
         baselinePoints > 0
           ? Math.round(
               ((currentWeekPoints - baselinePoints) / baselinePoints) * 100
             )
-          : "N/A";
+          : 0;
 
       const referralsIncreasePercentage =
         baselineReferrals > 0
@@ -56,14 +58,19 @@ const Analytics: React.FC = () => {
               ((currentWeekReferrals - baselineReferrals) / baselineReferrals) *
                 100
             )
-          : "N/A";
+          : 0;
 
       setPercentIncrease({
-        referrals: Number(referralsIncreasePercentage),
-        points: Number(pointsIncreasePercentage),
+        referrals: referralsIncreasePercentage,
+        points: pointsIncreasePercentage,
       });
     }
   }, [userStats]);
+
+  // Show Loader until the component is hydrated and userStats is available
+  if (!hydrated || !userStats) {
+    return <Loader />;
+  }
   return (
     <div className="  flex-col justify-center  h-screen">
       <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
@@ -95,7 +102,7 @@ const Analytics: React.FC = () => {
         </CardDataStats>
         <CardDataStats
           title="Total Referrals"
-          total={userStats?.totalReferrals }
+          total={userStats?.totalReferrals}
           rate={`${percentIncrease.referrals}%`}
           {...(percentIncrease.referrals > 0
             ? { levelUp: true }
