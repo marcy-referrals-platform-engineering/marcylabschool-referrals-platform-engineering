@@ -1,7 +1,9 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "../../../../prisma/client";
+import { authOptions } from "./lib/auth";
 
+export default NextAuth(authOptions);
 const handler = NextAuth({
     providers: [
         GoogleProvider({
@@ -28,7 +30,7 @@ const handler = NextAuth({
 
             // Add role to the user object
             if (isAuthorizedEmail) {
-                user.role = isAuthorizedEmail.role;  // Attach role to user object
+                (user as any).role = isAuthorizedEmail.role;  // Attach role to user object
             }
 
             return true; // Allow sign-in if the email is authorized
@@ -45,7 +47,7 @@ const handler = NextAuth({
         async jwt({ token, user }) {
             // If it's the first time (sign-in), copy the user's role to the token
             if (user) {
-                token.role = user.role;  // Add role to token for persistence
+                token.role = (user as any).role;  // Add role to token for persistence
             }
             return token;
         },

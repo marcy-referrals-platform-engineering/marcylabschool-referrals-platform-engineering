@@ -1,5 +1,7 @@
+'use client';
 import React, { ReactNode } from "react";
-
+import { useEffect, useState } from "react";
+import CardDataLoading from "./CardDataLoading";
 interface CardDataStatsProps {
   title: string;
   total: string;
@@ -17,8 +19,16 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
   levelDown,
   children,
 }) => {
-  return (
-    <div className="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
+
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoaded(true);
+    }, 300)
+  }, []);
+  return loaded?  (
+    <div className="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default">
       <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
         {children}
       </div>
@@ -71,7 +81,8 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
         </span>
       </div>
     </div>
-  );
+  ): 
+  (<CardDataLoading />)
 };
 
 export default CardDataStats;

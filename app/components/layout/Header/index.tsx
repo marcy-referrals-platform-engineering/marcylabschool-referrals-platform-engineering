@@ -1,13 +1,12 @@
 "use client";
 import Link from "next/link";
-import HbActive from "../HbActive";
 import DropdownNotification from "./DropdownNotification";
 import DropdownUser from "./DropdownUser";
 import Image from "next/image";
 import { useStore } from "@/app/state/useStore";
 import { signIn, signOut } from "next-auth/react";
 import { useEffect } from "react";
-
+import { useSidebarStore } from "@/app/state/useStore";
 export const links = [
   { text: "LOG-IN", onClick: () => signIn("google") },
   { text : 'REFERRALS', href: '/dashboard/referral-data'},
@@ -16,15 +15,9 @@ export const links = [
   
  
 ];
-const Header = ({
-  sidebarOpen,
-  setSidebarOpen,
-}: {
-  sidebarOpen: string | boolean | undefined;
-  setSidebarOpen: (arg0: boolean) => void;
-}) => {
+const Header = () => {
   const { user } = useStore();
-
+  const { sidebarOpen, setSidebarOpen } = useSidebarStore();
   const shouldHideLink = (linkText: string) => {
     if (user && linkText === "LOG-IN") {
       return true;
@@ -47,9 +40,9 @@ const Header = ({
     }
   });
   return (
-    <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
-      <div className="flex flex-grow items-center justify-between px-3 py-2 shadow-2 md:px-6 2xl:px-11">
-        <div className="flex items-center gap-2 sm:gap-4 ">
+    <header className="sticky top-0 z-999 flex  bg-white drop-shadow-1 ">
+      <div className="flex  m-auto  flex-grow items-center justify-between px-7 md:px-[3rem] lg:px-[4rem] py-2 shadow-2  ">
+        <div className="flex   items-center gap-2 sm:gap-4 ">
           {/* <!-- Hamburger Toggle BTN --> */}
           <button
             aria-controls="sidebar"
@@ -117,6 +110,7 @@ const Header = ({
               return !hide && (
                 
                 <Link
+                  onClick={link.onClick}
                   className={` hidden hover:opacity-50 duration-300 md:block font-medium text-[1.1rem]`}
                   href={link.href || ""}
                 >

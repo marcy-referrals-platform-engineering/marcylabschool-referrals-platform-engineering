@@ -1,9 +1,8 @@
 "use client";
 import "jsvectormap/dist/jsvectormap.css";
 import "flatpickr/dist/flatpickr.min.css";
-
 import React, { useEffect, useState } from "react";
-import Loader from "./components/common/Loader";
+
 
 export default function RootLayout({
   children,
@@ -11,14 +10,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
 
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <div className="dark:bg-boxdark-2 dark:text-bodydark">
-          {children}
-        </div>
+        <div className="overflow-scroll h-screen">{children}</div>
       </body>
     </html>
   );

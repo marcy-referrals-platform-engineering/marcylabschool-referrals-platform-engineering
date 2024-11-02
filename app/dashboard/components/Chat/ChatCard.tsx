@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Chat } from "@/app/types/dashboard/chat";
 
-const chatData: any[] = [
+const chatData: Chat[] = [
   {
     avatar: "/images/user/user-01.png",
     name: "Devid Heilo",
