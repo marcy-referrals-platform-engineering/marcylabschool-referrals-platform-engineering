@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn, signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import { useStore } from "../../state/useStore";
 export const links = [
   { text: "LOG-IN", onClick: () => signIn("google") },
@@ -27,7 +27,7 @@ const Sidebar = () => {
   }, []);
   return (
     <div className="w-[17rem] relative  min-h-full  bg-[#261f1d]">
-      <div className="py-6 fixed ml-8 ">
+      {/* <div className="py-6 fixed ml-8 ">
         <img
           className="w-[12rem] m-auto mb-4 border-b-white border-b"
           src="/marcylogo1.png"
@@ -74,7 +74,7 @@ const Sidebar = () => {
             </a>
           ))}
         </ul>
-      </div>
+      </div> */}
     </div>
   );
 };
