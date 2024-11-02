@@ -3,7 +3,8 @@ import dynamic from "next/dynamic";
 import React from "react";
 import ChartOne from "../Charts/ChartOne";
 import ChartTwo from "../Charts/ChartTwo";
-import CardDataStats from "../CardDataStats";
+import CardDataStats from "../DataCard/CardDataStats";
+import CardDataLoading from "../DataCard/CardDataLoading";
 
 const MapOne = dynamic(() => import("../Maps/MapOne"), {
   ssr: false,
@@ -15,8 +16,9 @@ const ChartThree = dynamic(() => import("../Charts/ChartThree"), {
 
 const Analytics: React.FC = () => {
   return (
-    <>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+    <div className='  flex-col justify-center  h-screen'>
+      <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+        
         <CardDataStats title="Total Points" total="300" rate="50%" levelUp>
           <svg
             stroke="currentColor"
@@ -88,7 +90,7 @@ const Analytics: React.FC = () => {
         {/* <ChartThree />
         <MapOne /> */}
       </div>
-    </>
+    </div>
   );
 };
 

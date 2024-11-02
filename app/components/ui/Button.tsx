@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 
 interface ButtonProps {
@@ -8,7 +9,7 @@ interface ButtonProps {
   onClick?: any;
   href?: string;
 }
-function Button({ text, invert, className, onClick, href }: ButtonProps) {
+function Button({ text, invert, className, onClick}: ButtonProps) {
   const [hovered, setHovered] = useState<boolean>(false);
   const bgRef = useRef<HTMLDivElement>(null);
 
@@ -19,7 +20,7 @@ function Button({ text, invert, className, onClick, href }: ButtonProps) {
   }, [hovered]);
 
   return (
-    <a href={href && href}>
+   
     <button
       onClick={ () => onClick? onClick(): null}
       className={`w-[10rem] z-[1] ${className} `}
@@ -52,7 +53,7 @@ function Button({ text, invert, className, onClick, href }: ButtonProps) {
         ></div>
       </div>
     </button>
-    </a>
+ 
   );
 }
 

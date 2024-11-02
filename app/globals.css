@@ -1,41 +1,35 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300..900&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-
-  font-family: 'Helvetica Neue';
+  font-family: "Helvetica Neue";
   color: #261f1d;
   letter-spacing: -0.05em;
-  font-family:'Helvetica Neue', sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
 
   font-weight: 400;
 }
 
-h1{
+h1 {
   font-weight: 50;
   letter-spacing: -0.05em;
-  font-family:'Helvetica Neue', sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 50px;
   font-weight: 400;
-
 }
 
-
 .marcy1 {
-  background-image: url(https://nycetc.org/wp-content/uploads/2020/12/Marcy-Lab_04-scaled.jpg) ;
+  background-image: url(https://nycetc.org/wp-content/uploads/2020/12/Marcy-Lab_04-scaled.jpg);
   background-size: cover; /* Makes the image cover the entire container */
   background-position: 0% 40%;
 }
 
-
-h2{
+h2 {
   font-weight: 50;
   letter-spacing: -0.05em;
-  font-family: 'Practice Display';
+  font-family: "Practice Display";
   font-size: 50px;
   line-height: 48px;
   padding-top: 30px;
@@ -67,13 +61,49 @@ h2{
   animation: moveWithin 12s ease-in-out infinite;
 }
 .vignette {
-
 }
 
 .marcy-transparent {
-  background: url('../public/marcy1.jpg') no-repeat center center fixed;
+  background: url("../public/marcy1.jpg") no-repeat center center fixed;
   background-size: cover; /* Ensures the image covers the container */
   position: relative; /* To allow the use of a positioned ::after element */
   filter: grayscale(100%);
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.1s ease-in-out forwards;
+}
+
+
+sticky-link {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: white;
+  padding: 0.75rem 1rem;
+}
+
+.sticky-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px; /* Adjust based on the shadow size */
+  width: 100%;
+  height: 8px; /* Height of shadow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow properties */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.sticky-link.stuck::after {
+  opacity: 1;
+}

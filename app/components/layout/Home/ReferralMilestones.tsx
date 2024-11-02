@@ -1,4 +1,4 @@
-import Milestone from "../ui/Milestone";
+import Milestone from "../../ui/Milestone";
 
 const pointsData = [
   {

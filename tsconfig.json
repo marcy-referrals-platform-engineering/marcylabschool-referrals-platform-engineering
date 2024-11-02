@@ -2,7 +2,6 @@
   "compilerOptions": {
     "types": [
       "next-auth",
-      "./app/types/next-auth.d.ts"
     ],
     "lib": [
       "dom",
