@@ -14,13 +14,13 @@ export default function DefaultLayout({
      
       <div className="flex">
 
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <Sidebar  />
 
 
 
         <div className={`relative flex flex-1 flex-col ${sidebarOpen ? "translate-x-0" : "translate-x-0"} `}>
 
-          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          <Header  />
     
           <main>
             <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
@@ -31,7 +31,7 @@ export default function DefaultLayout({
         </div>
        
       </div>
-      <FocusBackdrop sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <FocusBackdrop  />
     </>
   );
 }

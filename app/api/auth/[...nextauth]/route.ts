@@ -1,9 +1,9 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "../../../../prisma/client";
-import { authOptions } from "./lib/auth";
 
-export default NextAuth(authOptions);
+
+
 const handler = NextAuth({
     providers: [
         GoogleProvider({
