@@ -7,14 +7,14 @@ import { useStore } from "@/app/state/useStore";
 import { signIn, signOut } from "next-auth/react";
 import { useEffect } from "react";
 import { useSidebarStore } from "@/app/state/useStore";
-
+import { linksData } from "./data";
 const Header = ({
-  links,
+  links = linksData,
   features = true,
   mobile = true,
   className,
 }: {
-  links: any[];
+  links?: any[];
   features?: boolean;
   mobile?: boolean;
   className?: string;
