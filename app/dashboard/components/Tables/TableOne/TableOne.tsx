@@ -62,8 +62,6 @@ const TableOne = () => {
           <option value="">Sort by</option>
           <option value="name">Name</option>
           <option value="status">Date</option>
-          <option value="toured">Toured</option>
-          <option value="applied">Applied</option>
         </select>
       </div>
 

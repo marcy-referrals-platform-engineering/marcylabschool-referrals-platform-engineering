@@ -1,14 +1,11 @@
+'use client';
 import Analytics from "./components/Analytics";
 import { Metadata } from "next";
 import DefaultLayout from "./components/Layouts/DefaultLayout";
+import withAuth from "../components/layout/protect";
 
-export const metadata: Metadata = {
-  title:
-    "Next.js E-commerce Dashboard | TailAdmin - Next.js Dashboard Template",
-  description: "This is Next.js Home for TailAdmin Dashboard Template",
-};
 
-export default function Home() {
+function Home() {
   return (
     <>
       <DefaultLayout>
@@ -17,3 +14,6 @@ export default function Home() {
     </>
   );
 }
+
+export default withAuth(Home)
+

@@ -152,7 +152,7 @@ const ChartOne = ({userStats} : {userStats : any}) => {
               </span>
               <div className="w-full">
                 <p className="font-semibold text-primary">Total Points</p>
-                <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+                
               </div>
             </div>
             <div className="flex min-w-47.5">
@@ -161,7 +161,7 @@ const ChartOne = ({userStats} : {userStats : any}) => {
               </span>
               <div className="w-full">
                 <p className="font-semibold text-secondary">Total Referrals</p>
-                <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+            
               </div>
             </div>
           </div>
