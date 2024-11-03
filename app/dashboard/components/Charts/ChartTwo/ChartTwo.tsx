@@ -3,7 +3,6 @@
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
-import { useReferralStatsStore } from "@/app/state/useStore";
 import ChartTwoLoading from "./ChartTwoLoading";
 import { formatBarChartData } from "@/app/utils/chartutils";
 
@@ -72,8 +71,8 @@ interface ChartData {
   categories: string[];
 }
 
-const ChartTwo: React.FC = () => {
-  const { userStats } = useReferralStatsStore();
+const ChartTwo: React.FC<{userStats: any}> = ({userStats}) => {
+  
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<ChartData>({ series: [], categories: [] });
 

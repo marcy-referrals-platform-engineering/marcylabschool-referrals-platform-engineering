@@ -1,27 +1,50 @@
 "use client";
-import dynamic from "next/dynamic";
-import React, { useState, useEffect } from "react";
+import useSWR from "swr";
+import ReferralService from "@/app/services/ReferralService";
+import React, { useEffect, useState } from "react";
 import ChartOne from "../Charts/ChartOne/ChartOne";
 import ChartTwo from "../Charts/ChartTwo/ChartTwo";
 import Loader from "@/app/components/ui/Loader";
-import { useReferralStatsStore } from "@/app/state/useStore";
+import { useStore } from "@/app/state/useStore";
 import CardDataStats from "../DataCard/CardDataStats";
+import TableOne from "../Tables/TableOne/TableOne";
+
+// Fetcher function for SWR
+const fetchReferralStats = (email: string) =>
+  ReferralService.getReferralStats(email);
+
 const Analytics: React.FC = () => {
-  const { userStats } = useReferralStatsStore();
-  const [percentIncrease, setPercentIncrease] = useState<{
-    referrals: number;
-    points: number;
-  }>({ referrals: 0, points: 0 });
+  const { user } = useStore();
+  const [percentIncrease, setPercentIncrease] = useState({
+    referrals: 0,
+    points: 0,
+  });
   const [hydrated, setHydrated] = useState(false);
+
+  // SWR for data fetching, only when `user.email` is defined
+  const {
+    data: userStats,
+    error,
+    isLoading,
+  } = useSWR(
+    user?.email ? `referral-stats-${user.email}` : null,
+    () => fetchReferralStats(user!.email),
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+      revalidateIfStale: false,
+    }
+  );
 
   // Set hydration state to true once the component is mounted on the client
   useEffect(() => {
     setHydrated(true);
   }, []);
 
+  // Calculate the percentage increase based on userStats
   useEffect(() => {
     if (userStats) {
-      console.log(userStats);
       const weeklyData = userStats.weeklyData;
 
       const daysWithData = weeklyData.filter(
@@ -67,8 +90,8 @@ const Analytics: React.FC = () => {
     }
   }, [userStats]);
 
-  // Show Loader until the component is hydrated and userStats is available
-  if (!hydrated || !userStats) {
+  // Show Loader if component is not hydrated, data is loading, or there’s an error
+  if (!hydrated || isLoading || error) {
     return <Loader />;
   }
   return (
@@ -153,10 +176,13 @@ const Analytics: React.FC = () => {
         </CardDataStats> */}
       </div>
 
-      <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <ChartOne />
-        <ChartTwo />
+     
+
+      <div className="mt-4 grid mb-4 grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
+        <TableOne />
+        <ChartTwo userStats={userStats} />
       </div>
+      <ChartOne userStats={userStats} />
     </div>
   );
 };

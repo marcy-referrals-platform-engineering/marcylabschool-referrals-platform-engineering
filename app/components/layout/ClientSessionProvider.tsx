@@ -1,11 +1,11 @@
-// app/components/layout/ClientSessionProvider.tsx
-'use client';
+"use client";
 
 import { SessionProvider } from "next-auth/react";
-import { useStore, useReferralStatsStore } from "@/app/state/useStore";
+import { useStore } from "@/app/state/useStore";
 import { useEffect, useState } from "react";
 import Loader from "../ui/Loader";
 import ReferralService from "@/app/services/ReferralService";
+import AuthService from "@/app/services/AuthService";
 
 export default function ClientSessionProvider({
   children,
@@ -20,47 +20,45 @@ export default function ClientSessionProvider({
     setIsHydrated(true);
   }, []);
 
-    
-  return isHydrated? (
+  return isHydrated ? (
     <SessionProvider session={session}>
-      <StateInitializerWrapper session={session}>{children}</StateInitializerWrapper>
+      <StateInitializerWrapper session={session}>
+        {children}
+      </StateInitializerWrapper>
     </SessionProvider>
-  ) 
-  :
-  (<Loader />)
+  ) : (
+    <Loader />
+  );
 }
 
-function StateInitializerWrapper({ children, session }: { children: React.ReactNode; session: any }) {
+function StateInitializerWrapper({
+  children,
+  session,
+}: {
+  children: React.ReactNode;
+  session: any;
+}) {
   const setUser = useStore((state) => state.setUser);
 
-  const {userStats} = useReferralStatsStore();
-  const setUserStats = useReferralStatsStore((state) => state.setUserStats);
-
+  // Fetch the user's role only once when `session.user` is set
   useEffect(() => {
-    if (session?.user) {
-      setUser({
-        name: session.user.name || '',
-        email: session.user.email || '',
-        image: session.user.image || '',
-        role: session.user.role || '',
-      });
-
-      const getUserStats = async () => {
-       try {
-        const stats = await ReferralService.getReferralStats(session.user.email);
-        setUserStats(stats);
-        console.log("User stats fetched")
-       } catch {
-          console.log("Failed to fetch user stats")
-       }
+    const initializeUser = async () => {
+      if (session?.user) {
+        const userRole = await AuthService.getUserRole(session.user.email);
+        console.log(userRole, "userRole");
+        setUser({
+          name: session.user.name || "",
+          email: session.user.email || "",
+          image: session.user.image || "",
+          role: userRole || "",
+        });
+      } else {
+        setUser(null);
       }
+    };
 
-      getUserStats();
-
-    } else {
-      setUser(null);
-    }
-  }, [session, setUser]);
+    initializeUser();
+  }, [session?.user, setUser]); // Only runs when `session.user` changes
 
   return <>{children}</>;
 }
