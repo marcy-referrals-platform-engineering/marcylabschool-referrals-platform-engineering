@@ -3,17 +3,17 @@ import { useEffect, useState } from "react";
 import { useStore } from "@/app/state/useStore";
 import ReferralService from "@/app/services/ReferralService";
 import TableOneLoading from "./TabelOneLoading";
-import AuthService from "@/app/services/AuthService";
+import CheckBoxModal from "./CheckBoxModal";
+
 const TableOne = () => {
   const { user } = useStore();
   const [referrals, setReferrals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     if (!user) return;
     const { email } = user;
 
-    
     const fetchReferrals = async () => {
       setLoading(true); // Start loading
       const data = await ReferralService.fetchReferrals(email);
@@ -36,7 +36,6 @@ const TableOne = () => {
 
   // Toggle function to update the state
   const toggleStatus = (index: number, field: string) => {
-    console.log(user)
     if (user) {
       if (user.role !== "ADMIN") return; // Only allow toggling if user is an ADMIN
       setReferrals((prevReferrals) =>
@@ -103,67 +102,35 @@ const TableOne = () => {
                   {referral.email}
                 </td>
                 <td
-                  className={`p-2.5 xl:p-5 text-center cursor-pointer `}
-                  onClick={() => toggleStatus(index, "hasToured")}
+                  className="p-2.5 xl:p-5 text-center "
+                  
                 >
-                  <div
-                    className={`w-6 h-6 ml-8 flex items-center justify-center rounded ${
-                      referral.hasToured ? "bg-green-200" : "bg-red-200"
-                    }`}
-                  >
-                    {referral.hasToured ? (
-                      <span className="text-green-600">&#10003;</span>
-                    ) : (
-                      <span className="text-red-600">×</span>
-                    )}
+                  <div className="flex justify-center items-center h-full">
+                    <CheckBoxModal handler={() => toggleStatus(index, "hasToured")} conditionTrue={referral.hasToured} />
                   </div>
                 </td>
                 <td
-                  className={`p-2.5 xl:p-5 text-center cursor-pointer `}
-                  onClick={() => toggleStatus(index, "hasApplied")}
+                  className="p-2.5 xl:p-5 text-center "
+                
                 >
-                  <div
-                    className={`w-6 h-6 flex ml-8 items-center justify-center rounded ${
-                      referral.hasApplied ? "bg-green-200" : "bg-red-200"
-                    }`}
-                  >
-                    {referral.hasApplied ? (
-                      <span className="text-green-600">&#10003;</span>
-                    ) : (
-                      <span className="text-red-600">×</span>
-                    )}
+                  <div className="flex justify-center items-center h-full">
+                    <CheckBoxModal handler={() => toggleStatus(index, "hasApplied")} conditionTrue={referral.hasApplied} />
                   </div>
                 </td>
                 <td
-                  className={`p-2.5 xl:p-5 text-center cursor-pointer `}
-                  onClick={() => toggleStatus(index, "hasBeenAccepted")}
+                  className="p-2.5 xl:p-5 text-center "
+                  
                 >
-                  <div
-                    className={`w-6 h-6 flex items-center justify-center ml-8  rounded ${
-                      referral.hasBeenAccepted ? "bg-green-200" : "bg-red-200"
-                    }`}
-                  >
-                    {referral.hasBeenAccepted ? (
-                      <span className="text-green-600">&#10003;</span>
-                    ) : (
-                      <span className="text-red-600">×</span>
-                    )}
+                  <div className="flex justify-center items-center h-full">
+                    <CheckBoxModal handler={() => toggleStatus(index, "hasBeenAccepted")} conditionTrue={referral.hasBeenAccepted} />
                   </div>
                 </td>
                 <td
-                  className={`p-2.5 xl:p-5 text-center cursor-pointer `}
-                  onClick={() => toggleStatus(index, "hasEnrolled")}
+                  className="p-2.5 xl:p-5 text-center cursor-pointer"
+                  
                 >
-                  <div
-                    className={`w-6 h-6 flex items-center justify-center ml-8 rounded ${
-                      referral.hasEnrolled ? "bg-green-200" : "bg-red-200"
-                    }`}
-                  >
-                    {referral.hasEnrolled ? (
-                      <span className="text-green-600">&#10003;</span>
-                    ) : (
-                      <span className="text-red-600">×</span>
-                    )}
+                  <div className="flex justify-center items-center h-full">
+                    <CheckBoxModal handler={() => toggleStatus(index, "hasEnrolled")} conditionTrue={referral.hasEnrolled} />
                   </div>
                 </td>
               </tr>
