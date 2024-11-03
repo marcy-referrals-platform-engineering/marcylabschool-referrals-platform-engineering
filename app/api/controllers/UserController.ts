@@ -2,6 +2,16 @@ import User from '../models/User'
 import { NextResponse } from 'next/server';
 
 export class UserController {
+
+  static async getUserRole(email: string) {
+    try {
+      const userRole = await User.getUserRole(email);
+      return NextResponse.json(userRole, { status: 200 });
+    } catch (error: any) {
+      console.error('Error fetching user role:', error);
+      return NextResponse.json({ message: 'Failed to fetch user role', details: error.message }, { status: 500 });
+    }
+  }
   static async requestAuthorization(data: any) {
     try {
       await User.requestEmailAuthorization(data);

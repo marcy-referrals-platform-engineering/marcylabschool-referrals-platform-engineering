@@ -1,4 +1,4 @@
-// state/useStore.ts
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -52,12 +52,4 @@ export const useSidebarStore = create<SidebarState>((set) => ({
 }));
 
 
-interface userStatsState {
-  userStats: any;
-  setUserStats: (userStats: any) => void;
-}
 
-export const useReferralStatsStore = create<userStatsState>((set) => ({
-  userStats: null,
-  setUserStats: (userStats: any) => set(() => ({ userStats })),
-}))

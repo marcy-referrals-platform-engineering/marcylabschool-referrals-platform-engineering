@@ -1,6 +1,18 @@
 import prisma from "../../../prisma/client";
 import { aggregateMonthlyData, aggregateWeeklyData, calculateTotals } from "../utils/referralDataUtils";
 export default class User {
+   static async getUserRole(email: string) {
+        try {
+            const userRole = await prisma.authorizedEmails.findFirst({
+                where: { email },
+                select: { role: true }
+            })
+            return userRole;
+        } catch (error) {
+            console.error("Error fetching user role:", error);
+            throw new Error("Could not retrieve user role");
+        }
+   }
 
     static async requestEmailAuthorization(data: { email: string, name: string, img: string }) {
         const request = await prisma.authorizationRequests.create({

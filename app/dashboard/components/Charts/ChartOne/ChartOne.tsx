@@ -3,7 +3,7 @@
 import { ApexOptions } from "apexcharts";
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { useReferralStatsStore } from "@/app/state/useStore";
+
 import ChartOneLoading from "./ChartOneLoading";
 import { ChartData, formatLineChartData } from "@/app/utils/chartutils";
 
@@ -106,18 +106,19 @@ const options: ApexOptions = {
   },
 };
 
-const ChartOne: React.FC = () => {
-  const { userStats } = useReferralStatsStore();
+const ChartOne = ({userStats} : {userStats : any}) => {
+  
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [loading, setLoading] = useState(true);
+
   // Set the component as hydrated after mounting
   useEffect(() => {
     setHydrated(true);
   }, []);
 
   useEffect(() => {
-    // Setting loading to false after a delay
+    // Simulate loading delay
     const timer = setTimeout(() => setLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
@@ -130,28 +131,18 @@ const ChartOne: React.FC = () => {
     }
   }, [userStats]);
 
-  // Show loading until component is hydrated and chartData is available
-  if (
-    !hydrated ||
-    !userStats ||
-    !chartData ||
-    chartData.series.length === 0 ||
-    chartData.categories.length === 0
-  ) {
-    return <ChartOneLoading />;
-  }
-
   return (
-    <div className=" col-span-12 xl:col-span-8">
-      <div className={`${!loading ? "hidden" : "grid"}`}>
+    <div className="col-span-12 xl:col-span-8">
+      {/* Loading Component */}
+      <div className={`${loading ? "block" : "hidden"}`}>
         <ChartOneLoading />
       </div>
 
+      {/* Main Content */}
       <div
-        className={
-          "col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8" +
-          `${loading ? "hidden" : "grid"}`
-        }
+        className={`col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8 ${
+          loading ? "hidden" : "block"
+        }`}
       >
         <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
           <div className="flex w-full flex-wrap gap-3 sm:gap-5">
@@ -184,9 +175,9 @@ const ChartOne: React.FC = () => {
             <ReactApexChart
               options={{
                 ...options,
-                xaxis: { ...options.xaxis, categories: chartData.categories },
+                xaxis: { ...options.xaxis, categories: chartData?.categories || [] },
               }}
-              series={chartData.series}
+              series={chartData?.series || []}
               type="area"
               height={350}
               width="100%"
