@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import CardDataLoading from "./CardDataLoading";
@@ -8,6 +8,7 @@ interface CardDataStatsProps {
   rate: string;
   levelUp?: boolean;
   levelDown?: boolean;
+  levelStatic?: boolean;
   children: ReactNode;
 }
 
@@ -17,17 +18,20 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
   rate,
   levelUp,
   levelDown,
+  levelStatic,
   children,
 }) => {
-
   const [loaded, setLoaded] = useState(false);
-
+  let textStyle;
+  if (levelUp) textStyle = "text-meta-3";
+  if (levelDown) textStyle = "text-red-500";
+  if (levelStatic) textStyle = "text-meta-5";
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
-    }, 300)
+    }, 300);
   }, []);
-  return loaded?  (
+  return loaded ? (
     <div className="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default">
       <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
         {children}
@@ -42,9 +46,7 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
         </div>
 
         <span
-          className={`flex items-center gap-1 text-sm font-medium ${
-            levelUp && "text-meta-3"
-          } ${levelDown && "text-meta-5"} `}
+          className={`flex items-center gap-1 text-sm ${textStyle} font-medium `}
         >
           {rate}
 
@@ -65,7 +67,7 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
           )}
           {levelDown && (
             <svg
-              className="fill-meta-5"
+              className="fill-red-500"
               width="10"
               height="11"
               viewBox="0 0 10 11"
@@ -78,11 +80,30 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
               />
             </svg>
           )}
+          {levelStatic && (
+            <svg
+              className="fill-meta-5"
+              width="10"
+              height="11"
+              viewBox="0 0 10 11"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 5.5H10"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          )}
+          {}
         </span>
       </div>
     </div>
-  ): 
-  (<CardDataLoading />)
+  ) : (
+    <CardDataLoading />
+  );
 };
 
 export default CardDataStats;

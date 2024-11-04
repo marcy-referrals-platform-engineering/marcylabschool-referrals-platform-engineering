@@ -12,7 +12,7 @@ const style = {
   width: 400,
   bgcolor: "background.paper",
   outline: "none",
-  boxShadow: 24,
+
   borderRadius: "5px",
   p: 4,
   padding: "3rem",
@@ -69,10 +69,11 @@ export default function CheckBoxModal({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <h1 className=" text-[2rem] text-center pb-5">ARE YOU SURE?</h1>
           <h1 className="text-[1rem]" id="modal-modal-title">
-            Are you sure you want to mark milestone '{condition}'{" "}
+            You are attempting to mark milestone '{condition}'{" "}
             {conditionTrue ? "as incomplete" : " as complete"} for canidate{" "}
-            <span className="font-medium">{data.canidate}</span> ?
+            <span className="font-medium">{data.canidate}</span>
           </h1>
           <h1 className="text-[1rem] pt-4" id="modal-modal-title">
             Doing so will{" "}
@@ -96,13 +97,13 @@ export default function CheckBoxModal({
           </h1>
           <div className="flex gap-3 pt-10 justify-center m-auto">
             <button
-              className="p-2 text-[0.9rem] text-red-500 border hover:opacity-50 duration-200 rounded px-2 bg-red-100 "
+              className="p-2 text-[0.9rem]   text-red-500  hover:opacity-50 duration-200 rounded px-2 bg-red-100 "
               onClick={() => handleClose()}
             >
               CANCEL
             </button>
             <button
-              className="p-2 text-[0.9rem] px-2 hover:opacity-50 rounded bg-green-100 text-green-500  duration-200"
+              className="p-2 text-[0.9rem] px-2 hover:opacity-50 rounded bg-green-100 text-green-500   duration-200"
               onClick={() => handleContinue()}
             >
               CONTINUE

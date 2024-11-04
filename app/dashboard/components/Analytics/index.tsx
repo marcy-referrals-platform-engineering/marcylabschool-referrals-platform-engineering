@@ -50,46 +50,37 @@ const Analytics: React.FC = () => {
     }
   }, [refresh, user?.email]); // Refetch data when `refresh` or `user.email` changes
 
-  // Calculate the percentage increase based on userStats
   useEffect(() => {
     if (userStats) {
-      const weeklyData = userStats.weeklyData;
+      const { thisWeek } = userStats.weeklyData;
+      const totalPoints = userStats.totalPoints;
+      const totalReferrals = userStats.totalReferrals;
 
-      const daysWithData = weeklyData.filter(
-        (day: any) => day.points > 0 || day.referrals > 0
-      );
-      const baselinePoints = daysWithData.reduce(
-        (total: any, day: any) => total + day.points,
+      // Calculate points earned this week
+      const pointsThisWeek = thisWeek.reduce(
+        (total: number, day: any) => total + day.points,
         0
       );
-      const baselineReferrals = daysWithData.reduce(
-        (total: any, day: any) => total + day.referrals,
-        0
-      );
-
-      const currentWeekPoints = weeklyData.reduce(
-        (total: any, day: any) => total + day.points,
-        0
-      );
-      const currentWeekReferrals = weeklyData.reduce(
-        (total: any, day: any) => total + day.referrals,
+      const referralsThisWeek = thisWeek.reduce(
+        (total: number, day: any) => total + day.referrals,
         0
       );
 
+      // Calculate previous total (total before this week's points were earned)
+      const previousTotalPoints = totalPoints - pointsThisWeek;
+      const previousTotalReferrals = totalReferrals - referralsThisWeek;
+
+      // Calculate the percentage increase in points
       const pointsIncreasePercentage =
-        baselinePoints > 0
-          ? Math.round(
-              ((currentWeekPoints - baselinePoints) / baselinePoints) * 100
-            )
-          : 0;
+        previousTotalPoints > 0
+          ? Math.round((pointsThisWeek / previousTotalPoints) * 100)
+          : 100;
 
+      // Calculate the percentage increase in referrals
       const referralsIncreasePercentage =
-        baselineReferrals > 0
-          ? Math.round(
-              ((currentWeekReferrals - baselineReferrals) / baselineReferrals) *
-                100
-            )
-          : 0;
+        previousTotalReferrals > 0
+          ? Math.round((referralsThisWeek / previousTotalReferrals) * 100)
+          : 100;
 
       setPercentIncrease({
         referrals: referralsIncreasePercentage,
@@ -98,11 +89,13 @@ const Analytics: React.FC = () => {
     }
   }, [userStats]);
 
+  console.log("userstats", userStats);
+
   // Show Loader if component is not hydrated, data is loading, or there’s an error
   if (!hydrated || isLoading || error) {
     return <Loader />;
   }
-  
+
   // Show Loader if component is not hydrated, data is loading, or there’s an error
   if (!hydrated || isLoading || error) {
     return <Loader />;
@@ -114,9 +107,11 @@ const Analytics: React.FC = () => {
           title="Total Points"
           total={userStats?.totalPoints}
           rate={`${percentIncrease.points}%`}
-          {...(percentIncrease.points > 0
-            ? { levelUp: true }
-            : { levelDown: true })}
+          {...(percentIncrease.points != 0
+            ? percentIncrease.points > 0
+              ? { levelUp: true }
+              : { levelDown: true }
+            : { levelStatic: true })}
         >
           <svg
             stroke="currentColor"
@@ -140,9 +135,11 @@ const Analytics: React.FC = () => {
           title="Total Referrals"
           total={userStats?.totalReferrals}
           rate={`${percentIncrease.referrals}%`}
-          {...(percentIncrease.referrals > 0
-            ? { levelUp: true }
-            : { levelDown: true })}
+          {...(percentIncrease.referrals != 0
+            ? percentIncrease.referrals > 0
+              ? { levelUp: true }
+              : { levelDown: true }
+            : { levelStatic: true })}
         >
           <svg
             stroke="currentColor"
@@ -188,8 +185,6 @@ const Analytics: React.FC = () => {
           </svg>
         </CardDataStats> */}
       </div>
-
-     
 
       <div className="mt-4 grid mb-4 grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         <TableOne refresh={() => setRefresh(!refresh)} />
