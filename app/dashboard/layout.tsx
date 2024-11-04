@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <div className="overflow-scroll h-screen">{children}</div>
+        <div className="overflow-scroll bg-gray-50 h-screen">{children}</div>
       </body>
     </html>
   );

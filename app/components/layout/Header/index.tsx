@@ -30,6 +30,7 @@ const Header = ({
     }
     return false;
   };
+  console.log(user)
 
   useEffect(() => {
     if (window.location.hash) {

@@ -8,6 +8,7 @@ import Loader from "@/app/components/ui/Loader";
 import { useStore } from "@/app/state/useStore";
 import CardDataStats from "../DataCard/CardDataStats";
 import TableOne from "../Tables/TableOne/TableOne";
+import AuthRequests from "./AuthRequests";
 
 // Fetcher function for SWR
 const fetchReferralStats = (email: string) =>
@@ -102,7 +103,8 @@ const Analytics: React.FC = () => {
   }
   return (
     <div className="  lg:w-[90%] m-auto  flex-col justify-center  h-screen">
-      <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
+      <div>
+              <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
         <CardDataStats
           title="Total Points"
           total={userStats?.totalPoints}
@@ -163,27 +165,9 @@ const Analytics: React.FC = () => {
             />
           </svg>
         </CardDataStats>
+        <AuthRequests />
 
-        {/* <CardDataStats title="Pending Points" total="0" rate="0%" levelUp>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="25"
-            height="25"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M8 2h8"></path>
-            <path d="M8 22h8"></path>
-            <path d="M12 16a4 4 0 0 0 4-4"></path>
-            <path d="M12 8a4 4 0 0 1-4 4"></path>
-            <path d="M7 2a5 5 0 0 0 5 5 5 5 0 0 0 5-5"></path>
-            <path d="M7 22a5 5 0 0 1 5-5 5 5 0 0 1 5 5"></path>
-          </svg>
-        </CardDataStats> */}
+        
       </div>
 
       <div className="mt-4 grid mb-4 grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
@@ -191,6 +175,8 @@ const Analytics: React.FC = () => {
         <ChartTwo userStats={userStats} />
       </div>
       <ChartOne userStats={userStats} />
+      </div>
+      
     </div>
   );
 };

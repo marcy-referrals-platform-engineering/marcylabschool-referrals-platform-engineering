@@ -1,4 +1,3 @@
-import next from "next";
 import Referral from "../models/Referral";
 import { NextResponse } from 'next/server';
 

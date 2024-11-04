@@ -28,6 +28,8 @@ export default class User {
         return request;
     }
 
+
+
     static async getReferralStats(email: string) {
         try {
             const userRole = await prisma.authorizedEmails.findFirst({
