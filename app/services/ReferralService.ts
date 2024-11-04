@@ -16,7 +16,7 @@ export default class ReferralService {
             console.log("Failed to fetch referral stats")
             return null;
         }
-        return response;    
+        return response;
     }
 
     static async fetchReferrals(email: string): Promise<any> {
@@ -31,6 +31,21 @@ export default class ReferralService {
             console.error("Error fetching referrals:", error);
             return null;
         }
+    }
+
+    static async updateReferralStatus(referralId: number, milestone: string): Promise<any> {
+        try {
+            console.log('Frontend referral id', referralId)
+            const response = await apiFetch('/api/referral/update-status', 'PATCH', { referralId, milestone });
+            if (!response.ok) {
+                console.log('Failed to update referral status');
+                return null;
+            }
+        } catch (error) {
+            console.error("Error updated referral status, error");
+            return null
+        }
+
     }
 
 }

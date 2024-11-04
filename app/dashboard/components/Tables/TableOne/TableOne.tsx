@@ -5,7 +5,7 @@ import ReferralService from "@/app/services/ReferralService";
 import TableOneLoading from "./TabelOneLoading";
 import CheckBoxModal from "./CheckBoxModal";
 
-const TableOne = () => {
+const TableOne = ({refresh} : {refresh: any}) => {
   const { user } = useStore();
   const [referrals, setReferrals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +33,8 @@ const TableOne = () => {
 
     fetchReferrals();
   }, [user]);
-  console.log(referrals)
+  console.log(referrals);
+
 
   // Toggle function to update the state
   const toggleStatus = (index: number, field: string) => {
@@ -43,8 +44,11 @@ const TableOne = () => {
         prevReferrals.map((referral, i) =>
           i === index ? { ...referral, [field]: !referral[field] } : referral
         )
-      );
+      )
+      refresh()
     }
+
+    
   };
 
   // Render a loading indicator if still loading
@@ -53,7 +57,7 @@ const TableOne = () => {
   }
 
   return (
-    <div className="col-span-12 xl:col-span-8 overflow-scroll rounded-sm border border-stroke bg-white px-5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
+    <div className="col-span-12 xl:col-span-8  rounded-sm border border-stroke bg-white px-5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
       <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
         YOUR REFERRALS
       </h4>
@@ -70,10 +74,11 @@ const TableOne = () => {
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-100">
-              {user?.role === 'ADMIN' && 
-              <th className="p-2.5 xl:p-5 text-sm font-medium uppercase text-left xsm:text-base">
-                REFERRER
-              </th> }
+              {user?.role === "ADMIN" && (
+                <th className="p-2.5 xl:p-5 text-sm font-medium uppercase text-left xsm:text-base">
+                  REFERRER
+                </th>
+              )}
               <th className="p-2.5 xl:p-5 text-sm font-medium uppercase text-left xsm:text-base">
                 Name
               </th>
@@ -100,47 +105,79 @@ const TableOne = () => {
                 key={index}
                 className="border-b border-stroke dark:border-strokedark"
               >
-              {user?.role === 'ADMIN' &&
-              <td className="p-2.5 xl:p-5 text-black dark:text-white">
-              {referral.referrerName}
-            </td>
-              }
+                {user?.role === "ADMIN" && (
+                  <td className="p-2.5 xl:p-5 text-black dark:text-white">
+                    {referral.referrerName}
+                  </td>
+                )}
                 <td className="p-2.5 xl:p-5 text-black dark:text-white">
                   {referral.name}
                 </td>
                 <td className="p-2.5 xl:p-5 text-black dark:text-white">
                   {referral.email}
                 </td>
-                <td
-                  className="p-2.5 xl:p-5 text-center "
-                  
-                >
+                <td className="p-2.5 xl:p-5 text-center ">
                   <div className="flex justify-center items-center h-full">
-                    <CheckBoxModal data={{referrer: referral.referrerName, canidate: referral.name}} condition={'Attended Tour'} points={20} handler={() => toggleStatus(index, "hasToured")} conditionTrue={referral.hasToured} />
+                    <CheckBoxModal
+                      data={{
+                        referrer: referral.referrerName,
+                        canidate: referral.name,
+                        milestone: "hasToured",
+                        id: referral.id,
+                      }}
+                      condition={"Attended Tour"}
+                      points={20}
+                      handler={() => toggleStatus(index, "hasToured")}
+                      conditionTrue={referral.hasToured}
+                    />
                   </div>
                 </td>
-                <td
-                  className="p-2.5 xl:p-5 text-center "
-                
-                >
+                <td className="p-2.5 xl:p-5 text-center ">
                   <div className="flex justify-center items-center h-full">
-                    <CheckBoxModal data={{referrer: referral.referrerName, canidate: referral.name}} condition={"Submitted Application"} points={50} handler={() => toggleStatus(index, "hasApplied")} conditionTrue={referral.hasApplied} />
+                    <CheckBoxModal
+                      data={{
+                        referrer: referral.referrerName,
+                        canidate: referral.name,
+                        milestone: "hasApplied",
+                        id: referral.id,
+                      }}
+                      condition={"Submitted Application"}
+                      points={50}
+                      handler={() => toggleStatus(index, "hasApplied")}
+                      conditionTrue={referral.hasApplied}
+                    />
                   </div>
                 </td>
-                <td
-                  className="p-2.5 xl:p-5 text-center "
-                  
-                >
+                <td className="p-2.5 xl:p-5 text-center ">
                   <div className="flex justify-center items-center h-full">
-                    <CheckBoxModal data={{referrer: referral.referrerName, canidate: referral.name }} condition={"Recieved Offer"} points={100} handler={() => toggleStatus(index, "hasBeenAccepted")} conditionTrue={referral.hasBeenAccepted} />
+                    <CheckBoxModal
+                      data={{
+                        referrer: referral.referrerName,
+                        canidate: referral.name,
+                        milestone: "hasBeenAccepted",
+                        id: referral.id,
+                      }}
+                      condition={"Recieved Offer"}
+                      points={100}
+                      handler={() => toggleStatus(index, "hasBeenAccepted")}
+                      conditionTrue={referral.hasBeenAccepted}
+                    />
                   </div>
                 </td>
-                <td
-                  className="p-2.5 xl:p-5 text-center cursor-pointer"
-                  
-                >
+                <td className="p-2.5 xl:p-5 text-center cursor-pointer">
                   <div className="flex justify-center items-center h-full">
-                    <CheckBoxModal data={{referrer: referral.referrerName, canidate: referral.name}} condition={"Enrolled In Fellowship"} points={200} handler={() => toggleStatus(index, "hasEnrolled")} conditionTrue={referral.hasEnrolled} />
+                    <CheckBoxModal
+                      data={{
+                        referrer: referral.referrerName,
+                        canidate: referral.name,
+                        milestone: "hasEnrolled",
+                        id: referral.id,
+                      }}
+                      condition={"Enrolled In Fellowship"}
+                      points={200}
+                      handler={() => toggleStatus(index, "hasEnrolled")}
+                      conditionTrue={referral.hasEnrolled}
+                    />
                   </div>
                 </td>
               </tr>

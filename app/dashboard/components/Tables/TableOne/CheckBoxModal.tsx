@@ -2,6 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+import ReferralService from "@/app/services/ReferralService";
 
 const style = {
   position: "absolute",
@@ -33,8 +34,17 @@ export default function CheckBoxModal({
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
   const handleContinue = () => {
-    handler();
+    const updateStatus = async () => {
+      console.log(data.id, data.milestone)
+      const updatedReferral = await ReferralService.updateReferralStatus(
+        data.id,
+        data.milestone
+      );
+      handler();
+    };
+    updateStatus()
     handleClose();
   };
   return (
@@ -60,7 +70,7 @@ export default function CheckBoxModal({
       >
         <Box sx={style}>
           <h1 className="text-[1rem]" id="modal-modal-title">
-            Are you sure uou want to mark milestone '{condition}'{" "}
+            Are you sure you want to mark milestone '{condition}'{" "}
             {conditionTrue ? "as incomplete" : " as complete"} for canidate{" "}
             <span className="font-medium">{data.canidate}</span> ?
           </h1>

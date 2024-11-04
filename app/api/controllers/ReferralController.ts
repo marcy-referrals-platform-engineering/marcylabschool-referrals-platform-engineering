@@ -24,4 +24,15 @@ export default class ReferralController {
             return NextResponse.json({ message: 'Failed to fetch referrals', details: error.message }, { status: 500 });
         }
     }
+
+    static async updateMileStoneStatus(data: { referralId: number, milestone: string }) {
+        try {
+            const { referralId, milestone } = data
+            const updatedReferral = await Referral.updateMilestoneStatus(referralId, milestone)
+            return NextResponse.json(updatedReferral, { status: 200 })
+        } catch (error: any) {
+            console.error('Error Occured:', error)
+            return NextResponse.json({ message: 'Failed to update milestone status', details: error.message }, { status: 500 })
+        }
+    }
 }

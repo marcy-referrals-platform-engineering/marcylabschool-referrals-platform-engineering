@@ -1,7 +1,7 @@
 
 function ChartTwoLoading() {
   return (
-    <div className="h-[28.8rem] col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
+    <div className="h-[27.2rem] col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
       <div className="animate-pulse flex flex-col h-full">
         {/* Title Skeleton */}
         <div className="h-4 w-36 bg-gray-300 rounded mb-3 dark:bg-gray-600"></div>

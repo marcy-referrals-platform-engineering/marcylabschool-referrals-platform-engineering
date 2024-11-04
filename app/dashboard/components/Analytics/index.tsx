@@ -1,5 +1,5 @@
 "use client";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr"; // Import mutate
 import ReferralService from "@/app/services/ReferralService";
 import React, { useEffect, useState } from "react";
 import ChartOne from "../Charts/ChartOne/ChartOne";
@@ -15,6 +15,7 @@ const fetchReferralStats = (email: string) =>
 
 const Analytics: React.FC = () => {
   const { user } = useStore();
+  const [refresh, setRefresh] = useState(false);
   const [percentIncrease, setPercentIncrease] = useState({
     referrals: 0,
     points: 0,
@@ -41,6 +42,13 @@ const Analytics: React.FC = () => {
   useEffect(() => {
     setHydrated(true);
   }, []);
+
+  // Trigger SWR refetch when `refresh` state changes
+  useEffect(() => {
+    if (user?.email) {
+      mutate(`referral-stats-${user.email}`);
+    }
+  }, [refresh, user?.email]); // Refetch data when `refresh` or `user.email` changes
 
   // Calculate the percentage increase based on userStats
   useEffect(() => {
@@ -94,8 +102,13 @@ const Analytics: React.FC = () => {
   if (!hydrated || isLoading || error) {
     return <Loader />;
   }
+  
+  // Show Loader if component is not hydrated, data is loading, or there’s an error
+  if (!hydrated || isLoading || error) {
+    return <Loader />;
+  }
   return (
-    <div className="  flex-col justify-center  h-screen">
+    <div className="  lg:w-[90%] m-auto  flex-col justify-center  h-screen">
       <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
         <CardDataStats
           title="Total Points"
@@ -179,7 +192,7 @@ const Analytics: React.FC = () => {
      
 
       <div className="mt-4 grid mb-4 grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <TableOne />
+        <TableOne refresh={() => setRefresh(!refresh)} />
         <ChartTwo userStats={userStats} />
       </div>
       <ChartOne userStats={userStats} />
