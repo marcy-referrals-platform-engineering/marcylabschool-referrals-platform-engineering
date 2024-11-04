@@ -33,6 +33,7 @@ const TableOne = () => {
 
     fetchReferrals();
   }, [user]);
+  console.log(referrals)
 
   // Toggle function to update the state
   const toggleStatus = (index: number, field: string) => {
@@ -69,6 +70,10 @@ const TableOne = () => {
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-100">
+              {user?.role === 'ADMIN' && 
+              <th className="p-2.5 xl:p-5 text-sm font-medium uppercase text-left xsm:text-base">
+                REFERRER
+              </th> }
               <th className="p-2.5 xl:p-5 text-sm font-medium uppercase text-left xsm:text-base">
                 Name
               </th>
@@ -82,7 +87,7 @@ const TableOne = () => {
                 Applied
               </th>
               <th className="p-2.5 xl:p-5 text-sm font-medium uppercase text-center xsm:text-base">
-                Accepted
+                Offered
               </th>
               <th className="p-2.5 xl:p-5 text-sm font-medium uppercase text-center xsm:text-base">
                 Enrolled
@@ -95,6 +100,11 @@ const TableOne = () => {
                 key={index}
                 className="border-b border-stroke dark:border-strokedark"
               >
+              {user?.role === 'ADMIN' &&
+              <td className="p-2.5 xl:p-5 text-black dark:text-white">
+              {referral.referrerName}
+            </td>
+              }
                 <td className="p-2.5 xl:p-5 text-black dark:text-white">
                   {referral.name}
                 </td>
@@ -106,7 +116,7 @@ const TableOne = () => {
                   
                 >
                   <div className="flex justify-center items-center h-full">
-                    <CheckBoxModal handler={() => toggleStatus(index, "hasToured")} conditionTrue={referral.hasToured} />
+                    <CheckBoxModal data={{referrer: referral.referrerName, canidate: referral.name}} condition={'Attended Tour'} points={20} handler={() => toggleStatus(index, "hasToured")} conditionTrue={referral.hasToured} />
                   </div>
                 </td>
                 <td
@@ -114,7 +124,7 @@ const TableOne = () => {
                 
                 >
                   <div className="flex justify-center items-center h-full">
-                    <CheckBoxModal handler={() => toggleStatus(index, "hasApplied")} conditionTrue={referral.hasApplied} />
+                    <CheckBoxModal data={{referrer: referral.referrerName, canidate: referral.name}} condition={"Submitted Application"} points={50} handler={() => toggleStatus(index, "hasApplied")} conditionTrue={referral.hasApplied} />
                   </div>
                 </td>
                 <td
@@ -122,7 +132,7 @@ const TableOne = () => {
                   
                 >
                   <div className="flex justify-center items-center h-full">
-                    <CheckBoxModal handler={() => toggleStatus(index, "hasBeenAccepted")} conditionTrue={referral.hasBeenAccepted} />
+                    <CheckBoxModal data={{referrer: referral.referrerName, canidate: referral.name }} condition={"Recieved Offer"} points={100} handler={() => toggleStatus(index, "hasBeenAccepted")} conditionTrue={referral.hasBeenAccepted} />
                   </div>
                 </td>
                 <td
@@ -130,7 +140,7 @@ const TableOne = () => {
                   
                 >
                   <div className="flex justify-center items-center h-full">
-                    <CheckBoxModal handler={() => toggleStatus(index, "hasEnrolled")} conditionTrue={referral.hasEnrolled} />
+                    <CheckBoxModal data={{referrer: referral.referrerName, canidate: referral.name}} condition={"Enrolled In Fellowship"} points={200} handler={() => toggleStatus(index, "hasEnrolled")} conditionTrue={referral.hasEnrolled} />
                   </div>
                 </td>
               </tr>

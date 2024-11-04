@@ -13,7 +13,10 @@ model AuthorizedEmails {
   email     String     @unique
   createdAt DateTime   @default(now())
   role      Role       @default(USER)
+  name      String?
   referrals Referral[]
+
+  @@unique([email, name])
 }
 
 model Referral {
@@ -29,7 +32,8 @@ model Referral {
   hasBeenAccepted DateTime?
   hasEnrolled     DateTime?
   hasToured       DateTime?
-  referrer        AuthorizedEmails @relation(fields: [referrerEmail], references: [email])
+  referrerName    String
+  referrer        AuthorizedEmails @relation(fields: [referrerEmail, referrerName], references: [email, name])
 }
 
 model AuthorizationRequests {
