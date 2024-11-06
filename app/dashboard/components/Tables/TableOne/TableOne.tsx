@@ -33,6 +33,19 @@ const TableOne = ({ refresh }: { refresh: any }) => {
 
     fetchReferrals();
   }, [user]);
+
+  const toggleReviewed = (id: number) => {
+    console.log('id',id)
+    const updateReviewedStatus = async () => {
+      await ReferralService.updateReviewStatus(id);
+    }
+    updateReviewedStatus()
+    setSelectedReferral(null)
+    setReferrals((prevReferrals) => prevReferrals.map((referral) => referral.id === id ? {...referral, reviewed: true} : referral))
+
+  }
+
+
 console.log('referrals',referrals)
   const toggleStatus = (index: number, field: string) => {
     if (user && user.role === "ADMIN") {
@@ -48,7 +61,7 @@ console.log('referrals',referrals)
   if (loading) {
     return <TableOneLoading />;
   }
-
+  
   return (
     <div className="col-span-12 xl:col-span-8 rounded-sm border border-stroke bg-white px-3 pt-5 sm:px-5 xl:pb-1">
       <h4 className="mb-3 text-lg font-semibold text-black dark:text-white">
@@ -65,10 +78,10 @@ console.log('referrals',referrals)
                 </th>
               )}
               <th className="p-2 text-sm font-medium uppercase text-left">
-                Name
+                Canidate Name
               </th>
               <th className="p-2 text-sm font-medium uppercase text-left">
-                Email
+              Canidate Email
               </th>
 
               {/* Milestones are visible only on large screens */}
@@ -92,10 +105,14 @@ console.log('referrals',referrals)
             {referrals.map((referral, index) => (
               <tr
                 key={index}
-                className="border-b border-stroke dark:border-strokedark"
+                className="border-b  border-stroke dark:border-strokedark"
               >
                 {user?.role === "ADMIN" && (
-                  <td className="p-2 text-sm text-black dark:text-white">
+                  <td className="p-2  flex items-center gap-1 text-sm text-black dark:text-white">
+                    {   !referral.reviewed &&
+                        (<div className="rounded-full w-2 h-2  bg-red-500"></div>)
+                    }
+                    
                     {referral.referrerName}
                   </td>
                 )}
@@ -311,6 +328,7 @@ console.log('referrals',referrals)
                 </div>
               </div>
             </div>
+            { !selectedReferral.reviewed &&   (<button onClick={() => toggleReviewed(selectedReferral?.id)} className="text-center m-auto w-full underline">Mark As Reviewed</button>)}
           </div>
         </Modal>
       )}

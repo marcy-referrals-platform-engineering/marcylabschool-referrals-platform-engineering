@@ -62,4 +62,28 @@ export default class Referral {
         return updatedReferral;
     }
 
+    static async updateReviewStatus(referralId: number) {
+        console.log('Backend referral id', referralId)
+        const referral = await prisma.referral.findUnique({
+            where: { id: referralId },
+            select: { reviewed: true }
+        });
+
+        if (!referral) {
+            throw new Error('Referral not found');
+        }
+
+        const newValue = !referral.reviewed;
+
+        const updatedReferral = await prisma.referral.update({
+            where: { id: referralId },
+            data: { reviewed: newValue }
+        });
+
+        if (!updatedReferral) {
+            throw new Error('Error updating referral reviewed status in DB');
+        }
+
+        return updatedReferral;
+    }
 }

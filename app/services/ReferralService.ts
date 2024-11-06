@@ -48,4 +48,17 @@ export default class ReferralService {
 
     }
 
+    static async updateReviewStatus(referralId: number): Promise<any> {
+        try {
+            const response = await apiFetch('/api/referral/update-review-status', 'PATCH', { referralId });
+            if (!response.ok) {
+                console.log('Failed to update review status');
+                return null;
+            }
+        } catch (error) {
+            console.error("Error updating review status:", error);
+            return null;
+        }
+    }
+
 }

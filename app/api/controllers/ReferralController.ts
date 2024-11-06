@@ -34,4 +34,14 @@ export default class ReferralController {
             return NextResponse.json({ message: 'Failed to update milestone status', details: error.message }, { status: 500 })
         }
     }
+
+    static async updateReviewStatus(referralId: number) {
+        try {
+            const updatedReferral = await Referral.updateReviewStatus(referralId)
+            return NextResponse.json(updatedReferral, { status: 200 })
+        } catch (error: any) {
+            console.error('Error Occured:', error)
+            return NextResponse.json({ message: 'Failed to update review status', details: error.message }, { status: 500 })
+        }
+    }
 }
