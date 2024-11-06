@@ -10,7 +10,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
   const [referrals, setReferrals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedReferral, setSelectedReferral] = useState<any>(null);
-
+  
   useEffect(() => {
     if (!user) return;
     const { email } = user;
@@ -33,7 +33,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
 
     fetchReferrals();
   }, [user]);
-
+console.log('referrals',referrals)
   const toggleStatus = (index: number, field: string) => {
     if (user && user.role === "ADMIN") {
       setReferrals((prevReferrals) =>
@@ -79,7 +79,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                 Applied
               </th>
               <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center">
-                Offered
+                Accepted
               </th>
               <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center">
                 Enrolled
@@ -107,7 +107,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                 </td>
 
                 {/* Milestones - show only on large screens */}
-                <td className="hidden lg:table-cell p-2 text-center">
+                <td className="hidden lg:table-cell p-2 translate-x-[1.5rem] text-center">
                   <CheckBoxModal
                     data={{
                       referrer: referral.referrerName,
@@ -121,7 +121,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                     conditionTrue={referral.hasToured}
                   />
                 </td>
-                <td className="hidden lg:table-cell p-2 text-center">
+                <td className="hidden translate-x-[1.5rem]  lg:table-cell p-2 text-center">
                   <CheckBoxModal
                     data={{
                       referrer: referral.referrerName,
@@ -135,7 +135,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                     conditionTrue={referral.hasApplied}
                   />
                 </td>
-                <td className="hidden lg:table-cell p-2 text-center">
+                <td className="hidden translate-x-[1.5rem] lg:table-cell p-2 text-center">
                   <CheckBoxModal
                     data={{
                       referrer: referral.referrerName,
@@ -149,7 +149,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                     conditionTrue={referral.hasBeenAccepted}
                   />
                 </td>
-                <td className="hidden lg:table-cell p-2 text-center">
+                <td className="hidden translate-x-[1.5rem] lg:table-cell p-2 text-center">
                   <CheckBoxModal
                     data={{
                       referrer: referral.referrerName,
@@ -165,7 +165,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                 </td>
 
                 {/* View More Button - opens modal */}
-                <td className="p-2 text-sm text-center">
+                <td className="p-2  text-sm text-center">
                   <button
                     className="text-blue-500 hover:underline"
                     onClick={() => setSelectedReferral(referral)}
@@ -186,12 +186,11 @@ const TableOne = ({ refresh }: { refresh: any }) => {
           onClose={() => setSelectedReferral(null)}
         >
           <div className="space-y-6">
-            <h3 className="text-2xl font-semibold text-gray-800 mb-2">
-              {selectedReferral.name}
-            </h3>
-
             {/* Basic Info */}
             <div className="space-y-2 text-gray-600">
+              <p>
+                <strong>Name:</strong> {selectedReferral.name}
+              </p>
               <p>
                 <strong>Email:</strong> {selectedReferral.email}
               </p>
@@ -224,7 +223,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
             </div>
 
             {/* Milestones Section */}
-            <div>
+            <div className="border-t pt-2">
               <h4 className="text-xl font-semibold text-gray-700 mb-3">
                 Milestones
               </h4>
@@ -327,33 +326,51 @@ interface ModalProps {
 
 export const Modal = ({ title, children, onClose }: ModalProps) => {
   useEffect(() => {
-   
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
-
-
     window.scrollTo(0, 0);
     document.body.style.overflow = "hidden";
-    
-    return () => {
 
+    return () => {
       document.body.style.overflow = "auto";
-   
     };
   }, []);
 
   return (
-    <div className="fixed   inset-0 z-50 flex items-center justify-center   ">
+    <div className="fixed    inset-0 z-50 flex items-center justify-center   ">
       <div className="bg-[black] translate-y-[-5rem] inset-0 m-auto bg-opacity-50 w-screen h-[120vh] animate-fade absolute "></div>
-      <div className="bg-white translate-y-[-3rem] rounded-lg shadow-lg w-11/12 max-w-lg max-h-[90vh] p-8 overflow-y-auto relative">
-        <h1 className="text-[1.5rem] font-bold mb-4 text-gray-900">{title}</h1>
+      <div className="bg-white translate-y-[-3rem] rounded-lg shadow-lg w-11/12 max-w-lg max-h-[90vh] p-12 pt-6 overflow-y-auto relative">
+        <div className=" flex gap-2 border-b  justify-center">
+        <h1 className="text-[1.5rem]  font-bold mb-4 text-gray-900">
+          {title}
+        </h1>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="black"
+              stroke-width="2"
+              fill="none"
+            />
+            <path
+              d="M12 8C11.45 8 11 8.45 11 9C11 9.55 11.45 10 12 10C12.55 10 13 9.55 13 9C13 8.45 12.55 8 12 8ZM12 12C11.45 12 11 12.45 11 13V17C11 17.55 11.45 18 12 18C12.55 18 13 17.55 13 17V13C13 12.45 12.55 12 12 12Z"
+              fill="black"
+            />
+          </svg>
+        </div>
+        
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
           onClick={onClose}
         >
           ×
         </button>
-        <div className="space-y-4">{children}</div>
+        <div className=" pt-3">{children}</div>
       </div>
     </div>
   );

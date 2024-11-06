@@ -24,10 +24,10 @@ interface ModalProps {
     }, []);
   
     return (
-      <div className="fixed  inset-0 z-50 flex items-center justify-center   ">
-        <div className="bg-[black] inset-0 m-auto bg-opacity-50 w-screen h-[110vh] animate-fade absolute "></div>
+      <div className="fixed  inset-0 z-[605] flex items-center justify-center   ">
+        <div className="bg-[black] inset-0 m-auto z-[604] bg-opacity-50 w-screen h-[110vh] animate-fade absolute "></div>
         <div className="bg-white translate-y-[-3rem] rounded-lg shadow-lg w-11/12 max-w-lg max-h-[90vh] p-8 overflow-y-auto relative">
-          <h1 className="text-[1.5rem] font-bold mb-4 text-gray-900">{title}</h1>
+          <h1 className="text-[1.5rem]  font-bold mb-4 text-gray-900">{title}</h1>
           <button
             className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
             onClick={onClose}

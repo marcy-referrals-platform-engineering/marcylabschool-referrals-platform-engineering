@@ -146,17 +146,21 @@ const ChartTwo: React.FC<{ userStats: any }> = ({ userStats }) => {
       </div>
 
       <div>
-        <div id="chartTwo" className="-mb-9  -ml-5">
-          <ReactApexChart
-            options={{
-              ...options,
-              xaxis: { ...options.xaxis, categories: chartData.categories },
-            }}
-            series={chartData.series}
-            type="bar"
-            height={350}
-            width={"100%"}
-          />
+        
+          <div id="chartTwo" className="-mb-9  -ml-5">
+            {
+              chartData.series.length && (  <ReactApexChart
+                options={{
+                  ...options,
+                  xaxis: { ...options.xaxis, categories: chartData.categories },
+                }}
+                series={chartData.series}
+                type="bar"
+                height={350}
+                width={"100%"}
+              />)
+            }
+          
         </div>
       </div>
     </div>
