@@ -5,25 +5,23 @@ import Image from "next/image";
 function AuthRequests() {
   const [requests, setRequests] = useState<any>([]);
   const [expanded, setExpanded] = useState(false);
-
+  const [hasChanged, setHasChanged] = useState(false);
 
   const handleRequest = async (requestId: number, shouldAccept: boolean) => {
-    console.log(requestId, shouldAccept)
+    console.log(requestId, shouldAccept);
     const response = await AuthService.handleAuthRequest(requestId, shouldAccept);
-    if (response) {
-      setRequests(requests.filter((request: any) => request.id !== requestId));
-    }
-  }
+    
+};
   useEffect(() => {
     async function fetchRequests() {
       const requests = await AuthService.getAuthRequests();
       if (requests) {
         setRequests(requests);
       }
-      
+      setHasChanged(!hasChanged)
     }
     fetchRequests()
-  }, [])
+  }, [hasChanged])
 
 
 

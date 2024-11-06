@@ -146,7 +146,7 @@ const ChartTwo: React.FC<{ userStats: any }> = ({ userStats }) => {
       </div>
 
       <div>
-        <div id="chartTwo" className="-mb-9 -ml-5">
+        <div id="chartTwo" className="-mb-9  -ml-5">
           <ReactApexChart
             options={{
               ...options,

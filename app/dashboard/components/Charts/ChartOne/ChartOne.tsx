@@ -176,7 +176,7 @@ const ChartOne = ({ userStats }: { userStats: any }) => {
       </div>
 
       <div
-        className={`col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5  dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8 ${
+        className={`col-span-12  rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5  dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8 ${
           loading ? "hidden" : "block"
         }`}
       >
@@ -202,7 +202,7 @@ const ChartOne = ({ userStats }: { userStats: any }) => {
         </div>
 
         <div>
-          <div id="chartOne" className="-ml-5">
+          <div id="chartOne" className=" -ml-5">
             <ReactApexChart
               key={chartKey} // Force re-render with new key
               options={chartOptions}
