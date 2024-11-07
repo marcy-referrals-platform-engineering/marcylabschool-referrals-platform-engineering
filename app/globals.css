@@ -102,3 +102,37 @@ h2 {
   animation: fade-up 1s ease-out forwards;
   will-change: opacity, transform;
 }
+
+
+@keyframes fadeDown {
+  0% {
+      opacity: 0;
+      bottom: 0;
+  }
+  100% {
+      opacity: 1;
+      bottom: -4.6rem
+  }
+}
+
+.fadeDown {
+  animation: fadeDown 0.3s ease-in-out 0.5s forwards;
+  
+}
+
+@keyframes fade  {
+  0% {
+
+      opacity: 0
+  
+  }
+  100% {
+  
+      opacity: 1
+
+  }
+}
+
+.animate-fade {
+  animation: fade 0.3s ease-in-out forwards;
+}

@@ -29,6 +29,8 @@ model Referral {
   hasBeenAccepted DateTime?
   hasEnrolled     DateTime?
   hasToured       DateTime?
+  referrerName    String
+  reviewed       Boolean          @default(false)
   referrer        AuthorizedEmails @relation(fields: [referrerEmail], references: [email])
 }
 

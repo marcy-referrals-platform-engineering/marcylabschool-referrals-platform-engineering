@@ -1,5 +1,5 @@
 "use client";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr"; // Import mutate
 import ReferralService from "@/app/services/ReferralService";
 import React, { useEffect, useState } from "react";
 import ChartOne from "../Charts/ChartOne/ChartOne";
@@ -8,6 +8,7 @@ import Loader from "@/app/components/ui/Loader";
 import { useStore } from "@/app/state/useStore";
 import CardDataStats from "../DataCard/CardDataStats";
 import TableOne from "../Tables/TableOne/TableOne";
+import AuthRequests from "./AuthRequests";
 
 // Fetcher function for SWR
 const fetchReferralStats = (email: string) =>
@@ -15,6 +16,7 @@ const fetchReferralStats = (email: string) =>
 
 const Analytics: React.FC = () => {
   const { user } = useStore();
+  const [refresh, setRefresh] = useState(false);
   const [percentIncrease, setPercentIncrease] = useState({
     referrals: 0,
     points: 0,
@@ -42,46 +44,44 @@ const Analytics: React.FC = () => {
     setHydrated(true);
   }, []);
 
-  // Calculate the percentage increase based on userStats
+  // Trigger SWR refetch when `refresh` state changes
+  useEffect(() => {
+    if (user?.email) {
+      mutate(`referral-stats-${user.email}`);
+    }
+  }, [refresh, user?.email]); // Refetch data when `refresh` or `user.email` changes
+
   useEffect(() => {
     if (userStats) {
-      const weeklyData = userStats.weeklyData;
+      const { thisWeek } = userStats.weeklyData;
+      const totalPoints = userStats.totalPoints;
+      const totalReferrals = userStats.totalReferrals;
 
-      const daysWithData = weeklyData.filter(
-        (day: any) => day.points > 0 || day.referrals > 0
-      );
-      const baselinePoints = daysWithData.reduce(
-        (total: any, day: any) => total + day.points,
+      // Calculate points earned this week
+      const pointsThisWeek = thisWeek.reduce(
+        (total: number, day: any) => total + day.points,
         0
       );
-      const baselineReferrals = daysWithData.reduce(
-        (total: any, day: any) => total + day.referrals,
-        0
-      );
-
-      const currentWeekPoints = weeklyData.reduce(
-        (total: any, day: any) => total + day.points,
-        0
-      );
-      const currentWeekReferrals = weeklyData.reduce(
-        (total: any, day: any) => total + day.referrals,
+      const referralsThisWeek = thisWeek.reduce(
+        (total: number, day: any) => total + day.referrals,
         0
       );
 
+      // Calculate previous total (total before this week's points were earned)
+      const previousTotalPoints = totalPoints - pointsThisWeek;
+      const previousTotalReferrals = totalReferrals - referralsThisWeek;
+
+      // Calculate the percentage increase in points
       const pointsIncreasePercentage =
-        baselinePoints > 0
-          ? Math.round(
-              ((currentWeekPoints - baselinePoints) / baselinePoints) * 100
-            )
-          : 0;
+        previousTotalPoints > 0
+          ? Math.round((pointsThisWeek / previousTotalPoints) * 100)
+          : 100;
 
+      // Calculate the percentage increase in referrals
       const referralsIncreasePercentage =
-        baselineReferrals > 0
-          ? Math.round(
-              ((currentWeekReferrals - baselineReferrals) / baselineReferrals) *
-                100
-            )
-          : 0;
+        previousTotalReferrals > 0
+          ? Math.round((referralsThisWeek / previousTotalReferrals) * 100)
+          : 100;
 
       setPercentIncrease({
         referrals: referralsIncreasePercentage,
@@ -90,20 +90,30 @@ const Analytics: React.FC = () => {
     }
   }, [userStats]);
 
+  console.log("userstats", userStats);
+
+  // Show Loader if component is not hydrated, data is loading, or there’s an error
+  if (!hydrated || isLoading || error) {
+    return <Loader />;
+  }
+
   // Show Loader if component is not hydrated, data is loading, or there’s an error
   if (!hydrated || isLoading || error) {
     return <Loader />;
   }
   return (
-    <div className="  flex-col justify-center  h-screen">
-      <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
+    <div className="  lg:w-[90%] m-auto  flex-col justify-center  h-screen">
+      <div>
+              <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
         <CardDataStats
           title="Total Points"
           total={userStats?.totalPoints}
           rate={`${percentIncrease.points}%`}
-          {...(percentIncrease.points > 0
-            ? { levelUp: true }
-            : { levelDown: true })}
+          {...(percentIncrease.points != 0
+            ? percentIncrease.points > 0
+              ? { levelUp: true }
+              : { levelDown: true }
+            : { levelStatic: true })}
         >
           <svg
             stroke="currentColor"
@@ -127,9 +137,11 @@ const Analytics: React.FC = () => {
           title="Total Referrals"
           total={userStats?.totalReferrals}
           rate={`${percentIncrease.referrals}%`}
-          {...(percentIncrease.referrals > 0
-            ? { levelUp: true }
-            : { levelDown: true })}
+          {...(percentIncrease.referrals != 0
+            ? percentIncrease.referrals > 0
+              ? { levelUp: true }
+              : { levelDown: true }
+            : { levelStatic: true })}
         >
           <svg
             stroke="currentColor"
@@ -153,36 +165,18 @@ const Analytics: React.FC = () => {
             />
           </svg>
         </CardDataStats>
+        <AuthRequests />
 
-        {/* <CardDataStats title="Pending Points" total="0" rate="0%" levelUp>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="25"
-            height="25"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M8 2h8"></path>
-            <path d="M8 22h8"></path>
-            <path d="M12 16a4 4 0 0 0 4-4"></path>
-            <path d="M12 8a4 4 0 0 1-4 4"></path>
-            <path d="M7 2a5 5 0 0 0 5 5 5 5 0 0 0 5-5"></path>
-            <path d="M7 22a5 5 0 0 1 5-5 5 5 0 0 1 5 5"></path>
-          </svg>
-        </CardDataStats> */}
+        
       </div>
 
-     
-
       <div className="mt-4 grid mb-4 grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <TableOne />
+        <TableOne refresh={() => setRefresh(!refresh)} />
         <ChartTwo userStats={userStats} />
       </div>
       <ChartOne userStats={userStats} />
+      </div>
+      
     </div>
   );
 };

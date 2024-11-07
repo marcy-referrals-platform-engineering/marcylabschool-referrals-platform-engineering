@@ -7,7 +7,8 @@ import { useStore } from "@/app/state/useStore";
 import { signOut } from "next-auth/react";
 const DropdownUser = () => {
   const user = useStore((state) => state.user);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] =  useState(false);
+  console.log(user?.image)
 
   return user &&  (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -24,10 +25,10 @@ const DropdownUser = () => {
         </span>
         
         <span className="h-12 w-12 rounded-full">
-          <img
+          <Image
             width={112}
             height={112}
-            src={user?.image ?? ""}
+            src={user.image}
             style={{
               width: "auto",
               height: "auto",

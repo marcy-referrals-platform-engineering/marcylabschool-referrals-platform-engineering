@@ -9,12 +9,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+ 
 
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <div className="overflow-scroll h-screen">{children}</div>
+        <div className=" bg-gray-50 ">{children}</div>
       </body>
     </html>
   );

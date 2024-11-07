@@ -71,46 +71,59 @@ interface ChartData {
   categories: string[];
 }
 
-const ChartTwo: React.FC<{userStats: any}> = ({userStats}) => {
-  
+const ChartTwo: React.FC<{ userStats: any }> = ({ userStats }) => {
   const [loading, setLoading] = useState(true);
-  const [chartData, setChartData] = useState<ChartData>({ series: [], categories: [] });
+  const [chartData, setChartData] = useState<ChartData>({
+    series: [],
+    categories: [],
+  });
+  const [selectedWeek, setSelectedWeek] = useState<"thisWeek" | "lastWeek">(
+    "thisWeek"
+  );
 
   useEffect(() => {
-    // Setting loading to false after a delay
     const timer = setTimeout(() => setLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    const weeklyData = userStats?.weeklyData;
+    const weeklyData =
+      selectedWeek === "thisWeek"
+        ? userStats?.weeklyData.thisWeek || []
+        : userStats?.weeklyData.lastWeek || [];
     if (weeklyData && !loading) {
       const { series, categories } = formatBarChartData(weeklyData);
       setChartData({ series, categories });
     }
-  }, [userStats, loading]);
+  }, [userStats, loading, selectedWeek]);
 
-  return loading || chartData.series.length === 0 || chartData.categories.length === 0 ? (
+  const handleWeekChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedWeek(event.target.value as "thisWeek" | "lastWeek");
+  };
+
+  return loading ? (
     <ChartTwoLoading />
   ) : (
-    <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
+    <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5  dark:border-strokedark dark:bg-boxdark xl:col-span-4">
       <div className="mb-4 justify-between gap-4 sm:flex">
         <div>
           <h4 className="text-xl font-semibold text-black dark:text-white">
-            Points this week
+            Points {selectedWeek === "thisWeek" ? "This Week" : "Last Week"}
           </h4>
         </div>
         <div>
           <div className="relative z-20 inline-block">
             <select
-              name="#"
-              id="#"
+              name="week-select"
+              id="week-select"
+              onChange={handleWeekChange}
+              value={selectedWeek}
               className="relative z-20 inline-flex appearance-none bg-transparent py-1 pl-3 pr-8 text-sm font-medium outline-none"
             >
-              <option value="" className="dark:bg-boxdark">
+              <option value="thisWeek" className="dark:bg-boxdark">
                 This Week
               </option>
-              <option value="" className="dark:bg-boxdark">
+              <option value="lastWeek" className="dark:bg-boxdark">
                 Last Week
               </option>
             </select>
@@ -133,14 +146,21 @@ const ChartTwo: React.FC<{userStats: any}> = ({userStats}) => {
       </div>
 
       <div>
-        <div id="chartTwo" className="-mb-9 -ml-5">
-          <ReactApexChart
-            options={{ ...options, xaxis: { ...options.xaxis, categories: chartData.categories } }}
-            series={chartData.series}
-            type="bar"
-            height={350}
-            width={"100%"}
-          />
+        
+          <div id="chartTwo" className="-mb-9  -ml-5">
+            {
+              chartData.series.length && (  <ReactApexChart
+                options={{
+                  ...options,
+                  xaxis: { ...options.xaxis, categories: chartData.categories },
+                }}
+                series={chartData.series}
+                type="bar"
+                height={350}
+                width={"100%"}
+              />)
+            }
+          
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { UserController } from '../../controllers/UserController';
+import { UserController } from '../../../controllers/UserController';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {

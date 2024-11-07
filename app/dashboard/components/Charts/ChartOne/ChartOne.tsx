@@ -22,6 +22,19 @@ const options: ApexOptions = {
     fontFamily: "Satoshi, sans-serif",
     height: 335,
     type: "area",
+    animations: {
+      enabled: true,
+      easing: "easeinout",
+      speed: 800,
+      animateGradually: {
+        enabled: true,
+        delay: 150,
+      },
+      dynamicAnimation: {
+        enabled: true,
+        speed: 350,
+      },
+    },
     dropShadow: {
       enabled: true,
       color: "#623CEA14",
@@ -106,24 +119,22 @@ const options: ApexOptions = {
   },
 };
 
-const ChartOne = ({userStats} : {userStats : any}) => {
-  
+const ChartOne = ({ userStats }: { userStats: any }) => {
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [maxY, setMaxY] = useState(100);
+  const [chartKey, setChartKey] = useState(0); // Key to force re-render of chart
 
-  // Set the component as hydrated after mounting
   useEffect(() => {
     setHydrated(true);
   }, []);
 
   useEffect(() => {
-    // Simulate loading delay
     const timer = setTimeout(() => setLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
 
-  // Update chartData only after userStats is available
   useEffect(() => {
     if (userStats?.monthlyData) {
       const { series, categories } = formatLineChartData(userStats.monthlyData);
@@ -131,16 +142,41 @@ const ChartOne = ({userStats} : {userStats : any}) => {
     }
   }, [userStats]);
 
+  useEffect(() => {
+    if (chartData) {
+      const maxDataPoint = Math.max(...chartData.series.flatMap((serie) => serie.data));
+      
+      // Round up to the nearest 10
+      const yAxisMax = Math.ceil((maxDataPoint + maxDataPoint * 0.1) / 10) * 10;
+      
+      if (yAxisMax !== maxY) {
+        setMaxY(yAxisMax);
+        setChartKey((prevKey) => prevKey + 1); // Force re-render with updated y-axis
+      }
+    }
+  }, [chartData, maxY]);
+
+  const chartOptions: ApexOptions = {
+    ...options,
+    yaxis: {
+      ...options.yaxis,
+      min: 0,
+      max: maxY, // Dynamically set y-axis max rounded to nearest 10
+    },
+    xaxis: {
+      ...options.xaxis,
+      categories: chartData?.categories || [],
+    },
+  };
+
   return (
     <div className="col-span-12 xl:col-span-8">
-      {/* Loading Component */}
       <div className={`${loading ? "block" : "hidden"}`}>
         <ChartOneLoading />
       </div>
 
-      {/* Main Content */}
       <div
-        className={`col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8 ${
+        className={`col-span-12  rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5  dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8 ${
           loading ? "hidden" : "block"
         }`}
       >
@@ -152,7 +188,6 @@ const ChartOne = ({userStats} : {userStats : any}) => {
               </span>
               <div className="w-full">
                 <p className="font-semibold text-primary">Total Points</p>
-                
               </div>
             </div>
             <div className="flex min-w-47.5">
@@ -161,22 +196,16 @@ const ChartOne = ({userStats} : {userStats : any}) => {
               </span>
               <div className="w-full">
                 <p className="font-semibold text-secondary">Total Referrals</p>
-            
               </div>
             </div>
-          </div>
-          <div className="flex w-full max-w-45 justify-end">
-            {/* Additional content for the top-right */}
           </div>
         </div>
 
         <div>
-          <div id="chartOne" className="-ml-5">
+          <div id="chartOne" className=" -ml-5">
             <ReactApexChart
-              options={{
-                ...options,
-                xaxis: { ...options.xaxis, categories: chartData?.categories || [] },
-              }}
+              key={chartKey} // Force re-render with new key
+              options={chartOptions}
               series={chartData?.series || []}
               type="area"
               height={350}

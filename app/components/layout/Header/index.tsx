@@ -30,6 +30,7 @@ const Header = ({
     }
     return false;
   };
+  console.log(user)
 
   useEffect(() => {
     if (window.location.hash) {
@@ -42,7 +43,7 @@ const Header = ({
     }
   });
   return (
-    <header className="sticky   top-0 z-999 flex  bg-white drop-shadow-1 ">
+    <header className="sticky    top-0 z-[50] flex  bg-white drop-shadow-1 ">
       <div className={"flex  m-auto  flex-grow items-center justify-between px-7 md:px-[3rem] lg:px-[4rem] py-2 shadow-2  " + `${className}`}>
         <div className="flex   items-center gap-2 sm:gap-4 ">
           {/* <!-- Hamburger Toggle BTN --> */}

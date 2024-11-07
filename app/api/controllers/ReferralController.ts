@@ -1,4 +1,3 @@
-import next from "next";
 import Referral from "../models/Referral";
 import { NextResponse } from 'next/server';
 
@@ -22,6 +21,27 @@ export default class ReferralController {
         } catch (error: any) {
             console.error('Error fetching Referrals:', error);
             return NextResponse.json({ message: 'Failed to fetch referrals', details: error.message }, { status: 500 });
+        }
+    }
+
+    static async updateMileStoneStatus(data: { referralId: number, milestone: string }) {
+        try {
+            const { referralId, milestone } = data
+            const updatedReferral = await Referral.updateMilestoneStatus(referralId, milestone)
+            return NextResponse.json(updatedReferral, { status: 200 })
+        } catch (error: any) {
+            console.error('Error Occured:', error)
+            return NextResponse.json({ message: 'Failed to update milestone status', details: error.message }, { status: 500 })
+        }
+    }
+
+    static async updateReviewStatus(referralId: number) {
+        try {
+            const updatedReferral = await Referral.updateReviewStatus(referralId)
+            return NextResponse.json(updatedReferral, { status: 200 })
+        } catch (error: any) {
+            console.error('Error Occured:', error)
+            return NextResponse.json({ message: 'Failed to update review status', details: error.message }, { status: 500 })
         }
     }
 }

@@ -1,6 +1,6 @@
 function TableOneLoading() {
   return (
-    <div className="col-span-12 xl:col-span-8 overflow-scroll rounded-sm border border-stroke bg-white px-5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
+    <div className="col-span-12 xl:col-span-8  rounded-sm border border-stroke bg-white px-5 pt-6 shadow-default sm:px-7.5 ">
       <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
         YOUR REFERRALS
       </h4>
