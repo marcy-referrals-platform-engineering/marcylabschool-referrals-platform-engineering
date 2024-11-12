@@ -166,7 +166,7 @@ const RewardProgress: React.FC = () => {
                     />
                     {/* Lock overlay */}
                     {!isReached && (
-                      <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="absolute inset-0 bottom-[18%] flex items-center justify-center">
                         {/* Inline SVG Lock Icon */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
