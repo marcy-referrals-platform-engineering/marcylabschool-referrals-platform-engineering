@@ -143,6 +143,51 @@ export const useMenuGroups = () => {
           label: "Settings",
           route: "/settings",
         },
+        ...(user?.name?[{
+          icon: (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="25"
+              viewBox="0 0 64 64"
+              fill="none"
+            >
+              <rect x="24" y="52" width="16" height="8" fill="#C0C0C0" />
+
+              <rect x="30" y="40" width="4" height="12" fill="#C0C0C0" />
+
+              <path
+                d="M16 12 V22 C16 34 32 40 32 40 C32 40 48 34 48 22 V12 H16 Z"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+
+              <path
+                d="M16 16 H10 C8 16 8 22 10 22 H16"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+
+              <path
+                d="M48 16 H54 C56 16 56 22 54 22 H48"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+
+              <polygon
+                points="32,24 34.9,29.5 40,30.4 36,34.6 37,40 32,37 27,40 28,34.6 24,30.4 29.1,29.5"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="1"
+              />
+            </svg>
+          ),
+          label: "Rewards",
+          route: "/rewards",
+        }] :[]),
       ],
     },
   ].filter(Boolean);
