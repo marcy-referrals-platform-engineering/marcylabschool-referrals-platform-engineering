@@ -23,6 +23,16 @@ export default class ReferralController {
         }
     }
 
+    static async search(email: string, query: string, page: number, pageSize: number) {
+        try {
+            const results = await Referral.searchReferrals(email, query, page, pageSize);
+            return NextResponse.json(results, { status: 200 });
+        } catch (error: any) {
+            console.error('Error searching referrals:', error);
+            return NextResponse.json({ message: 'Failed to search referrals', details: error.message }, { status: 500 });
+        }
+    }
+
     static async updateMileStoneStatus(data: { referralId: number, milestone: string }) {
         try {
             const { referralId, milestone } = data

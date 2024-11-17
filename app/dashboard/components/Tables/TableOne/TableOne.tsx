@@ -14,6 +14,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
   const [selectedReferral, setSelectedReferral] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (!user) return;
@@ -22,8 +23,12 @@ const TableOne = ({ refresh }: { refresh: any }) => {
     const fetchReferrals = async () => {
       setLoading(true);
       try {
-        const response = await ReferralService.fetchReferrals(email, currentPage, ITEMS_PER_PAGE);
-        console.log('data', response);
+        const response = await ReferralService.fetchReferrals(
+          email,
+          currentPage,
+          ITEMS_PER_PAGE
+        );
+        console.log("data", response);
 
         if (response && Array.isArray(response.data)) {
           const initializedData = response.data.map((referral: any) => ({
@@ -34,13 +39,17 @@ const TableOne = ({ refresh }: { refresh: any }) => {
             hasEnrolled: referral.hasEnrolled || false,
           }));
           setReferrals(initializedData);
-          setTotalPages(response.totalPages);
+
+          // Ensure totalPages is at least 1
+
+          setTotalPages(Math.max(response.totalPages, 1));
         } else {
-          console.error('Unexpected response structure', response);
+          console.error("Unexpected response structure", response);
           setReferrals([]);
+          setTotalPages(1); // Default to 1 page when no data
         }
       } catch (error) {
-        console.error('Error fetching referrals:', error);
+        console.error("Error fetching referrals:", error);
       } finally {
         setLoading(false);
       }
@@ -48,6 +57,29 @@ const TableOne = ({ refresh }: { refresh: any }) => {
 
     fetchReferrals();
   }, [user, currentPage]);
+
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+      const response = await ReferralService.searchReferrals(
+        user!.email,
+        searchQuery,
+        currentPage,
+        ITEMS_PER_PAGE
+      );
+      if (response && Array.isArray(response.data)) {
+        setReferrals(response.data);
+        setTotalPages(response.totalPages);
+      } else {
+        console.error("Unexpected response structure", response);
+        setReferrals([]);
+      }
+    } catch (error) {
+      console.error("Error searching referrals:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const toggleReviewed = (id: number) => {
     const updateReviewedStatus = async () => {
@@ -79,141 +111,174 @@ const TableOne = ({ refresh }: { refresh: any }) => {
     }
   };
 
-  if (loading) {
-    return <TableOneLoading />;
-  }
-
   return (
     <div className="col-span-12 xl:col-span-8 rounded-sm border border-stroke bg-white px-3 pt-5 sm:px-5 xl:pb-1">
       <h4 className="mb-3 text-lg font-semibold text-black dark:text-white">
-        YOUR REFERRALS
+        {user?.role === "USER" ? "YOUR" : ""} REFERRALS
       </h4>
-
-      <div className="overflow-x-auto h-[20rem] overflow-y-hidden mb-6">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-100">
-              {user?.role === "ADMIN" && (
-                <th className="p-2 text-sm font-medium uppercase text-left">
-                  REFERRER
-                </th>
-              )}
-              <th className="p-2 text-sm font-medium uppercase text-left">
-                Candidate Name
-              </th>
-              <th className="p-2 text-sm font-medium uppercase text-left">
-                Candidate Email
-              </th>
-              <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center">
-                Toured
-              </th>
-              <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center">
-                Applied
-              </th>
-              <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center">
-                Accepted
-              </th>
-              <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center">
-                Enrolled
-              </th>
-              <th className="p-2 text-sm font-medium uppercase text-center"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {referrals.map((referral, index) => (
-              <tr
-                key={index}
-                className="border-b border-stroke dark:border-strokedark"
-              >
-                {user?.role === "ADMIN" && (
-                  <td className="p-2 flex items-center gap-1 text-sm text-black dark:text-white">
-                    {!referral.reviewed && (
-                      <div className="rounded-full w-2 h-2 bg-red-500"></div>
-                    )}
-                    {referral.referrerName}
-                  </td>
-                )}
-                <td className="p-2 text-sm text-black dark:text-white">
-                  {referral.name}
-                </td>
-                <td className="p-2 text-sm text-black dark:text-white">
-                  {referral.email}
-                </td>
-                <td className="hidden lg:table-cell p-2 text-center">
-                  <CheckBoxModal
-                    data={{
-                      referrer: referral.referrerName,
-                      canidate: referral.name,
-                      milestone: "hasToured",
-                      id: referral.id,
-                    }}
-                    condition={"Attended Tour"}
-                    points={20}
-                    handler={() => toggleStatus(index, "hasToured")}
-                    conditionTrue={referral.hasToured}
-                  />
-                </td>
-                <td className="hidden lg:table-cell p-2 text-center">
-                  <CheckBoxModal
-                    data={{
-                      referrer: referral.referrerName,
-                      canidate: referral.name,
-                      milestone: "hasApplied",
-                      id: referral.id,
-                    }}
-                    condition={"Submitted Application"}
-                    points={50}
-                    handler={() => toggleStatus(index, "hasApplied")}
-                    conditionTrue={referral.hasApplied}
-                  />
-                </td>
-                <td className="hidden lg:table-cell p-2 text-center">
-                  <CheckBoxModal
-                    data={{
-                      referrer: referral.referrerName,
-                      canidate: referral.name,
-                      milestone: "hasBeenAccepted",
-                      id: referral.id,
-                    }}
-                    condition={"Received Offer"}
-                    points={100}
-                    handler={() => toggleStatus(index, "hasBeenAccepted")}
-                    conditionTrue={referral.hasBeenAccepted}
-                  />
-                </td>
-                <td className="hidden lg:table-cell p-2 text-center">
-                  <CheckBoxModal
-                    data={{
-                      referrer: referral.referrerName,
-                      canidate: referral.name,
-                      milestone: "hasEnrolled",
-                      id: referral.id,
-                    }}
-                    condition={"Enrolled In Fellowship"}
-                    points={200}
-                    handler={() => toggleStatus(index, "hasEnrolled")}
-                    conditionTrue={referral.hasEnrolled}
-                  />
-                </td>
-                <td className="p-2 text-sm text-center">
-                  <button
-                    className="text-blue-500 hover:underline"
-                    onClick={() => setSelectedReferral(referral)}
-                  >
-                    View More
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div>
+        <input
+          type="text"
+          placeholder="Search by name or email"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="border p-2 mb-4"
+        />
+        <button
+          onClick={handleSearch}
+          className="px-2 py-2 border  translate-y-[0.4rem] border-black  bg-[black] duration-200  hover:opacity-50  text-white"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
       </div>
 
+      {loading ? (
+        <TableOneLoading />
+      ) : referrals.length === 0 ? (
+        <div className="text-center py-10">
+          <p className="text-gray-500 min-h-[17rem]">No referrals found</p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto  h-[15rem] overflow-y-scroll mb-6">
+          <table className="w-full  border-collapse">
+            <thead >
+              <tr className="bg-gray-100 ">
+                {user?.role === "ADMIN" && (
+                  <th className="p-2 text-sm font-medium uppercase text-left sticky top-0 bg-gray-100 z-10">
+                    REFERRER
+                  </th>
+                )}
+                <th className="p-2  text-sm font-medium uppercase text-left sticky top-0 bg-gray-100 z-10">
+                  Canidate Name
+                </th>
+                <th className="p-2 text-sm font-medium uppercase text-left sticky top-0 bg-gray-100 z-10">
+                  Canidate Email
+                </th>
+                <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center sticky top-0 bg-gray-100 z-10">
+                  Toured
+                </th>
+                <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center sticky top-0 bg-gray-100 z-10">
+                  Applied
+                </th>
+                <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center sticky top-0 bg-gray-100 z-10">
+                  Accepted
+                </th>
+                <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center sticky top-0 bg-gray-100 z-10">
+                  Enrolled
+                </th>
+                <th className="p-2 text-sm font-medium uppercase text-center sticky top-0 bg-gray-100 z-10"></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {referrals.map((referral, index) => (
+                <tr
+                  key={index}
+                  className="border-b border-stroke dark:border-strokedark"
+                >
+                  {user?.role === "ADMIN" && (
+                    <td className="p-2 flex items-center gap-1 text-sm text-black dark:text-white">
+                      {!referral.reviewed && (
+                        <div className="rounded-full w-2 h-2 bg-red-500"></div>
+                      )}
+                      {referral.referrerName}
+                    </td>
+                  )}
+                  <td className="p-2 px-10 text-sm text-black dark:text-white">
+                    {referral.name}
+                  </td>
+                  <td className="p-2 text-sm text-black dark:text-white">
+                    {referral.email}
+                  </td>
+                  <td className="hidden lg:table-cell p-2 text-center">
+                    <CheckBoxModal
+                      data={{
+                        referrer: referral.referrerName,
+                        canidate: referral.name,
+                        milestone: "hasToured",
+                        id: referral.id,
+                      }}
+                      condition={"Attended Tour"}
+                      points={20}
+                      handler={() => toggleStatus(index, "hasToured")}
+                      conditionTrue={referral.hasToured}
+                    />
+                  </td>
+                  <td className="hidden lg:table-cell p-2 text-center">
+                    <CheckBoxModal
+                      data={{
+                        referrer: referral.referrerName,
+                        canidate: referral.name,
+                        milestone: "hasApplied",
+                        id: referral.id,
+                      }}
+                      condition={"Submitted Application"}
+                      points={50}
+                      handler={() => toggleStatus(index, "hasApplied")}
+                      conditionTrue={referral.hasApplied}
+                    />
+                  </td>
+                  <td className="hidden lg:table-cell p-2 text-center">
+                    <CheckBoxModal
+                      data={{
+                        referrer: referral.referrerName,
+                        canidate: referral.name,
+                        milestone: "hasBeenAccepted",
+                        id: referral.id,
+                      }}
+                      condition={"Received Offer"}
+                      points={100}
+                      handler={() => toggleStatus(index, "hasBeenAccepted")}
+                      conditionTrue={referral.hasBeenAccepted}
+                    />
+                  </td>
+                  <td className="hidden lg:table-cell p-2 text-center">
+                    <CheckBoxModal
+                      data={{
+                        referrer: referral.referrerName,
+                        canidate: referral.name,
+                        milestone: "hasEnrolled",
+                        id: referral.id,
+                      }}
+                      condition={"Enrolled In Fellowship"}
+                      points={200}
+                      handler={() => toggleStatus(index, "hasEnrolled")}
+                      conditionTrue={referral.hasEnrolled}
+                    />
+                  </td>
+                  <td className="p-2 text-sm text-center">
+                    <button
+                      className="text-blue-500 hover:underline"
+                      onClick={() => setSelectedReferral(referral)}
+                    >
+                      View More
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
       {/* Pagination Controls */}
-      <div className="flex translate-y-[-1rem] items-center justify-between space-x-4">
+      <div className="flex    translate-y-[-0.8rem] items-center justify-between space-x-4">
         {currentPage > 1 ? (
           <button
-            className="py-2 px-3 rounded hover:opacity-50"
+            className="py-2 px-3 font-medium  duration-200 rounded hover:opacity-50"
             onClick={() => handlePageChange(currentPage - 1)}
           >
             Previous
@@ -222,19 +287,19 @@ const TableOne = ({ refresh }: { refresh: any }) => {
           <div className="w-[5rem] "></div>
         )}
 
-        <span className="flex-grow text-center">
-          Page {currentPage} of {totalPages}
+        <span className="flex-grow font-medium text-center">
+          Page {currentPage} of {totalPages || 1}
         </span>
 
         {currentPage < totalPages ? (
           <button
-            className="px-4 py-2 rounded hover:opacity-50"
+            className="px-4 py-2 font-medium rounded duration-200 hover:opacity-50"
             onClick={() => handlePageChange(currentPage + 1)}
           >
             Next
           </button>
         ) : (
-          <div className="w-[5rem]"></div>
+          <div className="w-[3.9rem]"></div>
         )}
       </div>
 

@@ -1,11 +1,7 @@
 function TableOneLoading() {
   return (
-    <div className="col-span-12  xl:col-span-8  rounded-sm border border-stroke bg-white px-5 pt-6 shadow-default sm:px-7.5 ">
-      <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
-        YOUR REFERRALS
-      </h4>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto min-h-[16.5rem]">
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-200 dark:bg-meta-4 animate-pulse">
@@ -54,7 +50,7 @@ function TableOneLoading() {
           </tbody>
         </table>
       </div>
-    </div>
+
   );
 }
 

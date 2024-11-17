@@ -20,67 +20,130 @@ export default class Referral {
         return referral;
     }
 
-   static async fetchAll(email: string, page: number = 1, pageSize: number = 5) {
-    // Find the user to check their role
-    const user = await prisma.authorizedEmails.findUnique({
-        where: {
-            email: email
-        }
-    });
-
-    // Calculate the number of items to skip based on the current page and page size
-    const skip = (page - 1) * pageSize;
-
-    // Declare variables for referrals and total count
-    let referrals, totalCount;
-
-    // Fetch referrals based on the user's role
-    if (user?.role === 'ADMIN') {
-        referrals = await prisma.referral.findMany({
-            skip: skip,
-            take: pageSize,
-            orderBy: {
-                dateCreated: 'desc' // Ensure this field exists in your schema
-            }
-        });
-        if (!referrals.length) {
-            console.log('failed mf')
-        }
-        // Fetch the total count for pagination
-        totalCount = await prisma.referral.count();
-    } else {
-        referrals = await prisma.referral.findMany({
+    static async fetchAll(email: string, page: number = 1, pageSize: number = 5) {
+        // Find the user to check their role
+        const user = await prisma.authorizedEmails.findUnique({
             where: {
-                referrerEmail: email,
-            },
-            skip: skip,
-            take: pageSize,
-            orderBy: {
-                dateCreated: 'desc'
+                email: email
             }
         });
 
-        if (!referrals) {
-            console.log('failed mf')
-        }
-        // Fetch the total count for the user
-        totalCount = await prisma.referral.count({
-            where: {
-                referrerEmail: email,
+        // Calculate the number of items to skip based on the current page and page size
+        const skip = (page - 1) * pageSize;
+
+        // Declare variables for referrals and total count
+        let referrals, totalCount;
+
+        // Fetch referrals based on the user's role
+        if (user?.role === 'ADMIN') {
+            referrals = await prisma.referral.findMany({
+                skip: skip,
+                take: pageSize,
+                orderBy: {
+                    dateCreated: 'desc' // Ensure this field exists in your schema
+                }
+            });
+            if (!referrals.length) {
+                console.log('failed mf')
             }
-        });
+            // Fetch the total count for pagination
+            totalCount = await prisma.referral.count();
+        } else {
+            referrals = await prisma.referral.findMany({
+                where: {
+                    referrerEmail: email,
+                },
+                skip: skip,
+                take: pageSize,
+                orderBy: {
+                    dateCreated: 'desc'
+                }
+            });
+
+            if (!referrals) {
+                console.log('failed mf')
+            }
+            // Fetch the total count for the user
+            totalCount = await prisma.referral.count({
+                where: {
+                    referrerEmail: email,
+                }
+            });
+        }
+
+        // Return referrals and pagination data
+        return {
+            data: referrals,
+            totalCount,
+            currentPage: page,
+            totalPages: Math.ceil(totalCount / pageSize)
+        };
     }
 
-    // Return referrals and pagination data
-    return {
-        data: referrals,
-        totalCount,
-        currentPage: page,
-        totalPages: Math.ceil(totalCount / pageSize)
-    };
-}
 
-    
+    static async searchReferrals(email: string, query: string, page: number = 1, pageSize: number = 5) {
+        const user = await prisma.authorizedEmails.findUnique({
+            where: { email: email }
+        });
+
+        const skip = (page - 1) * pageSize;
+
+        let referrals, totalCount;
+
+        if (user?.role === 'ADMIN') {
+            referrals = await prisma.referral.findMany({
+                where: {
+                    OR: [
+                        { name: { contains: query, mode: 'insensitive' } },
+                        { email: { contains: query, mode: 'insensitive' } },
+                        {referrerName: {contains: query, mode: 'insensitive'}},
+                        {referrerEmail: {contains: query, mode: 'insensitive'}}
+                    ]
+                },
+                skip: skip,
+                take: pageSize,
+                orderBy: { dateCreated: 'desc' }
+            });
+            totalCount = await prisma.referral.count({
+                where: {
+                    OR: [
+                        { name: { contains: query, mode: 'insensitive' } },
+                        { email: { contains: query, mode: 'insensitive' } }
+                    ]
+                }
+            });
+        } else {
+            referrals = await prisma.referral.findMany({
+                where: {
+                    referrerEmail: email,
+                    OR: [
+                        { name: { contains: query, mode: 'insensitive' } },
+                        { email: { contains: query, mode: 'insensitive' } }
+                    ]
+                },
+                skip: skip,
+                take: pageSize,
+                orderBy: { dateCreated: 'desc' }
+            });
+            totalCount = await prisma.referral.count({
+                where: {
+                    referrerEmail: email,
+                    OR: [
+                        { name: { contains: query, mode: 'insensitive' } },
+                        { email: { contains: query, mode: 'insensitive' } }
+                    ]
+                }
+            });
+        }
+
+        return {
+            data: referrals,
+            totalCount,
+            currentPage: page,
+            totalPages: Math.ceil(totalCount / pageSize)
+        };
+    }
+
 
 
     static async updateMilestoneStatus(referralId: number, milestone: string) {
