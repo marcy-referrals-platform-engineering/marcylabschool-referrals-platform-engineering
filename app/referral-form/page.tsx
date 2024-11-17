@@ -20,7 +20,7 @@ function LoadingComponent({ isLoading, isSuccess, onRetry }: { isLoading: boolea
       ) : (
         isSuccess !== null && (
           <div className="flex flex-col items-center justify-center">
-            <p className={`text-2xl ${isSuccess ? 'text-green-600' : 'text-red-600'} flex items-center`}>
+            <p className={`text-2xl ${isSuccess ? 'text-green-500' : 'text-red-600'} flex items-center`}>
               {isSuccess ? (
                 <span className="mr-2 text-[2rem]">Referral Submitted ✓</span>
               ) : (
@@ -47,28 +47,12 @@ function ReferralForm() {
   const [formData, setFormData] = useState<any>({});
   const [submitted, setSubmitted] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [referrals, setReferrals] = useState<any[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (user) {
-      fetchReferrals(user.email, currentPage);
+      setFormData({ ...formData, email: user.email, name: user.name });
     }
-  }, [user, currentPage]);
-
-  const fetchReferrals = async (email: string, page: number) => {
-    setIsLoading(true);
-    try {
-      const data = await ReferralService.fetchReferrals(email, page);
-      setReferrals(data.data);
-      setTotalPages(data.totalPages);
-    } catch (error) {
-      console.error('Error fetching referrals:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [user]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -91,12 +75,6 @@ function ReferralForm() {
   const handleRetry = () => {
     setSubmitted(null);
     setFormData(user ? { email: user.email, name: user.name } : {});
-  };
-
-  const handlePageChange = (newPage: number) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setCurrentPage(newPage);
-    }
   };
 
   return (
@@ -144,41 +122,6 @@ function ReferralForm() {
                   <Button text="SUBMIT REFERRAL" />
                 </div>
               </form>
-
-              {/* Display referral data */}
-              <div className="mt-10">
-                <h2 className="text-lg font-bold">Your Referrals</h2>
-                {referrals.length > 0 ? (
-                  referrals.map((referral) => (
-                    <div key={referral.id} className="border-b p-2">
-                      <p>
-                        <strong>Name:</strong> {referral.name} | <strong>Email:</strong> {referral.email}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No referrals found.</p>
-                )}
-
-                {/* Pagination Controls */}
-                <div className="flex justify-between mt-4">
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="px-4 py-2 border rounded disabled:opacity-50"
-                  >
-                    Previous
-                  </button>
-                  <span>Page {currentPage} of {totalPages}</span>
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="px-4 py-2 border rounded disabled:opacity-50"
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
             </div>
           </>
         )}

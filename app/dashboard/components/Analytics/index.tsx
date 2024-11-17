@@ -102,7 +102,7 @@ const Analytics: React.FC = () => {
     return <Loader />;
   }
   return (
-    <div className="  lg:w-[90%] m-auto  flex-col justify-center  h-screen">
+    <div className="  lg:w-[90%] m-auto  flex-col justify-center  ">
       <div>
               <div className="grid grid-cols-1 m-auto   gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
         <CardDataStats

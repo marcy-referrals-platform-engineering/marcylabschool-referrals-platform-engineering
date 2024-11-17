@@ -46,7 +46,6 @@ const TableOne = ({ refresh }: { refresh: any }) => {
         } else {
           console.error("Unexpected response structure", response);
           setReferrals([]);
-          setTotalPages(1); // Default to 1 page when no data
         }
       } catch (error) {
         console.error("Error fetching referrals:", error);
@@ -59,12 +58,13 @@ const TableOne = ({ refresh }: { refresh: any }) => {
   }, [user, currentPage]);
 
   const handleSearch = async () => {
+    setCurrentPage(1); // Reset to the first page for new search
     setLoading(true);
     try {
       const response = await ReferralService.searchReferrals(
         user!.email,
         searchQuery,
-        currentPage,
+        1, // Set to the first page for new search
         ITEMS_PER_PAGE
       );
       if (response && Array.isArray(response.data)) {
@@ -80,6 +80,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
       setLoading(false);
     }
   };
+  
 
   const toggleReviewed = (id: number) => {
     const updateReviewedStatus = async () => {
@@ -112,10 +113,15 @@ const TableOne = ({ refresh }: { refresh: any }) => {
   };
 
   return (
-    <div className="col-span-12 xl:col-span-8 rounded-sm border border-stroke bg-white px-3 pt-5 sm:px-5 xl:pb-1">
+    <div className="col-span-12 xl:col-span-8  rounded-sm border border-stroke bg-white px-3 pt-5 sm:px-5 xl:pb-1">
+      <div className="flex justify-between">
       <h4 className="mb-3 text-lg font-semibold text-black dark:text-white">
         {user?.role === "USER" ? "YOUR" : ""} REFERRALS
       </h4>
+
+      <PlusButton onClick={() => console.log("Add Referral")} />
+      </div>
+      
       <div>
         <input
           type="text"
@@ -149,7 +155,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
         <TableOneLoading />
       ) : referrals.length === 0 ? (
         <div className="text-center py-10">
-          <p className="text-gray-500 min-h-[17rem]">No referrals found</p>
+          <p className="text-gray-500 min-h-[12.5rem]">No referrals found</p>
         </div>
       ) : (
         <div className="overflow-x-auto  h-[15rem] overflow-y-scroll mb-6">
@@ -190,20 +196,21 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                   className="border-b border-stroke dark:border-strokedark"
                 >
                   {user?.role === "ADMIN" && (
-                    <td className="p-2 flex items-center gap-1 text-sm text-black dark:text-white">
+                    <td className="p-2  flex  overflow-hidden whitespace-nowrap items-center gap-1 text-sm text-black dark:text-white">
                       {!referral.reviewed && (
-                        <div className="rounded-full w-2 h-2 bg-red-500"></div>
+                        <div className="rounded-full  w-2 h-2 bg-red-500"></div>
                       )}
-                      {referral.referrerName}
+                      <p className="w-[5rem] whitespace-nowrap overflow-hidden text-ellipsis "> {referral.referrerName}</p>
                     </td>
                   )}
                   <td className="p-2 px-10 text-sm text-black dark:text-white">
-                    {referral.name}
+                  <p className="w-[5rem] whitespace-nowrap overflow-hidden text-ellipsis "> {referral.name}</p>
                   </td>
                   <td className="p-2 text-sm text-black dark:text-white">
-                    {referral.email}
+                  <p className="w-[5rem] whitespace-nowrap overflow-hidden text-ellipsis "> {referral.email}</p>
                   </td>
-                  <td className="hidden lg:table-cell p-2 text-center">
+                  
+                  <td className="hidden lg:table-cell p-2 pl-5  text-center">
                     <CheckBoxModal
                       data={{
                         referrer: referral.referrerName,
@@ -217,7 +224,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                       conditionTrue={referral.hasToured}
                     />
                   </td>
-                  <td className="hidden lg:table-cell p-2 text-center">
+                  <td className="hidden lg:table-cell p-2 pl-5  text-center">
                     <CheckBoxModal
                       data={{
                         referrer: referral.referrerName,
@@ -231,7 +238,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                       conditionTrue={referral.hasApplied}
                     />
                   </td>
-                  <td className="hidden lg:table-cell p-2 text-center">
+                  <td className="hidden lg:table-cell  p-2 pl-5  text-center">
                     <CheckBoxModal
                       data={{
                         referrer: referral.referrerName,
@@ -245,7 +252,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                       conditionTrue={referral.hasBeenAccepted}
                     />
                   </td>
-                  <td className="hidden lg:table-cell p-2 text-center">
+                  <td className="hidden lg:table-cell p-2 pl-5  text-center">
                     <CheckBoxModal
                       data={{
                         referrer: referral.referrerName,
@@ -261,7 +268,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                   </td>
                   <td className="p-2 text-sm text-center">
                     <button
-                      className="text-blue-500 hover:underline"
+                      className="text-black font-medium hover:underline"
                       onClick={() => setSelectedReferral(referral)}
                     >
                       View More
@@ -466,9 +473,9 @@ export const Modal = ({ title, children, onClose }: ModalProps) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="bg-[black] translate-y-[-5rem] inset-0 m-auto bg-opacity-50 w-screen h-[120vh] animate-fade absolute"></div>
-      <div className="bg-white translate-y-[-3rem] rounded-lg shadow-lg w-11/12 max-w-lg max-h-[90vh] p-12 pt-6 overflow-y-auto relative">
+    <div className="fixed  inset-0 z-50 flex items-center justify-center">
+      <div className="bg-[black]  inset-0  bg-opacity-50 w-screen  animate-fade absolute"></div>
+      <div className="bg-white absolute   top-50 max-h-[32rem] rounded-lg shadow-lg w-11/12 max-w-lg  p-12 pt-6 overflow-y-auto ">
         <div className="flex gap-2 border-b justify-center">
           <h1 className="text-[1.5rem] font-bold mb-4 text-gray-900">
             {title}
@@ -506,5 +513,35 @@ export const Modal = ({ title, children, onClose }: ModalProps) => {
     </div>
   );
 };
+
+
+import React from 'react';
+
+const PlusButton = ({ onClick } : {onClick: any}) => {
+  return (
+    <button 
+      onClick={onClick} 
+      className="p-1 px-3 bg-[black] hover:opacity-50 duration-200 text-white rounded-full flex items-center justify-center"
+      aria-label="Add"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        className="w-4 h-4"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M12 4v16m8-8H4"
+        />
+      </svg>
+    </button>
+  );
+};
+
+
 
 export default TableOne;

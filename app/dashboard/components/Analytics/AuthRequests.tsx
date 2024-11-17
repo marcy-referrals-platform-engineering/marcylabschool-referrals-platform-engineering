@@ -55,7 +55,7 @@ function AuthRequests() {
           <path d="M18 14l-4-4v3H6v2h8v3l4-4z" fill="gray" />
         </svg>
       </div>
-      <h3 className="text-[1.1rem] pt-3 text-red-500 px-7.5">
+      <h3 className="text-[1.1rem] pt-3 text-[black] px-7.5">
         {requests.length}{" "}
         <span>
           {requests.length > 1 || !requests.length ? "emails" : "email"}

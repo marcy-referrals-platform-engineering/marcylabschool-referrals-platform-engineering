@@ -187,7 +187,7 @@ const ChartOne = ({ userStats }: { userStats: any }) => {
                 <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-primary"></span>
               </span>
               <div className="w-full">
-                <p className="font-semibold text-primary">Total Points</p>
+                <p className="font-semibold text-[black'">Total Points</p>
               </div>
             </div>
             <div className="flex min-w-47.5">
@@ -195,7 +195,7 @@ const ChartOne = ({ userStats }: { userStats: any }) => {
                 <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-secondary"></span>
               </span>
               <div className="w-full">
-                <p className="font-semibold text-secondary">Total Referrals</p>
+                <p className="font-semibold text-medium">Total Referrals</p>
               </div>
             </div>
           </div>
