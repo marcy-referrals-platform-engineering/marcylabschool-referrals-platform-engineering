@@ -5,48 +5,63 @@ import ReferralService from "@/app/services/ReferralService";
 import TableOneLoading from "./TabelOneLoading";
 import CheckBoxModal from "./CheckBoxModal";
 
+const ITEMS_PER_PAGE = 5; // Number of referrals to display per page
+
 const TableOne = ({ refresh }: { refresh: any }) => {
   const { user } = useStore();
   const [referrals, setReferrals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedReferral, setSelectedReferral] = useState<any>(null);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   useEffect(() => {
     if (!user) return;
     const { email } = user;
 
     const fetchReferrals = async () => {
       setLoading(true);
-      const data = await ReferralService.fetchReferrals(email);
-      if (data) {
-        const initializedData = data.map((referral: any) => ({
-          ...referral,
-          hasToured: referral.hasToured || false,
-          hasApplied: referral.hasApplied || false,
-          hasBeenAccepted: referral.hasBeenAccepted || false,
-          hasEnrolled: referral.hasEnrolled || false,
-        }));
-        setReferrals(initializedData);
+      try {
+        const response = await ReferralService.fetchReferrals(email, currentPage, ITEMS_PER_PAGE);
+        console.log('data', response);
+
+        if (response && Array.isArray(response.data)) {
+          const initializedData = response.data.map((referral: any) => ({
+            ...referral,
+            hasToured: referral.hasToured || false,
+            hasApplied: referral.hasApplied || false,
+            hasBeenAccepted: referral.hasBeenAccepted || false,
+            hasEnrolled: referral.hasEnrolled || false,
+          }));
+          setReferrals(initializedData);
+          setTotalPages(response.totalPages);
+        } else {
+          console.error('Unexpected response structure', response);
+          setReferrals([]);
+        }
+      } catch (error) {
+        console.error('Error fetching referrals:', error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchReferrals();
-  }, [user]);
+  }, [user, currentPage]);
 
   const toggleReviewed = (id: number) => {
-    console.log('id',id)
     const updateReviewedStatus = async () => {
       await ReferralService.updateReviewStatus(id);
-    }
-    updateReviewedStatus()
-    setSelectedReferral(null)
-    setReferrals((prevReferrals) => prevReferrals.map((referral) => referral.id === id ? {...referral, reviewed: true} : referral))
+    };
+    updateReviewedStatus();
+    setSelectedReferral(null);
+    setReferrals((prevReferrals) =>
+      prevReferrals.map((referral) =>
+        referral.id === id ? { ...referral, reviewed: true } : referral
+      )
+    );
+  };
 
-  }
-
-
-console.log('referrals',referrals)
   const toggleStatus = (index: number, field: string) => {
     if (user && user.role === "ADMIN") {
       setReferrals((prevReferrals) =>
@@ -58,17 +73,23 @@ console.log('referrals',referrals)
     }
   };
 
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
   if (loading) {
     return <TableOneLoading />;
   }
-  
+
   return (
     <div className="col-span-12 xl:col-span-8 rounded-sm border border-stroke bg-white px-3 pt-5 sm:px-5 xl:pb-1">
       <h4 className="mb-3 text-lg font-semibold text-black dark:text-white">
         YOUR REFERRALS
       </h4>
 
-      <div className="overflow-x-auto mb-6">
+      <div className="overflow-x-auto h-[20rem] overflow-y-hidden mb-6">
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-100">
@@ -78,13 +99,11 @@ console.log('referrals',referrals)
                 </th>
               )}
               <th className="p-2 text-sm font-medium uppercase text-left">
-                Canidate Name
+                Candidate Name
               </th>
               <th className="p-2 text-sm font-medium uppercase text-left">
-              Canidate Email
+                Candidate Email
               </th>
-
-              {/* Milestones are visible only on large screens */}
               <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center">
                 Toured
               </th>
@@ -97,7 +116,6 @@ console.log('referrals',referrals)
               <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center">
                 Enrolled
               </th>
-
               <th className="p-2 text-sm font-medium uppercase text-center"></th>
             </tr>
           </thead>
@@ -105,14 +123,13 @@ console.log('referrals',referrals)
             {referrals.map((referral, index) => (
               <tr
                 key={index}
-                className="border-b  border-stroke dark:border-strokedark"
+                className="border-b border-stroke dark:border-strokedark"
               >
                 {user?.role === "ADMIN" && (
-                  <td className="p-2  flex items-center gap-1 text-sm text-black dark:text-white">
-                    {   !referral.reviewed &&
-                        (<div className="rounded-full w-2 h-2  bg-red-500"></div>)
-                    }
-                    
+                  <td className="p-2 flex items-center gap-1 text-sm text-black dark:text-white">
+                    {!referral.reviewed && (
+                      <div className="rounded-full w-2 h-2 bg-red-500"></div>
+                    )}
                     {referral.referrerName}
                   </td>
                 )}
@@ -122,9 +139,7 @@ console.log('referrals',referrals)
                 <td className="p-2 text-sm text-black dark:text-white">
                   {referral.email}
                 </td>
-
-                {/* Milestones - show only on large screens */}
-                <td className="hidden lg:table-cell p-2 translate-x-[1.5rem] text-center">
+                <td className="hidden lg:table-cell p-2 text-center">
                   <CheckBoxModal
                     data={{
                       referrer: referral.referrerName,
@@ -138,7 +153,7 @@ console.log('referrals',referrals)
                     conditionTrue={referral.hasToured}
                   />
                 </td>
-                <td className="hidden translate-x-[1.5rem]  lg:table-cell p-2 text-center">
+                <td className="hidden lg:table-cell p-2 text-center">
                   <CheckBoxModal
                     data={{
                       referrer: referral.referrerName,
@@ -152,7 +167,7 @@ console.log('referrals',referrals)
                     conditionTrue={referral.hasApplied}
                   />
                 </td>
-                <td className="hidden translate-x-[1.5rem] lg:table-cell p-2 text-center">
+                <td className="hidden lg:table-cell p-2 text-center">
                   <CheckBoxModal
                     data={{
                       referrer: referral.referrerName,
@@ -166,7 +181,7 @@ console.log('referrals',referrals)
                     conditionTrue={referral.hasBeenAccepted}
                   />
                 </td>
-                <td className="hidden translate-x-[1.5rem] lg:table-cell p-2 text-center">
+                <td className="hidden lg:table-cell p-2 text-center">
                   <CheckBoxModal
                     data={{
                       referrer: referral.referrerName,
@@ -180,9 +195,7 @@ console.log('referrals',referrals)
                     conditionTrue={referral.hasEnrolled}
                   />
                 </td>
-
-                {/* View More Button - opens modal */}
-                <td className="p-2  text-sm text-center">
+                <td className="p-2 text-sm text-center">
                   <button
                     className="text-blue-500 hover:underline"
                     onClick={() => setSelectedReferral(referral)}
@@ -194,6 +207,35 @@ console.log('referrals',referrals)
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex translate-y-[-1rem] items-center justify-between space-x-4">
+        {currentPage > 1 ? (
+          <button
+            className="py-2 px-3 rounded hover:opacity-50"
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Previous
+          </button>
+        ) : (
+          <div className="w-[5rem] "></div>
+        )}
+
+        <span className="flex-grow text-center">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        {currentPage < totalPages ? (
+          <button
+            className="px-4 py-2 rounded hover:opacity-50"
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Next
+          </button>
+        ) : (
+          <div className="w-[5rem]"></div>
+        )}
       </div>
 
       {/* Modal for additional details */}
@@ -245,7 +287,6 @@ console.log('referrals',referrals)
                 Milestones
               </h4>
               <div className="grid grid-cols-2 gap-4">
-                {/* Each Milestone with Label and Checkbox */}
                 <div className="flex items-center gap-3">
                   <span className="text-gray-700">Attended Tour</span>
                   <CheckBoxModal
@@ -328,7 +369,14 @@ console.log('referrals',referrals)
                 </div>
               </div>
             </div>
-            { !selectedReferral.reviewed &&   (<button onClick={() => toggleReviewed(selectedReferral?.id)} className="text-center m-auto w-full underline">Mark As Reviewed</button>)}
+            {!selectedReferral.reviewed && (
+              <button
+                onClick={() => toggleReviewed(selectedReferral?.id)}
+                className="text-center m-auto w-full underline"
+              >
+                Mark As Reviewed
+              </button>
+            )}
           </div>
         </Modal>
       )}
@@ -353,13 +401,13 @@ export const Modal = ({ title, children, onClose }: ModalProps) => {
   }, []);
 
   return (
-    <div className="fixed    inset-0 z-50 flex items-center justify-center   ">
-      <div className="bg-[black] translate-y-[-5rem] inset-0 m-auto bg-opacity-50 w-screen h-[120vh] animate-fade absolute "></div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="bg-[black] translate-y-[-5rem] inset-0 m-auto bg-opacity-50 w-screen h-[120vh] animate-fade absolute"></div>
       <div className="bg-white translate-y-[-3rem] rounded-lg shadow-lg w-11/12 max-w-lg max-h-[90vh] p-12 pt-6 overflow-y-auto relative">
-        <div className=" flex gap-2 border-b  justify-center">
-        <h1 className="text-[1.5rem]  font-bold mb-4 text-gray-900">
-          {title}
-        </h1>
+        <div className="flex gap-2 border-b justify-center">
+          <h1 className="text-[1.5rem] font-bold mb-4 text-gray-900">
+            {title}
+          </h1>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -376,19 +424,19 @@ export const Modal = ({ title, children, onClose }: ModalProps) => {
               fill="none"
             />
             <path
-              d="M12 8C11.45 8 11 8.45 11 9C11 9.55 11.45 10 12 10C12.55 10 13 9.55 13 9C13 8.45 12.55 8 12 8ZM12 12C11.45 12 11 12.45 11 13V17C11 17.55 11.45 18 12 18C12.55 18 13 17.55 13 17V13C13 12.45 12.55 12 12 12Z"
+              d="M12 8C11.45 8 11 8.45 11 9C11 9.55 11.45 10 12 10C12.55 10 13 9.55 13 9C13 8.45 12.55 8 12 8ZM12 12C11.45 12 11 12.45 11 13V17C11 17.55 11.45 18 12 18C12.55 18 13 17.55 13 17V13C13 12.45 12 12 12 12Z"
               fill="black"
             />
           </svg>
         </div>
-        
+
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
           onClick={onClose}
         >
           ×
         </button>
-        <div className=" pt-3">{children}</div>
+        <div className="pt-3">{children}</div>
       </div>
     </div>
   );

@@ -1,16 +1,17 @@
 import ReferralController from "../../controllers/ReferralController";
 import { NextRequest, NextResponse } from "next/server";
 
-
 export async function GET(req: NextRequest) {
     try {
-
         const email = req.nextUrl.searchParams.get('email');
+        const page = parseInt(req.nextUrl.searchParams.get('page') || '1', 10);
+        const pageSize = parseInt(req.nextUrl.searchParams.get('pageSize') || '5', 10);
 
         if (!email) {
             return new Response('Email is required', { status: 400 });
         }
-        const response = await ReferralController.fetchAll(email as string);
+
+        const response = await ReferralController.fetchAll(email, page, pageSize);
         return response;
     } catch (error) {
         console.error('Error processing request:', error);

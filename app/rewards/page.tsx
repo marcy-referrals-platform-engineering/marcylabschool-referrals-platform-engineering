@@ -10,7 +10,7 @@ const RewardProgress: React.FC = () => {
   const [hoveredTier, setHoveredTier] = useState<number | null>(null);
 
   // Redemption date
-  const redemptionDate = new Date("2024-05-03");
+  const redemptionDate = new Date("2024-05-17");
 
   useEffect(() => {
     if (!user) return;
@@ -23,28 +23,31 @@ const RewardProgress: React.FC = () => {
   const maxPoints = 570;
   const tiers = [
     {
-      points: 70,
-      imageUrl: "https://via.placeholder.com/100",
-      label: "Gift Box (70 points)",
-      description: "Unlock a special gift box with rewards!",
+      points: 50,
+      imageUrl: "/amazon10.webp",
+      label: "$10 Amazon Gift Card (50 points)",
+      description: "For use on amazon.com or any affiliated sites.",
     },
     {
       points: 150,
-      imageUrl: "https://via.placeholder.com/100",
-      label: "Medal (150 points)",
-      description: "Receive a medal for your outstanding progress.",
+      imageUrl: "/amazon25.webp",
+      label: "$25 Amazon Gift Card (150 points)",
+      description: "For use on amazon.com or any affiliated sites.",
     },
     {
       points: 250,
-      imageUrl: "https://via.placeholder.com/100",
-      label: "Trophy (250 points)",
-      description: "Achieve this trophy for reaching a major milestone.",
+      imageUrl: "/algoExpert.png",
+      label: "Algo Expert OR NeetCode Premium (250 points)",
+      description:
+        "Improve your technical interview skills with AlgoExpert or NeetCode Premium.",
     },
     {
       points: 500,
-      imageUrl: "https://via.placeholder.com/100",
-      label: "Special Badge (500 points)",
-      description: "Earn the special badge for top-level referrers.",
+      imageUrl: "/conf.jpg",
+      label: "Tech Conference Tickets (500 points)",
+      description:
+        "Get a free ticket to a tech conference on us. Limited to the first two achievers!",
+      special: true, // Mark this tier as special
     },
   ];
 
@@ -140,6 +143,22 @@ const RewardProgress: React.FC = () => {
             {tiers.map((tier, index) => {
               const leftPosition = (tier.points / maxPoints) * 100;
               const isReached = points >= tier.points;
+              const isSpecial = tier.special;
+
+              // Determine the size and styling based on whether the tier is special
+              const size = isSpecial ? "w-[10rem] h-[10rem]" : "w-[8rem] h-[8rem]";
+
+              const imageClassNames = `overflow-hidden ${size} rounded-full shadow-md transition-transform ${
+                isReached ? "transform scale-110" : "opacity-50"
+              } ${
+                isSpecial
+                  ? isReached
+                    ? "border-4 border-yellow-500 animate-pulse"
+                    : "border-4 border-yellow-500 opacity-75"
+                  : isReached
+                  ? "border-4 border-blue-500"
+                  : ""
+              }`;
 
               return (
                 <div
@@ -154,16 +173,21 @@ const RewardProgress: React.FC = () => {
                   onMouseLeave={() => setHoveredTier(null)}
                 >
                   {/* Reward Icon */}
-                  <div className="relative">
-                    <img
-                      src={tier.imageUrl}
-                      alt={tier.label}
-                      className={`lg:w-[8rem] rounded-full shadow-md transition-transform ${
-                        isReached
-                          ? "border-4 border-blue-500 transform scale-110"
-                          : "opacity-50"
-                      }`}
-                    />
+                  <div className={`relative ${isSpecial ? "special-tier" : ""}`}>
+                    {/* "Limited" Badge */}
+                    {isSpecial && (
+                      <div className="absolute top-[-1.5rem] left-1/3  bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-bl">
+                        Limited
+                      </div>
+                    )}
+                    <div className={imageClassNames}>
+                      <img
+                        src={tier.imageUrl}
+                        alt={tier.label}
+                        className={`object-fill m-auto ${size}`}
+                      />
+                    </div>
+
                     {/* Lock overlay */}
                     {!isReached && (
                       <div className="absolute inset-0 bottom-[18%] flex items-center justify-center">
@@ -188,7 +212,7 @@ const RewardProgress: React.FC = () => {
                     {/* Popup for milestone */}
                     {hoveredTier === index && (
                       <div
-                        className="absolute top-[10rem] left-1/2 transform -translate-x-1/2 w-48 bg-white p-2 rounded shadow-lg border border-gray-200 text-center z-50"
+                        className="absolute top-[10rem] left-1/2 transform -translate-x-1/2 w-56 bg-white p-2 rounded shadow-lg border border-gray-200 text-center z-50"
                         style={{ pointerEvents: "none" }}
                       >
                         <p className="font-bold">{tier.label}</p>

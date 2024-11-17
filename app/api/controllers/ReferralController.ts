@@ -13,11 +13,10 @@ export default class ReferralController {
         }
     }
 
-    static async fetchAll(email: string) {
+    static async fetchAll(email: string, page: number = 1, pageSize: number = 5) {
         try {
-            const referrals = await Referral.fetchAll(email);
+            const referrals = await Referral.fetchAll(email, page, pageSize);
             return NextResponse.json(referrals, { status: 200 });
-
         } catch (error: any) {
             console.error('Error fetching Referrals:', error);
             return NextResponse.json({ message: 'Failed to fetch referrals', details: error.message }, { status: 500 });
