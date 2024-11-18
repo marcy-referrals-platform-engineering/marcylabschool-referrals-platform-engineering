@@ -21,8 +21,6 @@ const TableOne = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [emailToUse, setEmailToUse] = useState("");
-  const [fetchForAll, setFetchForAll] = useState(true);
   console.log("email to use", email);
 
   const router = useRouter();

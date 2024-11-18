@@ -155,7 +155,7 @@ const Analytics: React.FC = () => {
         } ${user?.role === 'USER' && 'pt-[2rem]'}  m-auto flex-col `}
       >
         {user?.role === "ADMIN" && (
-          <div className="mb-4 border-b pb-5 pt-5 z-[50] translate-y-[-1rem]  sticky top-[5.05rem]  bg-gray-50  bg-opacity-80 backdrop-blur  m-auto   flex gap-2 align-middle ">
+          <div className="mb-4 border-b pb-5 pt-5 z-[20] translate-y-[-1rem]  sticky top-[5.05rem]  bg-gray-50  bg-opacity-80 backdrop-blur  m-auto   flex gap-2 align-middle ">
             <button
               onClick={() => {
                 if (view !== "all") {
