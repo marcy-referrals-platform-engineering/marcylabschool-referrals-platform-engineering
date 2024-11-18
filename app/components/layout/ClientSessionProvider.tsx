@@ -1,9 +1,9 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import  { useStore } from "@/app/state/useStore";
+import { useStore } from "@/app/state/useStore";
 import { useEffect, useState } from "react";
-import Loader from "../ui/Loader";
+import Loader from "./Loader";
 import ReferralService from "@/app/services/ReferralService";
 import AuthService from "@/app/services/AuthService";
 
@@ -39,18 +39,14 @@ function StateInitializerWrapper({
   session: any;
 }) {
   const setUser = useStore((state) => state.setUser);
-  const {initialPageLoad, setInitialPageLoad} = useStore();
 
-  useEffect(() => {
-   setInitialPageLoad(true);
-   
-  }, [])
   // Fetch the user's role only once when `session.user` is set
   useEffect(() => {
     const initializeUser = async () => {
       if (session?.user) {
-        const {userRole, userRelation} = await AuthService.getInfo(session.user.email);
-        console.log(userRole, userRelation, "userInfo");
+        const { userRole, userRelation } = await AuthService.getInfo(
+          session.user.email
+        );
         setUser({
           name: session.user.name || "",
           email: session.user.email || "",

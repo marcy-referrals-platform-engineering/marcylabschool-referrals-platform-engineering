@@ -1,5 +1,6 @@
 import Button from "../../ui/Button";
 import Link from "next/link";
+
 function HeroSection() {
   return (
     <div className=" z-[40]  relative overflow-hidden pb-20  ">
@@ -19,10 +20,9 @@ function HeroSection() {
           refer top talent through the Marcy Lab School Fellow Referral Program.
         </p>
         <div className="m-auto w-[10rem]">
-          <Link href='/referral-form'>
-          <Button text="START A REFERRAL" />
+          <Link href="/referral-form">
+            <Button text="START A REFERRAL" />
           </Link>
-          
         </div>
       </div>
     </div>

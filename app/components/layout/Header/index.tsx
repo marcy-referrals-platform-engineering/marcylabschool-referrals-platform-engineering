@@ -4,10 +4,10 @@ import DropdownNotification from "./DropdownNotification";
 import DropdownUser from "./DropdownUser";
 import Image from "next/image";
 import { useStore } from "@/app/state/useStore";
-import { signIn, signOut } from "next-auth/react";
 import { useEffect } from "react";
 import { useSidebarStore } from "@/app/state/useStore";
 import { linksData } from "./data";
+
 const Header = ({
   links = linksData,
   features = true,
@@ -30,7 +30,7 @@ const Header = ({
     }
     return false;
   };
-  console.log(user)
+  console.log(user);
 
   useEffect(() => {
     if (window.location.hash) {
@@ -44,7 +44,12 @@ const Header = ({
   });
   return (
     <header className="sticky    top-0 z-[50] flex  bg-white drop-shadow-1 ">
-      <div className={"flex  m-auto  flex-grow items-center justify-between px-7 md:px-[3rem] lg:px-[4rem] py-2 shadow-2  " + `${className}`}>
+      <div
+        className={
+          "flex  m-auto  flex-grow items-center justify-between px-7 md:px-[3rem] lg:px-[4rem] py-2 shadow-2  " +
+          `${className}`
+        }
+      >
         <div className="flex   items-center gap-2 sm:gap-4 ">
           {/* <!-- Hamburger Toggle BTN --> */}
           <button
@@ -53,7 +58,10 @@ const Header = ({
               e.stopPropagation();
               setSidebarOpen(!sidebarOpen);
             }}
-            className={"z-99999 md:hidden block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark " + `${mobile? 'block' :'hidden'}`}
+            className={
+              "z-99999 md:hidden block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark " +
+              `${mobile ? "block" : "hidden"}`
+            }
           >
             <span className="relative  block h-5.5 w-5.5 cursor-pointer">
               <span className="du-block absolute right-0 h-full w-full">
@@ -100,8 +108,6 @@ const Header = ({
           </Link>
         </div>
 
-        
-
         <div className="flex items-center gap-3 2xsm:gap-7">
           <ul className="flex gap-5">
             {links.map((link, index) => {
@@ -110,7 +116,9 @@ const Header = ({
                 !hide && (
                   <Link
                     onClick={link.onClick}
-                    className={` ${ mobile? 'hidden md:block'  : '' } hover:opacity-50 duration-300  font-medium text-[1.1rem]`}
+                    className={` ${
+                      mobile ? "hidden md:block" : ""
+                    } hover:opacity-50 duration-300  font-medium text-[1.1rem]`}
                     href={link.href || ""}
                   >
                     {link.text}

@@ -1,22 +1,18 @@
-'use client';
+"use client";
 import Analytics from "./components/Analytics";
-import { Metadata } from "next";
-import Layout from "../layout"
-import withAuth from "../components/layout/protect";
-import FocusBackdrop from "./ui/FocusBackdrop";
-
+import withAuth from "../components/layout/ProtectedRoute";
+import FocusBackdrop from "./components/FocusBackdrop";
 
 function Home() {
   return (
     <>
-        <div className="bg-gray-50">
+      <div className="bg-gray-50">
         <Analytics />
-        </div>
-        
-        <FocusBackdrop />
+      </div>
+
+      <FocusBackdrop />
     </>
   );
 }
 
-export default withAuth(Home)
-
+export default withAuth(Home);

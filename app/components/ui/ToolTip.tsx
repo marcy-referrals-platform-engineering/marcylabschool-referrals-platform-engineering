@@ -1,9 +1,9 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 
 interface TooltipProps {
-    children: React.ReactNode;
-    tooltipText: string;
+  children: React.ReactNode;
+  tooltipText: string;
 }
 const Tooltip: React.FC<TooltipProps> = ({ children, tooltipText }) => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });

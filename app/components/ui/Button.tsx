@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 
 interface ButtonProps {
@@ -9,6 +8,8 @@ interface ButtonProps {
   onClick?: any;
   href?: string;
 }
+
+// Animated button component
 function Button({ text, invert, className, onClick}: ButtonProps) {
   const [hovered, setHovered] = useState<boolean>(false);
   const bgRef = useRef<HTMLDivElement>(null);

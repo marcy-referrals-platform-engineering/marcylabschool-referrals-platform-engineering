@@ -1,7 +1,7 @@
 "use client";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
-import ChartOne from "./ChartOne/ChartOne";
-import ChartTwo from "./ChartTwo/ChartTwo";
+import ChartOne from "./ChartOne/YearChart";
+import ChartTwo from "./ChartTwo";
 import dynamic from "next/dynamic";
 import React from "react";
 
