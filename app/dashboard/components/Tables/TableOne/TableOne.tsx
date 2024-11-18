@@ -22,17 +22,6 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
   const router = useRouter()
 
   useEffect(() => {
-    if (email) {
-      setEmailToUse(email);
-
-    } else {
-      if (user) {
-        setEmailToUse(user.email);
-      }
-    }
-  })
-
-  useEffect(() => {
     if (!user) return;
 
     
@@ -78,12 +67,14 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
   const handleSearch = async () => {
     setCurrentPage(1); // Reset to the first page for new search
     setLoading(true);
+    console.log("searching referrals for email", email, 'searchQuery', searchQuery);
     try {
       const response = await ReferralService.searchReferrals(
-        user!.email,
+        email? email : user!.email,
         searchQuery,
         1, // Set to the first page for new search
-        ITEMS_PER_PAGE
+        ITEMS_PER_PAGE,
+        false
       );
       if (response && Array.isArray(response.data)) {
         setReferrals(response.data);
@@ -99,6 +90,12 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
     }
   };
   
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
 
   const toggleReviewed = (id: number) => {
     const updateReviewedStatus = async () => {
@@ -113,6 +110,10 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
     );
   };
 
+ 
+
+
+
   const toggleStatus = (index: number, field: string) => {
     if (user && user.role === "ADMIN") {
       setReferrals((prevReferrals) =>
@@ -121,12 +122,6 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
         )
       );
       refresh();
-    }
-  };
-
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
     }
   };
 
@@ -492,8 +487,8 @@ export const Modal = ({ title, children, onClose }: ModalProps) => {
 
   return (
     <div className="fixed  inset-0 z-50 flex items-center justify-center">
-      <div className="bg-[black]  inset-0  bg-opacity-50 w-screen  animate-fade absolute"></div>
-      <div className="bg-white absolute   top-50 h-[32rem] rounded-lg shadow-lg w-11/12 max-w-lg  p-12 pt-6 overflow-y-auto ">
+      <div className="bg-[black]  inset-0 z-[200] bg-opacity-50 w-screen  animate-fade absolute"></div>
+      <div className="bg-white absolute  z-[250]  top-40 h-[32rem] rounded-lg shadow-lg w-11/12 max-w-lg  p-12 pt-6 overflow-y-auto ">
         <div className="flex gap-2 border-b justify-center">
           <h1 className="text-[1.5rem] font-bold mb-4 text-gray-900">
             {title}

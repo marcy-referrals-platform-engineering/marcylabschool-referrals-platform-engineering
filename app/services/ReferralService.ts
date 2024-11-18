@@ -43,7 +43,7 @@ export default class ReferralService {
     }
 
     static async searchReferrals(email: string, query: string, page: number = 1, pageSize: number = 5, fetchForAll = true): Promise<any> {
-        const response = await fetch(`/api/referral/search?email=${encodeURIComponent(email)}&query=${encodeURIComponent(query)}&page=${page}&pageSize=${pageSize}${!fetchForAll ? '&fetchAll=false' : ''}`);
+        const response = await fetch(`/api/referral/search?email=${encodeURIComponent(email)}&query=${encodeURIComponent(query)}&page=${page}&pageSize=${pageSize}${fetchForAll ? '' : '&fetchForAll=false'}`);
         if (!response.ok) {
             throw new Error('Failed to search referrals');
         }

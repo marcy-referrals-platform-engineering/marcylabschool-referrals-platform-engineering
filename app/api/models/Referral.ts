@@ -81,7 +81,7 @@ export default class Referral {
     }
 
 
-    static async searchReferrals( email: string, query: string, page: number = 1, pageSize: number = 5 , fetchForAll: boolean = true) {
+    static async searchReferrals(email: string, query: string, page: number = 1, pageSize: number = 5, fetchForAll: boolean = true) {
         const user = await prisma.authorizedEmails.findUnique({
             where: { email: email }
         });
@@ -96,8 +96,8 @@ export default class Referral {
                     OR: [
                         { name: { contains: query, mode: 'insensitive' } },
                         { email: { contains: query, mode: 'insensitive' } },
-                        {referrerName: {contains: query, mode: 'insensitive'}},
-                        {referrerEmail: {contains: query, mode: 'insensitive'}}
+                        { referrerName: { contains: query, mode: 'insensitive' } },
+                        { referrerEmail: { contains: query, mode: 'insensitive' } }
                     ]
                 },
                 skip: skip,

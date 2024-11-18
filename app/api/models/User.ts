@@ -57,11 +57,16 @@ export default class User {
 
             let userReferrals;
 
-            userReferrals = (userRole as any) === 'ADMIN' && fetchForAll ? await prisma.referral.findMany() : await prisma.referral.findMany({
-                where: { referrerEmail: email }
-            });
+            userReferrals = (userRole as any).role === 'ADMIN' && fetchForAll
+            ? await prisma.referral.findMany({
+                take: 1000 // Increase this limit as needed
+              })
+            : await prisma.referral.findMany({
+                where: { referrerEmail: email },
+                take: 1000 // Add `take` here as well if needed
+              });
 
-            console.log(userReferrals);
+            console.log(userReferrals.length, 'User has this many referrals');
 
 
             const monthlyData = aggregateMonthlyData(userReferrals);

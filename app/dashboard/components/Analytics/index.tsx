@@ -63,7 +63,7 @@ const Analytics: React.FC = () => {
       setIsLoaded(false);
       setTimeout(() => {
         setIsLoaded(true);
-      }, 2200)
+      }, 2500)
 
       setInitialPageLoad(false);
     }
@@ -140,28 +140,22 @@ const Analytics: React.FC = () => {
     setFilteredUsers([]);
     setStatsLoaded(false);
     setView("single");
-    try {
       const userStats = await ReferralService.getReferralStats(email, false);
       setSelectedUserStats(userStats);
-    } catch (error) {
-      console.error("Error fetching user stats:", error);
-    } finally {
       setStatsLoaded(true);
-    }
+
   };
 
   return (
     <>
-      <div className={!hydrated || initialPageLoad || error ? "block" : "hidden"}>
-        <Loader />
-      </div>
+      
       <div
-        className={`lg:w-[90%] ${
+        className={` w-[90%] ${
           !hydrated || initialPageLoad || error ? "invisible" : ""
-        }  m-auto flex-col justify-center`}
+        }  m-auto flex-col `}
       >
         {user?.role === "ADMIN" && (
-          <div className="mb-4   flex gap-2 align-middle justify-center relative">
+          <div className="mb-4 border-b pb-5 pt-5 z-[50] translate-y-[-1rem]  sticky top-[5.05rem]  bg-gray-50   m-auto   flex gap-2 align-middle ">
             <button
               onClick={() => {
                 if (view !== "all") {
@@ -176,10 +170,10 @@ const Analytics: React.FC = () => {
                   setRefresh((prev) => !prev);
                 }
               }}
-              className={`self-center cursor-pointer border-[black] border ${
+              className={`self-center cursor-pointer duration-100  border-[black] border ${
                 view === "all"
-                  ? "bg-[black] text-white"
-                  : " bg-[white] text-black"
+                  ? "bg-[black]  text-white"
+                  : " bg-[white] hover:opacity-50 text-black"
               } p-2`}
             >
               All Referrals
@@ -190,10 +184,10 @@ const Analytics: React.FC = () => {
               value={searchQuery}
               onChange={handleSearchChange}
               placeholder="Search for a user by name or email"
-              className="border p-2 w-[20rem]"
+              className={`border p-2 ${view !== 'all'? 'bg-[black] border-black  text-white' : 'bg-gray-50'}  w-[15rem]`}
             />
             {searchQuery.length > 2 && filteredUsers.length > 0 && (
-              <div className="absolute bg-white border shadow-md mt-1 w-full max-h-40 overflow-y-auto z-50">
+              <div className="absolute bg-white border shadow-md mt-1 w-[20rem] translate-x-[3.1rem] translate-y-[2.2rem] max-h-40 overflow-y-auto z-50">
                 {filteredUsers.map((user) => (
                   <div
                     key={user.email}
@@ -208,12 +202,12 @@ const Analytics: React.FC = () => {
           </div>
         )}
 
-        {!isLoaded ? (
+        {(!isLoaded || !(userStats || selectedUserStats))? (
           <Loader />
         ) : (
           (selectedUserStats || userStats) && (
             <>
-              {/* <h1>{selectedUserName ? `${selectedUserName.toUpperCase()}'S REFERRAL STATS` : ''}</h1> */}
+             
               <div className="grid grid-cols-1 m-auto gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
                 <CardDataStats
                   loaded={statsLoaded}
