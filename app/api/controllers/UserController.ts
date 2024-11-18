@@ -3,6 +3,16 @@ import { NextResponse } from 'next/server';
 
 export class UserController {
 
+ static async search(query: string) {
+    try {
+      const users = await User.search(query);
+      return NextResponse.json(users, { status: 200 });
+    } catch (error: any) {
+      console.error('Error fetching users:', error);
+      return NextResponse.json({ message: 'Failed to fetch users', details: error.message }, { status: 500 });
+    }
+  }
+ 
   static async getUserRole(email: string) {
     try {
       const userRole = await User.getUserRole(email);
@@ -22,9 +32,9 @@ export class UserController {
     }
   }
 
-  static async getReferralStats(email: string) {
+  static async getReferralStats(email: string, fetchForAll: boolean = true) {
     try {
-      const stats = await User.getReferralStats(email);
+      const stats = await User.getReferralStats(email, fetchForAll);
       return NextResponse.json(stats, { status: 200 });
     } catch (error: any) {
       console.error('Error fetching referral stats:', error);

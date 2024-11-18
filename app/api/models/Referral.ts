@@ -20,7 +20,7 @@ export default class Referral {
         return referral;
     }
 
-    static async fetchAll(email: string, page: number = 1, pageSize: number = 5) {
+    static async fetchAll(email: string, page: number = 1, pageSize: number = 5, fetchForAll: boolean = true) {
         // Find the user to check their role
         const user = await prisma.authorizedEmails.findUnique({
             where: {
@@ -35,7 +35,7 @@ export default class Referral {
         let referrals, totalCount;
 
         // Fetch referrals based on the user's role
-        if (user?.role === 'ADMIN') {
+        if (user?.role === 'ADMIN' && fetchForAll) {
             referrals = await prisma.referral.findMany({
                 skip: skip,
                 take: pageSize,
@@ -81,7 +81,7 @@ export default class Referral {
     }
 
 
-    static async searchReferrals(email: string, query: string, page: number = 1, pageSize: number = 5) {
+    static async searchReferrals( email: string, query: string, page: number = 1, pageSize: number = 5 , fetchForAll: boolean = true) {
         const user = await prisma.authorizedEmails.findUnique({
             where: { email: email }
         });
@@ -90,7 +90,7 @@ export default class Referral {
 
         let referrals, totalCount;
 
-        if (user?.role === 'ADMIN') {
+        if (user?.role === 'ADMIN' && fetchForAll) {
             referrals = await prisma.referral.findMany({
                 where: {
                     OR: [

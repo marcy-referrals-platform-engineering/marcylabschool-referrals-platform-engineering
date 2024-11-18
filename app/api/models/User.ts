@@ -1,6 +1,24 @@
 import prisma from "../../../prisma/client";
 import { aggregateMonthlyData, aggregateWeeklyData, calculateTotals } from "../utils/referralDataUtils";
 export default class User {
+
+    static async search(query: string) { 
+        const response = await prisma.authorizedEmails.findMany({
+            where: {
+                OR: [
+                    { email: { contains: query, mode: 'insensitive' } },
+                    { name: { contains: query, mode: 'insensitive' } }
+                ]
+               
+            }
+        });
+        if (!response) {
+            console.log("Failed to search users");
+            return [];
+        }
+        return response;
+    }
+
    static async getUserRole(email: string) {
         try {
             const userRole = await prisma.authorizedEmails.findFirst({
@@ -30,7 +48,7 @@ export default class User {
 
 
 
-    static async getReferralStats(email: string) {
+    static async getReferralStats(email: string, fetchForAll: boolean = true) {
         try {
             const userRole = await prisma.authorizedEmails.findFirst({
                 where: { email },
@@ -39,7 +57,7 @@ export default class User {
 
             let userReferrals;
 
-            userReferrals = (userRole as any) === 'ADMIN' ? await prisma.referral.findMany() : await prisma.referral.findMany({
+            userReferrals = (userRole as any) === 'ADMIN' && fetchForAll ? await prisma.referral.findMany() : await prisma.referral.findMany({
                 where: { referrerEmail: email }
             });
 

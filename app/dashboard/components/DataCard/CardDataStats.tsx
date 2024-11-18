@@ -10,6 +10,8 @@ interface CardDataStatsProps {
   levelDown?: boolean;
   levelStatic?: boolean;
   children: ReactNode;
+  loaded: any;
+  setLoaded: any;
 }
 
 const CardDataStats: React.FC<CardDataStatsProps> = ({
@@ -20,8 +22,9 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
   levelDown,
   levelStatic,
   children,
+  loaded,
+  setLoaded,
 }) => {
-  const [loaded, setLoaded] = useState(false);
   let textStyle;
   if (levelUp) textStyle = "text-meta-3";
   if (levelDown) textStyle = "text-red-500";

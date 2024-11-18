@@ -13,9 +13,9 @@ export default class ReferralController {
         }
     }
 
-    static async fetchAll(email: string, page: number = 1, pageSize: number = 5) {
+    static async fetchAll(email: string, page: number = 1, pageSize: number = 5, fetchForAll: boolean = true) {
         try {
-            const referrals = await Referral.fetchAll(email, page, pageSize);
+            const referrals = await Referral.fetchAll(email, page, pageSize, fetchForAll);
             return NextResponse.json(referrals, { status: 200 });
         } catch (error: any) {
             console.error('Error fetching Referrals:', error);
@@ -23,9 +23,9 @@ export default class ReferralController {
         }
     }
 
-    static async search(email: string, query: string, page: number, pageSize: number) {
+    static async search(email: string, query: string, page: number, pageSize: number, fetchForAll: boolean = true) {
         try {
-            const results = await Referral.searchReferrals(email, query, page, pageSize);
+            const results = await Referral.searchReferrals(email, query, page, pageSize, fetchForAll);
             return NextResponse.json(results, { status: 200 });
         } catch (error: any) {
             console.error('Error searching referrals:', error);

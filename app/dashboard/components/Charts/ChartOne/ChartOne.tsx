@@ -119,10 +119,9 @@ const options: ApexOptions = {
   },
 };
 
-const ChartOne = ({ userStats }: { userStats: any }) => {
+const ChartOne = ({ userStats, loaded, setLoaded }: { userStats: any, loaded: any, setLoaded: any }) => {
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [hydrated, setHydrated] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [maxY, setMaxY] = useState(100);
   const [chartKey, setChartKey] = useState(0); // Key to force re-render of chart
 
@@ -131,7 +130,7 @@ const ChartOne = ({ userStats }: { userStats: any }) => {
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
+    const timer = setTimeout(() => setLoaded(true), 500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -171,13 +170,13 @@ const ChartOne = ({ userStats }: { userStats: any }) => {
 
   return (
     <div className="col-span-12 xl:col-span-8">
-      <div className={`${loading ? "block" : "hidden"}`}>
+      <div className={`${!loaded ? "block" : "hidden"}`}>
         <ChartOneLoading />
       </div>
 
       <div
         className={`col-span-12  rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5  dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8 ${
-          loading ? "hidden" : "block"
+          !loaded ? "hidden" : "block"
         }`}
       >
         <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">

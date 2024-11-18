@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import ReferralService from "@/app/services/ReferralService";
-
+import { useStore } from "@/app/state/useStore";
 const style = {
   position: "absolute",
   top: "50%",
@@ -31,6 +31,7 @@ export default function CheckBoxModal({
   points: number;
   data: any;
 }) {
+  const { user } = useStore();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -48,10 +49,10 @@ export default function CheckBoxModal({
     handleClose();
   };
   return (
-    <div className=" cursor-pointer w-6">
+    <div className={` ${user?.role === 'ADMIN' && 'cursor-pointer'} w-6`}>
       <div
         onClick={() => handleOpen()}
-        className={`w-6 overflow-hidden relative h-6 flex items-center justify-center rounded ${
+        className={` ${user?.role === 'USER' && 'pointer-events-none '} w-6  overflow-hidden relative h-6 flex items-center justify-center  rounded ${
           conditionTrue ? "bg-green-200" : "bg-red-200"
         }`}
       >

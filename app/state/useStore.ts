@@ -1,4 +1,4 @@
-
+import { useEffect, useState } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -13,6 +13,9 @@ interface User {
 interface StoreState {
   user: User | null;
   setUser: (user: User | null) => void;
+
+  initialPageLoad: boolean;
+  setInitialPageLoad: (value: boolean) => void;
 }
 
 export const useStore = create<StoreState>()(
@@ -20,6 +23,9 @@ export const useStore = create<StoreState>()(
     (set) => ({
       user: null,
       setUser: (user) => set({ user }),
+      // Ensure `initialPageLoad` is true by default
+      initialPageLoad: true,
+      setInitialPageLoad: (value) => set({ initialPageLoad: value }),
     }),
     {
       name: 'user-store', 
@@ -50,6 +56,8 @@ export const useSidebarStore = create<SidebarState>((set) => ({
   sidebarOpen: false,
   setSidebarOpen: (open: boolean) => set(() => ({ sidebarOpen: open })),
 }));
+
+
 
 
 

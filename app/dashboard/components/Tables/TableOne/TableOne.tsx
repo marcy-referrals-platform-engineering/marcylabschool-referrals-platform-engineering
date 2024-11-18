@@ -4,10 +4,10 @@ import { useStore } from "@/app/state/useStore";
 import ReferralService from "@/app/services/ReferralService";
 import TableOneLoading from "./TabelOneLoading";
 import CheckBoxModal from "./CheckBoxModal";
-
+import {useRouter} from 'next/navigation'
 const ITEMS_PER_PAGE = 5; // Number of referrals to display per page
 
-const TableOne = ({ refresh }: { refresh: any }) => {
+const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => {
   const { user } = useStore();
   const [referrals, setReferrals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,18 +15,36 @@ const TableOne = ({ refresh }: { refresh: any }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [emailToUse, setEmailToUse] = useState("");
+  const [fetchForAll, setFetchForAll] = useState(true);
+  console.log('email to use', email)
+
+  const router = useRouter()
+
+  useEffect(() => {
+    if (email) {
+      setEmailToUse(email);
+
+    } else {
+      if (user) {
+        setEmailToUse(user.email);
+      }
+    }
+  })
 
   useEffect(() => {
     if (!user) return;
-    const { email } = user;
+
+    
 
     const fetchReferrals = async () => {
       setLoading(true);
       try {
         const response = await ReferralService.fetchReferrals(
-          email,
+          email? email : user.email,
           currentPage,
-          ITEMS_PER_PAGE
+          ITEMS_PER_PAGE,
+          email? false : true
         );
         console.log("data", response);
 
@@ -55,7 +73,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
     };
 
     fetchReferrals();
-  }, [user, currentPage]);
+  }, [user, currentPage, email]);
 
   const handleSearch = async () => {
     setCurrentPage(1); // Reset to the first page for new search
@@ -118,8 +136,8 @@ const TableOne = ({ refresh }: { refresh: any }) => {
       <h4 className="mb-3 text-lg font-semibold text-black dark:text-white">
         {user?.role === "USER" ? "YOUR" : ""} REFERRALS
       </h4>
-
-      <PlusButton onClick={() => console.log("Add Referral")} />
+    
+      <PlusButton onClick={() => router.push('/referral-form')} />
       </div>
       
       <div>
@@ -128,7 +146,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
           placeholder="Search by name or email"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border p-2 mb-4"
+          className="border p-2 mb-4 bg-gray-50"
         />
         <button
           onClick={handleSearch}
@@ -155,7 +173,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
         <TableOneLoading />
       ) : referrals.length === 0 ? (
         <div className="text-center py-10">
-          <p className="text-gray-500 min-h-[12.5rem]">No referrals found</p>
+          <p className="text-gray-500 min-h-[12rem]">No referrals found</p>
         </div>
       ) : (
         <div className="overflow-x-auto  h-[15rem] overflow-y-scroll mb-6">
@@ -441,7 +459,7 @@ const TableOne = ({ refresh }: { refresh: any }) => {
                 </div>
               </div>
             </div>
-            {!selectedReferral.reviewed && (
+            {!selectedReferral.reviewed  && user?.role === 'ADMIN' &&  (
               <button
                 onClick={() => toggleReviewed(selectedReferral?.id)}
                 className="text-center m-auto w-full underline"
@@ -475,7 +493,7 @@ export const Modal = ({ title, children, onClose }: ModalProps) => {
   return (
     <div className="fixed  inset-0 z-50 flex items-center justify-center">
       <div className="bg-[black]  inset-0  bg-opacity-50 w-screen  animate-fade absolute"></div>
-      <div className="bg-white absolute   top-50 max-h-[32rem] rounded-lg shadow-lg w-11/12 max-w-lg  p-12 pt-6 overflow-y-auto ">
+      <div className="bg-white absolute   top-50 h-[32rem] rounded-lg shadow-lg w-11/12 max-w-lg  p-12 pt-6 overflow-y-auto ">
         <div className="flex gap-2 border-b justify-center">
           <h1 className="text-[1.5rem] font-bold mb-4 text-gray-900">
             {title}
@@ -521,7 +539,7 @@ const PlusButton = ({ onClick } : {onClick: any}) => {
   return (
     <button 
       onClick={onClick} 
-      className="p-1 px-3 bg-[black] hover:opacity-50 duration-200 text-white rounded-full flex items-center justify-center"
+      className="p-1 px-3 scale-[0.8] bg-[black] hover:opacity-50 duration-200 text-white rounded-full flex items-center justify-center"
       aria-label="Add"
     >
       <svg

@@ -10,8 +10,8 @@ export default class ReferralService {
         return wasRequestSuccessful
     }
 
-    static async getReferralStats(email: string): Promise<any> {
-        const response = await apiFetch(`api/user/referral-stats?email=${email}`);
+    static async getReferralStats(email: string, fetchForAll = true): Promise<any> {
+        const response = await apiFetch(`api/user/referral-stats?email=${email}${!fetchForAll ? '&fetchForAll=false' : ''}`);
         if (!response) {
             console.log("Failed to fetch referral stats")
             return null;
@@ -19,8 +19,8 @@ export default class ReferralService {
         return response;
     }
 
-    static async fetchReferrals(email: string, page: number = 1, pageSize: number = 5): Promise<any> {
-        const response = await fetch(`/api/referral/get-all?email=${email}&page=${page}&pageSize=${pageSize}`);
+    static async fetchReferrals(email: string, page: number = 1, pageSize: number = 5, fetchForAll=true): Promise<any> {
+        const response = await fetch(`/api/referral/get-all?email=${email}&page=${page}&pageSize=${pageSize} ${!fetchForAll ? '&fetchForAll=false' : ''}`);
     if (!response.ok) {
         throw new Error('Failed to fetch referrals');
     }
@@ -42,13 +42,15 @@ export default class ReferralService {
 
     }
 
-    static async searchReferrals(email: string, query: string, page: number = 1, pageSize: number = 5) {
-        const response = await fetch(`/api/referral/search?email=${encodeURIComponent(email)}&query=${encodeURIComponent(query)}&page=${page}&pageSize=${pageSize}`);
+    static async searchReferrals(email: string, query: string, page: number = 1, pageSize: number = 5, fetchForAll = true): Promise<any> {
+        const response = await fetch(`/api/referral/search?email=${encodeURIComponent(email)}&query=${encodeURIComponent(query)}&page=${page}&pageSize=${pageSize}${!fetchForAll ? '&fetchAll=false' : ''}`);
         if (!response.ok) {
             throw new Error('Failed to search referrals');
         }
         return await response.json();
     }
+
+
 
     static async updateReviewStatus(referralId: number): Promise<any> {
         try {

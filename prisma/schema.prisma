@@ -10,6 +10,7 @@ datasource db {
 
 model AuthorizedEmails {
   id        Int        @id @default(autoincrement())
+  name String?
   email     String     @unique
   createdAt DateTime   @default(now())
   role      Role       @default(USER)

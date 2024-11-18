@@ -71,8 +71,8 @@ interface ChartData {
   categories: string[];
 }
 
-const ChartTwo: React.FC<{ userStats: any }> = ({ userStats }) => {
-  const [loading, setLoading] = useState(true);
+const ChartTwo: React.FC<{ userStats: any, loaded: any, setLoaded: any }> = ({ userStats, loaded, setLoaded }) => {
+
   const [chartData, setChartData] = useState<ChartData>({
     series: [],
     categories: [],
@@ -82,7 +82,7 @@ const ChartTwo: React.FC<{ userStats: any }> = ({ userStats }) => {
   );
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
+    const timer = setTimeout(() => setLoaded(true), 500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -91,17 +91,17 @@ const ChartTwo: React.FC<{ userStats: any }> = ({ userStats }) => {
       selectedWeek === "thisWeek"
         ? userStats?.weeklyData.thisWeek || []
         : userStats?.weeklyData.lastWeek || [];
-    if (weeklyData && !loading) {
+    if (weeklyData && loaded) {
       const { series, categories } = formatBarChartData(weeklyData);
       setChartData({ series, categories });
     }
-  }, [userStats, loading, selectedWeek]);
+  }, [userStats, loaded, selectedWeek]);
 
   const handleWeekChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedWeek(event.target.value as "thisWeek" | "lastWeek");
   };
 
-  return loading ? (
+  return !loaded ? (
     <ChartTwoLoading />
   ) : (
     <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5  dark:border-strokedark dark:bg-boxdark xl:col-span-4">
