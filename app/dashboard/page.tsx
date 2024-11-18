@@ -3,7 +3,7 @@ import Analytics from "./components/Analytics";
 import withAuth from "../components/layout/ProtectedRoute";
 import FocusBackdrop from "./components/FocusBackdrop";
 
-function Home() {
+function Dashboard() {
   return (
     <>
       <div className="bg-gray-50">
@@ -15,4 +15,4 @@ function Home() {
   );
 }
 
-export default withAuth(Home);
+export default withAuth(Dashboard);

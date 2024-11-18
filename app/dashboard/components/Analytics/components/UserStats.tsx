@@ -1,5 +1,5 @@
 import React from "react";
-import CardDataStats from "../../DataCard/CardDataStats";
+import CardDataStats from "../../DataCards/CardDataStats";
 
 interface UserStatsProps {
   userStats: any;
