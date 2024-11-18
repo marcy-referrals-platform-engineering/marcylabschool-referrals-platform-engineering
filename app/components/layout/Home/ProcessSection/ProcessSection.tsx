@@ -18,7 +18,7 @@ function ProcessSection({processData} : {processData: ProcessData[]}) {
   };
 
   return (
-    <div className=" mt-10 w-[90%]   border-t-[0.3rem] m-auto border-t-[#261f1d]">
+    <div className=" mt-10 w-[90%]    border-t-[0.3rem] m-auto border-t-[#261f1d]">
       <h1 className="text-[2.3rem] lg:text-[2.8rem] xl-[3rem]  md:text-[2.7rem]">
         THE PROCESS
       </h1>

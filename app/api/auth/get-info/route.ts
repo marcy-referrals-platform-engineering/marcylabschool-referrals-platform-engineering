@@ -11,11 +11,17 @@ export async function GET(req: NextRequest) {
             return new Response('Email is required', { status: 400 });
         }
 
-        const userRole = await UserController.getUserRole(email as string);
-        return userRole;
+        const response = await UserController.getUserInfo(email as string);
+        const { userRole, userRelation } = await response.json();
+        console.log('userRole:', userRole, 'userRelation', userRelation);
+        return new Response(JSON.stringify({ userRole, userRelation }), { status: 200 });
     } catch (error) {
         console.error('Error processing request:', error);
         return new Response('Internal Server Error', { status: 500 });
 
     }
+}
+
+export async function OPTIONS() {
+    return NextResponse.json({}, { status: 200 });
 }

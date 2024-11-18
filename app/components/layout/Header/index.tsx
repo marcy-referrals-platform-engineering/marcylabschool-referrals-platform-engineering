@@ -25,7 +25,7 @@ const Header = ({
     if (user && linkText === "LOG-IN") {
       return true;
     }
-    if (!user && (linkText === "DASHBOARD" || linkText === "REFERRALS" || linkText === "REWARDS")) {
+    if (!user && (linkText === "DASHBOARD" || linkText === "REFERRALS")) {
       return true;
     }
     return false;

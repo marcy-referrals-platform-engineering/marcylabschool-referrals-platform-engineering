@@ -11,5 +11,8 @@ export default class UserService {
         return response;
     }
 
+    static async setRelation(email: string, relation: string) {
+        const response = await apiFetch(`/api/user/set-relation`, 'PATCH', { email, relation });
+    }
   
 }

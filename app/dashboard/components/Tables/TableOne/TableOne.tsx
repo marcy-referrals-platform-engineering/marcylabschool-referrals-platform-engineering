@@ -368,7 +368,7 @@ const TableOne = ({
                   href={selectedReferral.linkedIn}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`font-medium ${selectedReferral.resume && 'underline'} hover:opacity-50 transition`}
+                  className={`font-medium ${selectedReferral.linkedIn && 'underline'} hover:opacity-50 transition`}
                 >
                 { selectedReferral.linkedIn ? "Link" : "Not provided"}
                 </a>

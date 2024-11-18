@@ -19,15 +19,19 @@ export default class User {
         return response;
     }
 
-   static async getUserRole(email: string) {
+   static async getUserInfo(email: string) {
         try {
             const userRole = await prisma.authorizedEmails.findFirst({
                 where: { email },
                 select: { role: true }
             })
-            return userRole;
+            const userRelation = await prisma.authorizedEmails.findFirst({
+                where: { email },
+                select: { relation: true }
+            })
+            return {userRole, userRelation};
         } catch (error) {
-            console.error("Error fetching user role:", error);
+            console.error("Error fetching user info:", error);
             throw new Error("Could not retrieve user role");
         }
    }
@@ -82,4 +86,15 @@ export default class User {
         }
     }
 
+
+    static async setRelation(email: string, relation: string) {
+        const response = await prisma.authorizedEmails.update({
+            where: { email },
+            data: { relation }
+        });
+        if (!response) {
+            throw new Error('Failed to set relation');
+        }
+        return response;
+    }
 }

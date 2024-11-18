@@ -7,6 +7,7 @@ interface User {
   email: string;
   image: string;
   role: string;
+  relation: string;
 }
 
 

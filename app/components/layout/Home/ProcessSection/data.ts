@@ -29,7 +29,7 @@ export const processData = [
     body: `Once you've accumulated enough points, you can redeem them for exclusive rewards. Rewards include Marcy Lab School merchandise, gift cards, and more.`,
     color: "#a6c2b4", // Use any color of your choice
     img: "/marcy7.jpg", // Use an appropriate image for the rewards section
-    step: 3,
-    button: { invert: true, text: "VIEW REWARDS" },
+    step: 3, 
+    button: { invert: true, text: "VIEW REWARDS", href: '/rewards' },
   },
 ];

@@ -6,7 +6,7 @@ export default class Referral {
             data: {
                 name: data.recruitName,
                 email: data.recruitEmail,
-                resume: data.recruitResume || null,
+                resume: data.resume || null,
                 gender: data.recruitGender || null,
                 linkedIn: data.recruitLinkedIn || null,
                 referrerEmail: data.email,

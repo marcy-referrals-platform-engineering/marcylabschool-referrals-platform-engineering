@@ -20,14 +20,15 @@ const Sidebar = () => {
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
       <aside
-        className={`fixed lg:hidden  left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-[#261f1d] duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 ${
+        className={`fixed lg:hidden  left-0 top-0 z-[2600] flex h-screen w-72.5 flex-col overflow-y-hidden bg-[#261f1d] duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full "
         }`}
       >
         {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center border-b w-[74%] mx-auto justify-between gap-2  py-3 lg:py-6.5">
-          <Link href="/">
+          <Link  href="/">
             <Image
+            onClick={() => setTimeout(() => setSidebarOpen(false), 100)}
               className=""
               width={170}
               height={50}

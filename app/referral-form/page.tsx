@@ -8,8 +8,17 @@ import FileUpload from "./components/FileUpload";
 import Button from "../components/ui/Button";
 import Header from "../components/layout/Header";
 import withAuth from "../components/layout/protect";
+import { uploadFile } from "../utils/supabase";
 
-function LoadingComponent({ isLoading, isSuccess, onRetry }: { isLoading: boolean; isSuccess: boolean | null; onRetry: () => void }) {
+function LoadingComponent({
+  isLoading,
+  isSuccess,
+  onRetry,
+}: {
+  isLoading: boolean;
+  isSuccess: boolean | null;
+  onRetry: () => void;
+}) {
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-[calc(100vh-200px)] bg-slate-50">
       {isLoading ? (
@@ -20,7 +29,11 @@ function LoadingComponent({ isLoading, isSuccess, onRetry }: { isLoading: boolea
       ) : (
         isSuccess !== null && (
           <div className="flex flex-col items-center justify-center">
-            <p className={`text-2xl ${isSuccess ? 'text-green-500' : 'text-red-600'} flex items-center`}>
+            <p
+              className={`text-2xl ${
+                isSuccess ? "text-green-500" : "text-red-600"
+              } flex items-center`}
+            >
               {isSuccess ? (
                 <span className="mr-2 text-[2rem]">Referral Submitted ✓</span>
               ) : (
@@ -30,10 +43,10 @@ function LoadingComponent({ isLoading, isSuccess, onRetry }: { isLoading: boolea
             <button
               onClick={onRetry}
               className={`mt-10 px-4 py-2 border rounded ${
-                isSuccess ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                isSuccess ? "bg-green-500 text-white" : "bg-red-500 text-white"
               }`}
             >
-              {isSuccess ? 'Submit Another Referral' : 'Try Again'}
+              {isSuccess ? "Submit Another Referral" : "Try Again"}
             </button>
           </div>
         )
@@ -59,7 +72,16 @@ function ReferralForm() {
     setIsLoading(true);
     setSubmitted(null);
     try {
-      const success = await ReferralService.sendReferralRequest(formData);
+      // Upload the file and get the resume link
+      const resume = await uploadFile(formData.resume, "resumes");
+
+      // Create a new object with the updated resume link
+      const updatedFormData = { ...formData, resume };
+      console.log('updatedFormData', updatedFormData)
+      // Send the referral request with the updated form data
+      const success = await ReferralService.sendReferralRequest(
+        updatedFormData
+      );
       setSubmitted(success);
     } catch (error) {
       setSubmitted(false);
@@ -81,19 +103,20 @@ function ReferralForm() {
     user && (
       <div className="w-screen min-h-screen bg-slate-50">
         {/* Header with sticky positioning */}
-        <Header
-          className="py-2.5"
-          features={false}
-          mobile={false}
-          links={[{ text: "← Back Home ", href: "/" }]}
-        />
+
         {/* Main Page Content */}
         {isLoading || submitted !== null ? (
-          <LoadingComponent isLoading={isLoading} isSuccess={submitted} onRetry={handleRetry} />
+          <LoadingComponent
+            isLoading={isLoading}
+            isSuccess={submitted}
+            onRetry={handleRetry}
+          />
         ) : (
           <>
             {/* Background Image */}
             <Image
+              unoptimized
+              priority
               width={900}
               quality={100}
               height={900}
@@ -109,13 +132,16 @@ function ReferralForm() {
                 className="p-8 border bg-white z-[130] flex flex-col"
               >
                 <p className="w-[95%] font-medium m-auto border-b-[#261f1d] pb-3 border-b-[0.2rem] pt-1">
-                  Help us connect with the next generation of Marcy talent. Please
-                  use this form to submit a referral. Remember, LinkedIn profiles
-                  and resumes are highly encouraged.
+                  Help us connect with the next generation of Marcy talent.
+                  Please use this form to submit a referral. Remember, LinkedIn
+                  profiles and resumes are highly encouraged.
                 </p>
 
                 <div className="pt-8 p-6">
-                  <CandidateInfo formData={formData} handleChange={handleChange} />
+                  <CandidateInfo
+                    formData={formData}
+                    handleChange={handleChange}
+                  />
                   <FileUpload formData={formData} setFormData={setFormData} />
                 </div>
                 <div className="m-auto -translate-x-[1rem]">

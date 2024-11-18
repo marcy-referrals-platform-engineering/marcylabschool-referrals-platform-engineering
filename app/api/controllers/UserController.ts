@@ -13,10 +13,10 @@ export class UserController {
     }
   }
  
-  static async getUserRole(email: string) {
+  static async getUserInfo(email: string) {
     try {
-      const userRole = await User.getUserRole(email);
-      return NextResponse.json(userRole, { status: 200 });
+      const {userRole, userRelation} = await User.getUserInfo(email);
+      return NextResponse.json({userRole, userRelation}, { status: 200 });
     } catch (error: any) {
       console.error('Error fetching user role:', error);
       return NextResponse.json({ message: 'Failed to fetch user role', details: error.message }, { status: 500 });
@@ -39,6 +39,16 @@ export class UserController {
     } catch (error: any) {
       console.error('Error fetching referral stats:', error);
       return NextResponse.json({ message: 'Failed to fetch referral stats', details: error.message }, { status: 500 });
+    }
+  }
+
+  static async setRelation(email: string, relation: string) {
+    try {
+      await User.setRelation(email, relation);
+      return NextResponse.json({ message: 'Relation set successfully' }, { status: 200 });
+    } catch (error: any) {
+      console.error('Error setting relation:', error);
+      return NextResponse.json({ message: 'Failed to set relation', details: error.message }, { status: 500 });
     }
   }
 }

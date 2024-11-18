@@ -1,3 +1,4 @@
+
 import "./globals.css";
 import Sidebar from "./components/layout/Sidebar/index";
 import ProcessSection from "./components/layout/Home/ProcessSection/ProcessSection";
@@ -13,13 +14,11 @@ import { processData } from "./components/layout/Home/ProcessSection/data";
 export default function Home() {
   return (
     <div className="flex h-screen bg-white">
-      <div className="h-full">
-        <Sidebar />
-      </div>
+      
 
       {/* Main content area */}
       <div className="flex-1 overflow-y-auto ml-auto">
-        <Header />
+
         <HeroSection />
         <ProcessSection processData={processData} />
         <ReferralMilestones />
@@ -33,3 +32,5 @@ export default function Home() {
     </div>
   );
 }
+
+

@@ -150,9 +150,9 @@ const Analytics: React.FC = () => {
     <>
       
       <div
-        className={` w-[90%] ${
+        className={` w-[90%]  ${
           !hydrated || initialPageLoad || error ? "invisible" : ""
-        }  m-auto flex-col `}
+        } ${user?.role === 'USER' && 'pt-[2rem]'}  m-auto flex-col `}
       >
         {user?.role === "ADMIN" && (
           <div className="mb-4 border-b pb-5 pt-5 z-[50] translate-y-[-1rem]  sticky top-[5.05rem]  bg-gray-50  bg-opacity-80 backdrop-blur  m-auto   flex gap-2 align-middle ">
@@ -172,7 +172,7 @@ const Analytics: React.FC = () => {
               }}
               className={`self-center cursor-pointer duration-100  border-[black] border ${
                 view === "all"
-                  ? "bg-[#261f1d]  text-white"
+                  ? "bg-[#261f1d]    text-white"
                   : " bg-[white] hover:opacity-50 text-black"
               } p-2`}
             >

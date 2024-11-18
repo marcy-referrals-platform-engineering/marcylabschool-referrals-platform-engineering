@@ -8,10 +8,13 @@ export default class AuthService {
         const wasRequestSuccessful = !!(await apiFetch('/api/auth/auth-request/create', 'POST', { email, name, img }))
         return wasRequestSuccessful
     };
-    static async getUserRole(email: string): Promise<string> {
-        const response = await apiFetch(`/api/auth/get-role?email=${email}`);
-        return response.role;
+    static async getInfo(email: string): Promise<{userRole: string, userRelation: string}> {
+        const response = await apiFetch(`/api/auth/get-info?email=${email}`);
+        console.log(response, "response")
+        return {userRole: (response.userRole.role), userRelation: response.userRelation.relation};
     }
+
+
 
     static async getAuthRequests(): Promise<any[]> {
         try {

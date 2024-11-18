@@ -13,9 +13,9 @@ const RewardProgress: React.FC = () => {
   const redemptionDate = new Date("2024-05-17");
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || user.role === 'ADMIN') return;
     ReferralService.getReferralStats(user!.email).then((data) => {
-      setPoints(100); // Set mock points for demonstration
+      setPoints(data.totalPoints); // Set mock points for demonstration
     });
   }, [user]);
 
@@ -94,8 +94,7 @@ const RewardProgress: React.FC = () => {
 
   return (
     <div>
-      <Header />
-      <div className="p-6 bg-white rounded-lg">
+      <div className="p-6 z-[-1]   bg-white rounded-lg">
         <h1 className="text-2xl font-bold mb-4 text-center">
           Referral Rewards Progress
         </h1>
@@ -225,7 +224,7 @@ const RewardProgress: React.FC = () => {
             })}
           </div>
         </div>
-        <p className="text-center text-lg font-medium">Points: {points}</p>
+        { user && user.role === 'USER' && <p className="text-center text-lg font-medium">Points: {points}</p>}
       </div>
     </div>
   );
