@@ -155,7 +155,7 @@ const Analytics: React.FC = () => {
         }  m-auto flex-col `}
       >
         {user?.role === "ADMIN" && (
-          <div className="mb-4 border-b pb-5 pt-5 z-[50] translate-y-[-1rem]  sticky top-[5.05rem]  bg-gray-50   m-auto   flex gap-2 align-middle ">
+          <div className="mb-4 border-b pb-5 pt-5 z-[50] translate-y-[-1rem]  sticky top-[5.05rem]  bg-gray-50  bg-opacity-80 backdrop-blur  m-auto   flex gap-2 align-middle ">
             <button
               onClick={() => {
                 if (view !== "all") {
@@ -172,7 +172,7 @@ const Analytics: React.FC = () => {
               }}
               className={`self-center cursor-pointer duration-100  border-[black] border ${
                 view === "all"
-                  ? "bg-[black]  text-white"
+                  ? "bg-[#261f1d]  text-white"
                   : " bg-[white] hover:opacity-50 text-black"
               } p-2`}
             >
@@ -184,7 +184,7 @@ const Analytics: React.FC = () => {
               value={searchQuery}
               onChange={handleSearchChange}
               placeholder="Search for a user by name or email"
-              className={`border p-2 ${view !== 'all'? 'bg-[black] border-black  text-white' : 'bg-gray-50'}  w-[15rem]`}
+              className={`border p-2 ${view !== 'all'? 'bg-[#261f1d] border-black  text-white' : 'bg-gray-50'} w-[15.5rem]`}
             />
             {searchQuery.length > 2 && filteredUsers.length > 0 && (
               <div className="absolute bg-white border shadow-md mt-1 w-[20rem] translate-x-[3.1rem] translate-y-[2.2rem] max-h-40 overflow-y-auto z-50">
@@ -208,7 +208,7 @@ const Analytics: React.FC = () => {
           (selectedUserStats || userStats) && (
             <>
              
-              <div className="grid grid-cols-1 m-auto gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+              <div className={` grid ${user?.role === 'ADMIN'? 'xl:grid-cols-3 md:grid-cols-1 ' : ' xl:grid-cols-2 md:grid-cols-2'} grid-cols-1 m-auto gap-4  md:gap-6  2xl:gap-7.5`}>
                 <CardDataStats
                   loaded={statsLoaded}
                   setLoaded={setStatsLoaded}
@@ -263,7 +263,7 @@ const Analytics: React.FC = () => {
                     <path d="M15.9843 10.0313H15.6749C14.6437 10.0313 13.6468 10.3406 12.7874 10.8563C11.8593 9.61876 10.3812 8.79376 8.73115 8.79376H5.67178C2.85303 8.82814 0.618652 11.0625 0.618652 13.8469V16.3219C0.618652 16.975 1.13428 17.4906 1.7874 17.4906H20.2468C20.8999 17.4906 21.4499 16.9406 21.4499 16.2875V15.4625C21.4155 12.4719 18.9749 10.0313 15.9843 10.0313ZM2.16553 15.9438V13.8469C2.16553 11.9219 3.74678 10.3406 5.67178 10.3406H8.73115C10.6562 10.3406 12.2374 11.9219 12.2374 13.8469V15.9438H2.16553V15.9438ZM19.8687 15.9438H13.7499V13.8469C13.7499 13.2969 13.6468 12.7469 13.4749 12.2313C14.0937 11.7844 14.8499 11.5781 15.6405 11.5781H15.9499C18.0812 11.5781 19.8343 13.3313 19.8343 15.4625V15.9438H19.8687Z" />
                   </svg>
                 </CardDataStats>
-                <AuthRequests />
+                { user?.role === 'ADMIN' && <AuthRequests setLoaded={setStatsLoaded} loaded={statsLoaded} />}
               </div>
 
               <div className="mt-4 grid mb-4 grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">

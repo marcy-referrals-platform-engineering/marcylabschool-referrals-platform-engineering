@@ -12,8 +12,7 @@ const style = {
   width: 400,
   bgcolor: "background.paper",
   outline: "none",
-
-  borderRadius: "5px",
+  borderRadius: "3px",
   p: 4,
   padding: "3rem",
 };
@@ -68,6 +67,7 @@ export default function CheckBoxModal({
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        
       >
         <Box sx={style}>
           <h1 className=" text-[2rem] text-center pb-5">ARE YOU SURE?</h1>

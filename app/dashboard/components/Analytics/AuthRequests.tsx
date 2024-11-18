@@ -3,11 +3,23 @@ import { useEffect, useState } from "react";
 import AuthService from "@/app/services/AuthService";
 import Image from "next/image";
 import { requestToBodyStream } from "next/dist/server/body-streams";
-function AuthRequests() {
+function AuthRequests({
+  loaded,
+  setLoaded,
+}: {
+  loaded: boolean;
+  setLoaded: any;
+}) {
   const [requests, setRequests] = useState<any>([]);
   const [expanded, setExpanded] = useState(false);
   const [hasChanged, setHasChanged] = useState(false);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setLoaded(true);
+    }, 300);
+  });
+  
   const handleRequest = async (requestId: number, shouldAccept: boolean) => {
     console.log(requestId, shouldAccept);
     const response = await AuthService.handleAuthRequest(
@@ -26,7 +38,9 @@ function AuthRequests() {
     fetchRequests();
   }, [hasChanged]);
 
-  return (
+  return !loaded ? (
+    <AuthRequstsLoading />
+  ) : (
     <div className="rounded-sm relative min-h-[10.2rem] border border-stroke bg-white  pt-6 pb-2  ">
       <div className=" pt-4 px-7.5 flex items-center gap-2">
         <h1 className="text-[1.4rem] font-medium">Authorization Requests</h1>
@@ -65,7 +79,9 @@ function AuthRequests() {
 
       <p
         onClick={() => setExpanded(!expanded)}
-        className={`font-medium   text-center z-[68] border-t cursor-pointer mt-6 text-gray-500 pt-2 hover:opacity-50 duration-200 ${!requests.length && 'hidden'}`}
+        className={`font-medium   text-center z-[68] border-t cursor-pointer mt-6 text-gray-500 pt-2 hover:opacity-50 duration-200 ${
+          !requests.length && "hidden"
+        }`}
       >
         {expanded ? "Collapse Requests" : "View Requests"}
       </p>
@@ -113,3 +129,18 @@ function AuthRequests() {
 }
 
 export default AuthRequests;
+
+const AuthRequstsLoading = () => {
+  return (
+    <div className="animate-pulse shadow bg-white border px-7.5">
+      <div className="flex items-center gap-3 mt-10">
+        
+        <div className="flex-1 flex flex-col gap-2">
+          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+        </div>
+      </div>
+     
+    </div>
+  );
+};

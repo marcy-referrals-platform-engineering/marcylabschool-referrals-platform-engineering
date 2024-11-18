@@ -4,10 +4,16 @@ import { useStore } from "@/app/state/useStore";
 import ReferralService from "@/app/services/ReferralService";
 import TableOneLoading from "./TabelOneLoading";
 import CheckBoxModal from "./CheckBoxModal";
-import {useRouter} from 'next/navigation'
+import { useRouter } from "next/navigation";
 const ITEMS_PER_PAGE = 5; // Number of referrals to display per page
 
-const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => {
+const TableOne = ({
+  refresh,
+  email,
+}: {
+  refresh: any;
+  email: string | null;
+}) => {
   const { user } = useStore();
   const [referrals, setReferrals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -17,23 +23,21 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
   const [searchQuery, setSearchQuery] = useState("");
   const [emailToUse, setEmailToUse] = useState("");
   const [fetchForAll, setFetchForAll] = useState(true);
-  console.log('email to use', email)
+  console.log("email to use", email);
 
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     if (!user) return;
-
-    
 
     const fetchReferrals = async () => {
       setLoading(true);
       try {
         const response = await ReferralService.fetchReferrals(
-          email? email : user.email,
+          email ? email : user.email,
           currentPage,
           ITEMS_PER_PAGE,
-          email? false : true
+          email ? false : true
         );
         console.log("data", response);
 
@@ -67,10 +71,15 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
   const handleSearch = async () => {
     setCurrentPage(1); // Reset to the first page for new search
     setLoading(true);
-    console.log("searching referrals for email", email, 'searchQuery', searchQuery);
+    console.log(
+      "searching referrals for email",
+      email,
+      "searchQuery",
+      searchQuery
+    );
     try {
       const response = await ReferralService.searchReferrals(
-        email? email : user!.email,
+        email ? email : user!.email,
         searchQuery,
         1, // Set to the first page for new search
         ITEMS_PER_PAGE,
@@ -89,13 +98,12 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
       setLoading(false);
     }
   };
-  
+
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
-
 
   const toggleReviewed = (id: number) => {
     const updateReviewedStatus = async () => {
@@ -110,10 +118,6 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
     );
   };
 
- 
-
-
-
   const toggleStatus = (index: number, field: string) => {
     if (user && user.role === "ADMIN") {
       setReferrals((prevReferrals) =>
@@ -122,19 +126,26 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
         )
       );
       refresh();
+
+      if (selectedReferral) {
+        setSelectedReferral({
+          ...selectedReferral,
+          [field]: !selectedReferral[field],
+        });
+      }
     }
   };
 
   return (
     <div className="col-span-12 xl:col-span-8  rounded-sm border border-stroke bg-white px-3 pt-5 sm:px-5 xl:pb-1">
       <div className="flex justify-between">
-      <h4 className="mb-3 text-lg font-semibold text-black dark:text-white">
-        {user?.role === "USER" ? "YOUR" : ""} REFERRALS
-      </h4>
-    
-      <PlusButton onClick={() => router.push('/referral-form')} />
+        <h4 className="mb-3 text-lg font-semibold text-black dark:text-white">
+          {user?.role === "USER" ? "YOUR" : ""} REFERRALS
+        </h4>
+
+        <PlusButton onClick={() => router.push("/referral-form")} />
       </div>
-      
+
       <div>
         <input
           type="text"
@@ -145,7 +156,7 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
         />
         <button
           onClick={handleSearch}
-          className="px-2 py-2 border  translate-y-[0.4rem] border-black  bg-[black] duration-200  hover:opacity-50  text-white"
+          className="px-2 py-2 border  translate-y-[0.4rem] border-black  bg-[#261f1d] duration-200  hover:opacity-50  text-white"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -173,7 +184,7 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
       ) : (
         <div className="overflow-x-auto  h-[15rem] overflow-y-scroll mb-6">
           <table className="w-full  border-collapse">
-            <thead >
+            <thead>
               <tr className="bg-gray-100 ">
                 {user?.role === "ADMIN" && (
                   <th className="p-2 text-sm font-medium uppercase text-left sticky top-0 bg-gray-100 z-10">
@@ -213,16 +224,25 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
                       {!referral.reviewed && (
                         <div className="rounded-full  w-2 h-2 bg-red-500"></div>
                       )}
-                      <p className="w-[5rem] whitespace-nowrap overflow-hidden text-ellipsis "> {referral.referrerName}</p>
+                      <p className="w-[5rem] whitespace-nowrap overflow-hidden text-ellipsis ">
+                        {" "}
+                        {referral.referrerName}
+                      </p>
                     </td>
                   )}
                   <td className="p-2 px-10 text-sm text-black dark:text-white">
-                  <p className="w-[5rem] whitespace-nowrap overflow-hidden text-ellipsis "> {referral.name}</p>
+                    <p className="w-[5rem] whitespace-nowrap overflow-hidden text-ellipsis ">
+                      {" "}
+                      {referral.name}
+                    </p>
                   </td>
                   <td className="p-2 text-sm text-black dark:text-white">
-                  <p className="w-[5rem] whitespace-nowrap overflow-hidden text-ellipsis "> {referral.email}</p>
+                    <p className="w-[5rem] whitespace-nowrap overflow-hidden text-ellipsis ">
+                      {" "}
+                      {referral.email}
+                    </p>
                   </td>
-                  
+
                   <td className="hidden lg:table-cell p-2 pl-5  text-center">
                     <CheckBoxModal
                       data={{
@@ -329,7 +349,7 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
           title="Candidate Details"
           onClose={() => setSelectedReferral(null)}
         >
-          <div className="space-y-6">
+          <div className="space-y-6 ">
             {/* Basic Info */}
             <div className="space-y-2 text-gray-600">
               <p>
@@ -348,9 +368,9 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
                   href={selectedReferral.linkedIn}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-500 hover:text-blue-700 transition"
+                  className={`font-medium ${selectedReferral.resume && 'underline'} hover:opacity-50 transition`}
                 >
-                  LinkedIn Profile
+                { selectedReferral.linkedIn ? "Link" : "Not provided"}
                 </a>
               </p>
               <p>
@@ -359,9 +379,9 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
                   href={selectedReferral.resume}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-500 hover:text-blue-700 transition"
+                  className={`font-medium ${selectedReferral.resume && 'underline'} hover:opacity-50 transition`}
                 >
-                  View Resume
+                 {selectedReferral.resume ? "Link" : "Not provided"}
                 </a>
               </p>
             </div>
@@ -454,7 +474,7 @@ const TableOne = ({ refresh, email }: { refresh: any, email: string | null}) => 
                 </div>
               </div>
             </div>
-            {!selectedReferral.reviewed  && user?.role === 'ADMIN' &&  (
+            {!selectedReferral.reviewed && user?.role === "ADMIN" && (
               <button
                 onClick={() => toggleReviewed(selectedReferral?.id)}
                 className="text-center m-auto w-full underline"
@@ -488,30 +508,25 @@ export const Modal = ({ title, children, onClose }: ModalProps) => {
   return (
     <div className="fixed  inset-0 z-50 flex items-center justify-center">
       <div className="bg-[black]  inset-0 z-[200] bg-opacity-50 w-screen  animate-fade absolute"></div>
-      <div className="bg-white absolute  z-[250]  top-40 h-[32rem] rounded-lg shadow-lg w-11/12 max-w-lg  p-12 pt-6 overflow-y-auto ">
+      <div className="bg-white absolute  z-[250]  top-40 max-h[30rem] border rounded shadow-lg w-11/12 max-w-lg  p-14 pt-8 overflow-y-auto ">
         <div className="flex gap-2 border-b justify-center">
           <h1 className="text-[1.5rem] font-bold mb-4 text-gray-900">
             {title}
           </h1>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="30"
+            height="30"
             viewBox="0 0 24 24"
             fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className="feather feather-user"
           >
-            <circle
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="black"
-              stroke-width="2"
-              fill="none"
-            />
-            <path
-              d="M12 8C11.45 8 11 8.45 11 9C11 9.55 11.45 10 12 10C12.55 10 13 9.55 13 9C13 8.45 12.55 8 12 8ZM12 12C11.45 12 11 12.45 11 13V17C11 17.55 11.45 18 12 18C12.55 18 13 17.55 13 17V13C13 12.45 12 12 12 12Z"
-              fill="black"
-            />
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
           </svg>
         </div>
 
@@ -527,14 +542,13 @@ export const Modal = ({ title, children, onClose }: ModalProps) => {
   );
 };
 
+import React from "react";
 
-import React from 'react';
-
-const PlusButton = ({ onClick } : {onClick: any}) => {
+const PlusButton = ({ onClick }: { onClick: any }) => {
   return (
-    <button 
-      onClick={onClick} 
-      className="p-1 px-3 scale-[0.8] bg-[black] hover:opacity-50 duration-200 text-white rounded-full flex items-center justify-center"
+    <button
+      onClick={onClick}
+      className="p-1 px-3 scale-[0.8] bg-[#261f1d] shadow-lg hover:opacity-50 duration-200 text-white rounded-full flex items-center justify-center"
       aria-label="Add"
     >
       <svg
@@ -554,7 +568,5 @@ const PlusButton = ({ onClick } : {onClick: any}) => {
     </button>
   );
 };
-
-
 
 export default TableOne;
