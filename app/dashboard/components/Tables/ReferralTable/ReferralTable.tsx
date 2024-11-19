@@ -157,7 +157,7 @@ const ReferralTable = ({
           {user?.role === "USER" ? "YOUR" : ""} REFERRALS
         </h4>
 
-        <PlusButton onClick={() => router.push("/referral-form")} />
+       { !email &&  <PlusButton onClick={() => router.push("/referral-form")} />}
       </div>
 
       <div>
