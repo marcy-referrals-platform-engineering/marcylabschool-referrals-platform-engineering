@@ -19,12 +19,12 @@ export default class ReferralService {
         return response;
     }
 
-    static async fetchReferrals(email: string, page: number = 1, pageSize: number = 5, fetchForAll=true): Promise<any> {
+    static async fetchReferrals(email: string, page: number = 1, pageSize: number = 5, fetchForAll = true): Promise<any> {
         const response = await fetch(`/api/referral/get-all?email=${email}&page=${page}&pageSize=${pageSize} ${!fetchForAll ? '&fetchForAll=false' : ''}`);
-    if (!response.ok) {
-        throw new Error('Failed to fetch referrals');
-    }
-    return await response.json();
+        if (!response.ok) {
+            throw new Error('Failed to fetch referrals');
+        }
+        return await response.json();
     }
 
     static async updateReferralStatus(referralId: number, milestone: string): Promise<any> {

@@ -117,6 +117,8 @@ const Analytics: React.FC = () => {
           (selectedUserStats || userStats) && (
             <>
               <div
+              // If the user is an admin, display the stats in a 3 column grid, otherwise display in a 2 column grid
+              // This is because the admin has an extra component to display
                 className={` grid ${
                   user?.role === "ADMIN"
                     ? "xl:grid-cols-3 md:grid-cols-1 "
