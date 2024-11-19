@@ -120,7 +120,7 @@ const Analytics: React.FC = () => {
               // If the user is an admin, display the stats in a 3 column grid, otherwise display in a 2 column grid
               // This is because the admin has an extra component to display
                 className={` grid ${
-                  user?.role === "ADMIN"
+                  user?.role === "ADMIN" && !selectedUserEmail
                     ? "xl:grid-cols-3 md:grid-cols-1 "
                     : " xl:grid-cols-2 md:grid-cols-2"
                 } grid-cols-1 m-auto gap-4  md:gap-6  2xl:gap-7.5`}
@@ -132,7 +132,7 @@ const Analytics: React.FC = () => {
                   statsLoaded={statsLoaded}
                   selectedUserStats={selectedUserStats}
                 />
-                {user?.role === "ADMIN" && (
+                {user?.role === "ADMIN" && !selectedUserEmail && (
                   <AuthRequests
                     setLoaded={setStatsLoaded}
                     loaded={statsLoaded}
