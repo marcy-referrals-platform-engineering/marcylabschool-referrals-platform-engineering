@@ -16,20 +16,26 @@ import { calculateWeeklyPercentIncrease, generateSWRKey } from "./utils";
 const Analytics: React.FC = () => {
   const { user, initialPageLoad, setInitialPageLoad } = useStore();
   const [refresh, setRefresh] = useState(false);
-  const [percentIncrease, setPercentIncrease] = useState({referrals: 0, points: 0,});
+  const [percentIncrease, setPercentIncrease] = useState({
+    referrals: 0,
+    points: 0,
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
-  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(null);
+  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(
+    null
+  );
   const [selectedUserStats, setSelectedUserStats] = useState<any>(null);
   const [isLoaded, setIsLoaded] = useState(true);
   const [statsLoaded, setStatsLoaded] = useState(false);
   const [view, setView] = useState("all");
 
   // SWR for data fetching and caching, only when `user.email` is defined
-  const {data: userStats, error,} = useSWR(
+  const { data: userStats, error } = useSWR(
     // Generate a unique key for the SWR cache
-    generateSWRKey(user?.email || '', selectedUserEmail),
-    () => ReferralService.getReferralStats(selectedUserEmail || user?.email || ""),
+    generateSWRKey(user?.email || "", selectedUserEmail),
+    () =>
+      ReferralService.getReferralStats(selectedUserEmail || user?.email || ""),
     {
       refreshInterval: 0,
       revalidateOnFocus: true,
@@ -47,7 +53,6 @@ const Analytics: React.FC = () => {
     }
   });
 
-
   // On refresh, refresh the data
   useEffect(() => {
     if (user?.email) {
@@ -61,7 +66,9 @@ const Analytics: React.FC = () => {
 
   // Calculate the weekly percent increase
   useEffect(() => {
-    const percentIncrease = calculateWeeklyPercentIncrease(selectedUserStats? selectedUserStats : userStats);
+    const percentIncrease = calculateWeeklyPercentIncrease(
+      selectedUserStats ? selectedUserStats : userStats
+    );
     setPercentIncrease(percentIncrease);
   }, [userStats]);
 
@@ -69,13 +76,13 @@ const Analytics: React.FC = () => {
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-      try {
-        const users = await UserService.search(query);
-        console.log("search resuls", users);
-        setFilteredUsers(users);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
+    try {
+      const users = await UserService.search(query);
+      console.log("search resuls", users);
+      setFilteredUsers(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
   };
 
   // Handle the user select from autocomplete menu
@@ -92,9 +99,9 @@ const Analytics: React.FC = () => {
   return (
     <>
       <div
-        className={` w-[90%]  ${
-         initialPageLoad || error ? "invisible" : ""
-        } ${user?.role === "USER" && "pt-[2rem]"}  m-auto flex-col `}
+        className={` w-[90%]  ${initialPageLoad || error ? "invisible" : ""} ${
+          user?.role === "USER" && "pt-[2rem]"
+        }  m-auto flex-col `}
       >
         {user?.role === "ADMIN" && (
           <AdminControls
@@ -117,22 +124,22 @@ const Analytics: React.FC = () => {
           (selectedUserStats || userStats) && (
             <>
               <div
-              // If the user is an admin, display the stats in a 3 column grid, otherwise display in a 2 column grid
-              // This is because the admin has an extra component to display
+                // If the user is an admin, display the stats in a 3 column grid, otherwise display in a 2 column grid
+                // This is because the admin has an extra component to display
                 className={` grid ${
-                  user?.role === "ADMIN" && !selectedUserEmail
+                  user?.role === "ADMIN" && view === "all"
                     ? "xl:grid-cols-3 md:grid-cols-1 "
                     : " xl:grid-cols-2 md:grid-cols-2"
                 } grid-cols-1 m-auto gap-4  md:gap-6  2xl:gap-7.5`}
               >
                 <UserStats
-                  setStatsLoaded={setStatsLoaded}
+                  setLoaded={setStatsLoaded}
                   userStats={selectedUserStats || userStats}
                   percentIncrease={percentIncrease}
-                  statsLoaded={statsLoaded}
+                  loaded={statsLoaded}
                   selectedUserStats={selectedUserStats}
                 />
-                {user?.role === "ADMIN" && !selectedUserEmail && (
+                {user?.role === "ADMIN" && view === "all" && (
                   <AuthRequests
                     setLoaded={setStatsLoaded}
                     loaded={statsLoaded}
