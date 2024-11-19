@@ -2,9 +2,11 @@
 import { useEffect, useState } from "react";
 import { useStore } from "@/app/state/useStore";
 import ReferralService from "@/app/services/ReferralService";
-import TableOneLoading from "./ReferralTableLoading";
-import CheckBoxModal from "./CheckBoxModal";
+import TableOneLoading from "./components/ReferralTableLoading";
+import CheckBoxModal from "./components/CheckBoxModal";
 import { useRouter } from "next/navigation";
+import Modal from "./components/InfoModal";
+import PlusButton from "./components/PlusButton";
 const ITEMS_PER_PAGE = 5; // Number of referrals to display per page
 
 const ReferralTable = ({
@@ -30,13 +32,27 @@ const ReferralTable = ({
 
     const fetchReferrals = async () => {
       setLoading(true);
+
       try {
-        const response = await ReferralService.fetchReferrals(
-          email ? email : user.email,
-          currentPage,
-          ITEMS_PER_PAGE,
-          email ? false : true
-        );
+        let response;
+        //  handle pagination for when there is a query
+        if (searchQuery) {
+          response = await ReferralService.searchReferrals(
+            email ? email : user.email,
+            searchQuery,
+            currentPage,
+            ITEMS_PER_PAGE,
+            email ? false : true
+          );
+        } else {
+          // handle pagination for when there is no query
+          response = await ReferralService.fetchReferrals(
+            email ? email : user.email,
+            currentPage,
+            ITEMS_PER_PAGE,
+            email ? false : true
+          );
+        }
         console.log("data", response);
 
         if (response && Array.isArray(response.data)) {
@@ -81,7 +97,7 @@ const ReferralTable = ({
         searchQuery,
         1, // Set to the first page for new search
         ITEMS_PER_PAGE,
-        false
+        email ? false : true
       );
       if (response && Array.isArray(response.data)) {
         setReferrals(response.data);
@@ -366,9 +382,11 @@ const ReferralTable = ({
                   href={selectedReferral.linkedIn}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`font-medium ${selectedReferral.linkedIn && 'underline'} hover:opacity-50 transition`}
+                  className={`font-medium ${
+                    selectedReferral.linkedIn && "underline"
+                  } hover:opacity-50 transition`}
                 >
-                { selectedReferral.linkedIn ? "Link" : "Not provided"}
+                  {selectedReferral.linkedIn ? "Link" : "Not provided"}
                 </a>
               </p>
               <p>
@@ -377,9 +395,11 @@ const ReferralTable = ({
                   href={selectedReferral.resume}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`font-medium ${selectedReferral.resume && 'underline'} hover:opacity-50 transition`}
+                  className={`font-medium ${
+                    selectedReferral.resume && "underline"
+                  } hover:opacity-50 transition`}
                 >
-                 {selectedReferral.resume ? "Link" : "Not provided"}
+                  {selectedReferral.resume ? "Link" : "Not provided"}
                 </a>
               </p>
             </div>
@@ -484,86 +504,6 @@ const ReferralTable = ({
         </Modal>
       )}
     </div>
-  );
-};
-
-interface ModalProps {
-  title: string;
-  children: React.ReactNode;
-  onClose: () => void;
-}
-
-export const Modal = ({ title, children, onClose }: ModalProps) => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
-
-  return (
-    <div className="fixed  inset-0 z-50 flex items-center justify-center">
-      <div className="bg-[black]  inset-0 z-[200] bg-opacity-50 w-screen  animate-fade absolute"></div>
-      <div className="bg-white absolute  z-[250]  top-40 max-h[30rem] border rounded shadow-lg w-11/12 max-w-lg  p-14 pt-8 overflow-y-auto ">
-        <div className="flex gap-2 border-b justify-center">
-          <h1 className="text-[1.5rem] font-bold mb-4 text-gray-900">
-            {title}
-          </h1>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            className="feather feather-user"
-          >
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-        </div>
-
-        <button
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-          onClick={onClose}
-        >
-          ×
-        </button>
-        <div className="pt-3">{children}</div>
-      </div>
-    </div>
-  );
-};
-
-import React from "react";
-
-const PlusButton = ({ onClick }: { onClick: any }) => {
-  return (
-    <button
-      onClick={onClick}
-      className="p-1 px-3 scale-[0.8] bg-[#261f1d] shadow-lg hover:opacity-50 duration-200 text-white rounded-full flex items-center justify-center"
-      aria-label="Add"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        className="w-4 h-4"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M12 4v16m8-8H4"
-        />
-      </svg>
-    </button>
   );
 };
 
