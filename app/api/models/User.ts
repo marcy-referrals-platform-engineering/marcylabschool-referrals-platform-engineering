@@ -1,15 +1,37 @@
 import prisma from "../../../prisma/client";
 import { aggregateMonthlyData, aggregateWeeklyData, calculateTotals } from "../utils/referralDataUtils";
 export default class User {
-   static async getUserRole(email: string) {
+
+    static async search(query: string) { 
+        const response = await prisma.authorizedEmails.findMany({
+            where: {
+                OR: [
+                    { email: { contains: query, mode: 'insensitive' } },
+                    { name: { contains: query, mode: 'insensitive' } }
+                ]
+               
+            }
+        });
+        if (!response) {
+            console.log("Failed to search users");
+            return [];
+        }
+        return response;
+    }
+
+   static async getUserInfo(email: string) {
         try {
             const userRole = await prisma.authorizedEmails.findFirst({
                 where: { email },
                 select: { role: true }
             })
-            return userRole;
+            const userRelation = await prisma.authorizedEmails.findFirst({
+                where: { email },
+                select: { relation: true }
+            })
+            return {userRole, userRelation};
         } catch (error) {
-            console.error("Error fetching user role:", error);
+            console.error("Error fetching user info:", error);
             throw new Error("Could not retrieve user role");
         }
    }
@@ -30,7 +52,7 @@ export default class User {
 
 
 
-    static async getReferralStats(email: string) {
+    static async getReferralStats(email: string, fetchForAll: boolean = true) {
         try {
             const userRole = await prisma.authorizedEmails.findFirst({
                 where: { email },
@@ -39,11 +61,16 @@ export default class User {
 
             let userReferrals;
 
-            userReferrals = (userRole as any) === 'ADMIN' ? await prisma.referral.findMany() : await prisma.referral.findMany({
-                where: { referrerEmail: email }
-            });
+            userReferrals = (userRole as any).role === 'ADMIN' && fetchForAll
+            ? await prisma.referral.findMany({
+                take: 1000 // Increase this limit as needed
+              })
+            : await prisma.referral.findMany({
+                where: { referrerEmail: email },
+                take: 1000 // Add `take` here as well if needed
+              });
 
-            console.log(userReferrals);
+            console.log(userReferrals.length, 'User has this many referrals');
 
 
             const monthlyData = aggregateMonthlyData(userReferrals);
@@ -59,4 +86,15 @@ export default class User {
         }
     }
 
+
+    static async setRelation(email: string, relation: string) {
+        const response = await prisma.authorizedEmails.update({
+            where: { email },
+            data: { relation }
+        });
+        if (!response) {
+            throw new Error('Failed to set relation');
+        }
+        return response;
+    }
 }

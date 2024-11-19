@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Button from "./Button";
 import Image from "next/image";
+
 interface StepCardProps {
   color: string;
   img: string;
@@ -33,20 +34,25 @@ function StepCard({ color, img, title, body, step, button }: StepCardProps) {
           </p>
           <div className="pt-3">
             {button && (
-              <Link href={(button as any).href || ''}>
+              <Link href={(button as any).href || ""}>
                 <Button
-                text={button.text}
-                href={(button as any).href}
-                onClick={null}
-                invert={button.invert}
-              />
+                  text={button.text}
+                  href={(button as any).href}
+                  onClick={null}
+                  invert={button.invert}
+                />
               </Link>
-              
             )}
           </div>
         </div>
 
-        <Image alt='step' width={500} height={500} className="   md:w-[40%]  pt-10  " src={img}></Image>
+        <Image
+          alt="step"
+          width={500}
+          height={500}
+          className="   md:w-[40%]  pt-10  "
+          src={img}
+        ></Image>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@
 import { SessionProvider } from "next-auth/react";
 import { useStore } from "@/app/state/useStore";
 import { useEffect, useState } from "react";
-import Loader from "../ui/Loader";
+import Loader from "./Loader";
 import ReferralService from "@/app/services/ReferralService";
 import AuthService from "@/app/services/AuthService";
 
@@ -44,13 +44,15 @@ function StateInitializerWrapper({
   useEffect(() => {
     const initializeUser = async () => {
       if (session?.user) {
-        const userRole = await AuthService.getUserRole(session.user.email);
-        console.log(userRole, "userRole");
+        const { userRole, userRelation } = await AuthService.getInfo(
+          session.user.email
+        );
         setUser({
           name: session.user.name || "",
           email: session.user.email || "",
           image: session.user.image || "",
           role: userRole || "",
+          relation: userRelation || "",
         });
       } else {
         setUser(null);

@@ -143,7 +143,7 @@ export const useMenuGroups = () => {
           label: "Settings",
           route: "/settings",
         },
-        ...(user?.name?[{
+        {
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -187,7 +187,7 @@ export const useMenuGroups = () => {
           ),
           label: "Rewards",
           route: "/rewards",
-        }] :[]),
+        }
       ],
     },
   ].filter(Boolean);
