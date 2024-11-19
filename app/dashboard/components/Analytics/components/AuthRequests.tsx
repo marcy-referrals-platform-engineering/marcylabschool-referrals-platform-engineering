@@ -14,11 +14,7 @@ function AuthRequests({
   const [expanded, setExpanded] = useState(false);
   const [hasChanged, setHasChanged] = useState(false);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-    }, 300);
-  });
+
   
   const handleRequest = async (requestId: number, shouldAccept: boolean) => {
     console.log(requestId, shouldAccept);
