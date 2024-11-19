@@ -206,10 +206,10 @@ const ReferralTable = ({
                   </th>
                 )}
                 <th className="p-2  text-sm font-medium uppercase text-left sticky top-0 bg-gray-100 z-10">
-                  Canidate Name
+                  Candidate Name
                 </th>
                 <th className="p-2 text-sm font-medium uppercase text-left sticky top-0 bg-gray-100 z-10">
-                  Canidate Email
+                  Candidate Email
                 </th>
                 <th className="hidden lg:table-cell p-2 text-sm font-medium uppercase text-center sticky top-0 bg-gray-100 z-10">
                   Toured
