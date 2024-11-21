@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import AuthService from "@/app/services/AuthService";
 import Image from "next/image";
-import { requestToBodyStream } from "next/dist/server/body-streams";
+
 function AuthRequests({
   loaded,
   setLoaded,
@@ -14,8 +14,6 @@ function AuthRequests({
   const [expanded, setExpanded] = useState(false);
   const [hasChanged, setHasChanged] = useState(false);
 
-
-  
   const handleRequest = async (requestId: number, shouldAccept: boolean) => {
     console.log(requestId, shouldAccept);
     const response = await AuthService.handleAuthRequest(
@@ -104,13 +102,19 @@ function AuthRequests({
               </div>
               <div className="flex gap-2 ml-auto">
                 <button
-                  onClick={() => handleRequest(request.id, true)}
+                  onClick={() => {
+                    handleRequest(request.id, true);
+                    if (requests.length === 0) setExpanded(false);
+                  }}
                   className="text-[0.9rem] text-green-500 bg-green-200 px-2 py-1 rounded-sm"
                 >
                   Accept
                 </button>
                 <button
-                  onClick={() => handleRequest(request.id, false)}
+                  onClick={() => {
+                    handleRequest(request.id, false);
+                    if (requests.length === 0) setExpanded(false);
+                  }}
                   className="text-[0.9rem] text-red-500 bg-red-200 px-2 py-1 rounded-sm"
                 >
                   Reject
@@ -130,13 +134,11 @@ const AuthRequstsLoading = () => {
   return (
     <div className="animate-pulse shadow bg-white border px-7.5">
       <div className="flex items-center gap-3 mt-10">
-        
         <div className="flex-1 flex flex-col gap-2">
           <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
           <div className="h-3 bg-gray-200 rounded w-1/2"></div>
         </div>
       </div>
-     
     </div>
   );
 };

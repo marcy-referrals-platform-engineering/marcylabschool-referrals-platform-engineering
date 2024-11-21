@@ -23,7 +23,7 @@ function ErrorPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen   bg-[url(https://archewell.org/wp-content/uploads/2023/10/DSC8867.jpg)] bg-cover bg-center">
+    <div className="flex items-center justify-center min-h-[92.2vh]   bg-[url(https://archewell.org/wp-content/uploads/2023/10/DSC8867.jpg)] bg-cover bg-center">
       {/* Semi-transparent white backdrop */}
       <div className="absolute inset-0 bg-white/90"></div>
 
