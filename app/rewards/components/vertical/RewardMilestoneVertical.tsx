@@ -1,29 +1,23 @@
 import React from "react";
 
 interface RewardMilestoneProps {
-  leftPosition: number;
+  topPosition: number; // Vertical positioning
   isReached: boolean;
   isSpecial: boolean;
   size: string;
   imageUrl: string;
   label: string;
   description: string;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
-  isHovered: boolean;
 }
 
 const RewardMilestone: React.FC<RewardMilestoneProps> = ({
-  leftPosition,
+  topPosition,
   isReached,
   isSpecial,
   size,
   imageUrl,
   label,
   description,
-  onMouseEnter,
-  onMouseLeave,
-  isHovered,
 }) => {
   const imageClassNames = `overflow-hidden ${size} rounded-full shadow-md transition-transform ${
     isReached ? "transform scale-110" : "opacity-50"
@@ -41,12 +35,10 @@ const RewardMilestone: React.FC<RewardMilestoneProps> = ({
     <div
       className="absolute"
       style={{
-        left: `${leftPosition}%`,
-        top: "50%",
-        transform: `translate(-50%, -100%)`,
+        top: `${topPosition}%`, // Use top for vertical positioning
+        left: "50%", // Center horizontally
+        transform: `translate(-50%, -50%)`, // Adjust to center the milestone
       }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
     >
       {/* Reward Icon */}
       <div className={`relative ${isSpecial ? "special-tier" : ""}`}>
@@ -77,20 +69,17 @@ const RewardMilestone: React.FC<RewardMilestoneProps> = ({
           </div>
         )}
 
-        <div className="flex items-center h-[2rem]">
-          <div className="border-l-2 h-full mx-auto"></div>
+        {/* Vertical connector */}
+        <div className="flex  flex-col items-center h-[2rem]">
+          {/* <div className="border-t-2 w-full mx-auto"></div> */}
         </div>
 
-        {/* Popup for milestone */}
-        {isHovered && (
-          <div
-            className="absolute top-[10rem] left-1/2 transform -translate-x-1/2 w-56 bg-white p-2 rounded shadow-lg border border-gray-200 text-center z-50"
-            style={{ pointerEvents: "none" }}
-          >
-            <p className="font-bold">{label}</p>
-            <p className="text-sm">{description}</p>
-          </div>
-        )}
+        {/* Always visible info box aligned to the left */}
+        <div
+          className={`absolute ${isSpecial? 'translate-x-[-1.1rem]' : 'translate-x-[-1.9rem]'}  transform -translate-y-[1.5rem] w-50 bg-white p-2 text-xs rounded shadow-lg border border-gray-200  z-50`}
+        >
+          <p className=" text-center font-bold">{label}</p>
+        </div>
       </div>
     </div>
   );
