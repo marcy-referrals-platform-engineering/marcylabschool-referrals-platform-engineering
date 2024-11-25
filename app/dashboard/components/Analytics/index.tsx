@@ -12,6 +12,7 @@ import AuthRequests from "./components/AuthRequests";
 import AdminControls from "./components/AdminControls";
 import UserStats from "./components/UserStats";
 import { calculateWeeklyPercentIncrease, generateSWRKey } from "./utils";
+import { supabase } from "@/app/utils/supabaseClient";
 
 const Analytics: React.FC = () => {
   const { user, initialPageLoad, setInitialPageLoad } = useStore();
@@ -43,6 +44,28 @@ const Analytics: React.FC = () => {
       revalidateIfStale: false,
     }
   );
+
+  useEffect(() => {
+    if (user?.email) {
+      const channel = supabase
+        .channel("referrals_channel") // Create a channel
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "Referral" },
+          (payload) => {
+            console.log("Change received in referrals table!", payload);
+            // Trigger data refresh
+            mutate(`referral-stats-${user?.email || ""}`);
+          }
+        )
+        .subscribe();
+
+      // Cleanup on component unmount
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, []);
 
   // Keep track of of weather or not the page has hard refreshed
   useEffect(() => {

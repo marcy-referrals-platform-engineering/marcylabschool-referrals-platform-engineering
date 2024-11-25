@@ -5,7 +5,6 @@ import HeroSection from "./components/layout/Home/HeroSection";
 import QuestionsSection from "./components/layout/Home/QuestionsSection";
 import ReferralMilestones from "./components/layout/Home/ReferralMilestones";
 import HomeFooter from "./components/layout/Home/HomeFooter";
-import Header from "./components/layout/Header";
 import FocusBackdrop from "./dashboard/components/FocusBackdrop";
 
 import { processData } from "./components/layout/Home/ProcessSection/data";
