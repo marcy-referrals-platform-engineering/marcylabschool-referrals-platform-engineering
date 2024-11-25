@@ -7,6 +7,7 @@ import CheckBoxModal from "./components/CheckBoxModal";
 import { useRouter } from "next/navigation";
 import Modal from "./components/InfoModal";
 import PlusButton from "./components/PlusButton";
+import { supabase } from "@/app/utils/supabaseClient";
 const ITEMS_PER_PAGE = 5; // Number of referrals to display per page
 
 const ReferralTable = ({
@@ -27,60 +28,77 @@ const ReferralTable = ({
 
   const router = useRouter();
 
+  const fetchReferrals = async () => {
+    if (!user) return;
+    setLoading(true);
+
+    try {
+      let response;
+      // Handle pagination for when there is a query
+      if (searchQuery) {
+        response = await ReferralService.searchReferrals(
+          email ? email : user.email,
+          searchQuery,
+          currentPage,
+          ITEMS_PER_PAGE,
+          email ? false : true
+        );
+      } else {
+        // Handle pagination for when there is no query
+        response = await ReferralService.fetchReferrals(
+          email ? email : user.email,
+          currentPage,
+          ITEMS_PER_PAGE,
+          email ? false : true
+        );
+      }
+
+      if (response && Array.isArray(response.data)) {
+        const initializedData = response.data.map((referral: any) => ({
+          ...referral,
+          hasToured: referral.hasToured || false,
+          hasApplied: referral.hasApplied || false,
+          hasBeenAccepted: referral.hasBeenAccepted || false,
+          hasEnrolled: referral.hasEnrolled || false,
+        }));
+        setReferrals(initializedData);
+        setTotalPages(Math.max(response.totalPages, 1)); // Ensure totalPages is at least 1
+      } else {
+        console.error("Unexpected response structure", response);
+        setReferrals([]);
+      }
+    } catch (error) {
+      console.error("Error fetching referrals:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReferrals();
+  }, [user, currentPage, email]); // Trigger whenever user, currentPage, or email changes
+
+  // Add Supabase Realtime subscription
   useEffect(() => {
     if (!user) return;
 
-    const fetchReferrals = async () => {
-      setLoading(true);
-
-      try {
-        let response;
-        //  handle pagination for when there is a query
-        if (searchQuery) {
-          response = await ReferralService.searchReferrals(
-            email ? email : user.email,
-            searchQuery,
-            currentPage,
-            ITEMS_PER_PAGE,
-            email ? false : true
-          );
-        } else {
-          // handle pagination for when there is no query
-          response = await ReferralService.fetchReferrals(
-            email ? email : user.email,
-            currentPage,
-            ITEMS_PER_PAGE,
-            email ? false : true
-          );
+    const channel = supabase
+      .channel("referrals_channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "Referral" },
+        (payload) => {
+          console.log("Change detected in Referral table:", payload);
+          fetchReferrals(); // Fetch data when a change is detected
         }
-        console.log("data", response);
+      )
+      .subscribe();
 
-        if (response && Array.isArray(response.data)) {
-          const initializedData = response.data.map((referral: any) => ({
-            ...referral,
-            hasToured: referral.hasToured || false,
-            hasApplied: referral.hasApplied || false,
-            hasBeenAccepted: referral.hasBeenAccepted || false,
-            hasEnrolled: referral.hasEnrolled || false,
-          }));
-          setReferrals(initializedData);
-
-          // Ensure totalPages is at least 1
-
-          setTotalPages(Math.max(response.totalPages, 1));
-        } else {
-          console.error("Unexpected response structure", response);
-          setReferrals([]);
-        }
-      } catch (error) {
-        console.error("Error fetching referrals:", error);
-      } finally {
-        setLoading(false);
-      }
+    return () => {
+      supabase.removeChannel(channel); // Clean up subscription on unmount
     };
+  }, [user]); // Dependency ensures subscription is user-specific
 
-    fetchReferrals();
-  }, [user, currentPage, email]);
 
   const handleSearch = async () => {
     setCurrentPage(1); // Reset to the first page for new search
