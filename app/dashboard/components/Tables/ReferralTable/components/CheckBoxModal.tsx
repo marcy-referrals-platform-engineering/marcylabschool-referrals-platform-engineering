@@ -23,30 +23,32 @@ export default function CheckBoxModal({
   handler,
   points,
   data,
+  setUpdatedByUser
 }: {
   conditionTrue: string;
   handler: any;
   condition: any;
   points: number;
   data: any;
+  setUpdatedByUser: any
 }) {
   const { user } = useStore();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleContinue = () => {
-    const updateStatus = async () => {
-      console.log(data.id, data.milestone)
-      const updatedReferral = await ReferralService.updateReferralStatus(
-        data.id,
-        data.milestone
-      );
-      handler();
-    };
-    updateStatus()
-    handleClose();
+  const handleContinue = async () => {
+    setUpdatedByUser(true); // Mark as user-initiated update
+    handleClose()
+    try {
+      console.log(data.id, data.milestone);
+      await ReferralService.updateReferralStatus(data.id, data.milestone);
+      handler(); // Update the parent component's local state
+    } catch (error) {
+      console.error("Error updating referral status:", error);
+    } 
   };
+  
   return (
     <div className={` ${user?.role === 'ADMIN' && 'cursor-pointer'} w-6`}>
       <div
