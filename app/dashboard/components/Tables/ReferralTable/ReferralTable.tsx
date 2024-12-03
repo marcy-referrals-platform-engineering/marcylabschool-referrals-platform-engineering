@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Modal from "./components/InfoModal";
 import PlusButton from "./components/PlusButton";
 import { supabase } from "@/app/utils/supabaseClient";
-const ITEMS_PER_PAGE = 5; // Number of referrals to display per page
+const ITEMS_PER_PAGE = 10; // Number of referrals to display per page
 
 const ReferralTable = ({
   refresh,
@@ -24,12 +24,13 @@ const ReferralTable = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [updatedByUser, setUpdatedByUser] = useState(false);
   console.log("email to use", email);
 
   const router = useRouter();
 
   const fetchReferrals = async () => {
-    if (!user) return;
+    if (!user || updatedByUser) return;
     setLoading(true);
 
     try {
@@ -89,7 +90,13 @@ const ReferralTable = ({
         { event: "*", schema: "public", table: "Referral" },
         (payload) => {
           console.log("Change detected in Referral table:", payload);
-          fetchReferrals(); // Fetch data when a change is detected
+          if (!updatedByUser) {
+            console.log("Refetching due to external changes");
+            fetchReferrals(); // Fetch data if the change wasn't user-initiated
+          } else {
+            console.log("Skipping fetch due to user-initiated update");
+          }
+          setUpdatedByUser(false); // Reset the flag after processing
         }
       )
       .subscribe();
@@ -97,8 +104,8 @@ const ReferralTable = ({
     return () => {
       supabase.removeChannel(channel); // Clean up subscription on unmount
     };
-  }, [user]); // Dependency ensures subscription is user-specific
-
+  }, [user, updatedByUser]);
+  // Dependency ensures subscription is user-specific
 
   const handleSearch = async () => {
     setCurrentPage(1); // Reset to the first page for new search
@@ -175,7 +182,7 @@ const ReferralTable = ({
           {user?.role === "USER" ? "YOUR" : ""} REFERRALS
         </h4>
 
-       { !email &&  <PlusButton onClick={() => router.push("/referral-form")} />}
+        {!email && <PlusButton onClick={() => router.push("/referral-form")} />}
       </div>
 
       <div>
@@ -184,6 +191,11 @@ const ReferralTable = ({
           placeholder="Search by name or email"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch();
+            }
+          }}
           className="border p-2 mb-4 bg-gray-50"
         />
         <button
@@ -283,6 +295,7 @@ const ReferralTable = ({
                         milestone: "hasToured",
                         id: referral.id,
                       }}
+                      setUpdatedByUser={setUpdatedByUser}
                       condition={"Attended Tour"}
                       points={20}
                       handler={() => toggleStatus(index, "hasToured")}
@@ -297,6 +310,7 @@ const ReferralTable = ({
                         milestone: "hasApplied",
                         id: referral.id,
                       }}
+                      setUpdatedByUser={setUpdatedByUser}
                       condition={"Submitted Application"}
                       points={50}
                       handler={() => toggleStatus(index, "hasApplied")}
@@ -311,6 +325,7 @@ const ReferralTable = ({
                         milestone: "hasBeenAccepted",
                         id: referral.id,
                       }}
+                      setUpdatedByUser={setUpdatedByUser}
                       condition={"Received Offer"}
                       points={100}
                       handler={() => toggleStatus(index, "hasBeenAccepted")}
@@ -325,6 +340,7 @@ const ReferralTable = ({
                         milestone: "hasEnrolled",
                         id: referral.id,
                       }}
+                      setUpdatedByUser={setUpdatedByUser}
                       condition={"Enrolled In Fellowship"}
                       points={200}
                       handler={() => toggleStatus(index, "hasEnrolled")}
@@ -360,7 +376,9 @@ const ReferralTable = ({
         )}
 
         <span className="flex-grow font-medium text-center">
-          Page {currentPage} of {totalPages || 1}
+          Page {currentPage} of {totalPages || 1} (
+          {ITEMS_PER_PAGE * (currentPage - 1) + 1} -{" "}
+          {referrals.length + ITEMS_PER_PAGE * (currentPage - 1)})
         </span>
 
         {currentPage < totalPages ? (
@@ -437,6 +455,7 @@ const ReferralTable = ({
                       milestone: "hasToured",
                       id: selectedReferral.id,
                     }}
+                    setUpdatedByUser={setUpdatedByUser}
                     condition={"Attended Tour"}
                     points={20}
                     handler={() =>
@@ -457,6 +476,7 @@ const ReferralTable = ({
                       milestone: "hasApplied",
                       id: selectedReferral.id,
                     }}
+                    setUpdatedByUser={setUpdatedByUser}
                     condition={"Submitted Application"}
                     points={50}
                     handler={() =>
@@ -477,6 +497,7 @@ const ReferralTable = ({
                       milestone: "hasBeenAccepted",
                       id: selectedReferral.id,
                     }}
+                    setUpdatedByUser={setUpdatedByUser}
                     condition={"Received Offer"}
                     points={100}
                     handler={() =>
@@ -497,6 +518,7 @@ const ReferralTable = ({
                       milestone: "hasEnrolled",
                       id: selectedReferral.id,
                     }}
+                    setUpdatedByUser={setUpdatedByUser}
                     condition={"Enrolled In Fellowship"}
                     points={200}
                     handler={() =>

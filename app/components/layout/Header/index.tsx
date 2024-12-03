@@ -129,9 +129,9 @@ const Header = ({
           </ul>
           {features && (
             <div className="flex gap-2">
-              <ul className="flex items-center gap-2 2xsm:gap-4">
+              {/* <ul className="flex items-center gap-2 2xsm:gap-4">
                 <DropdownNotification />
-              </ul>
+              </ul> */}
 
               <DropdownUser />
             </div>

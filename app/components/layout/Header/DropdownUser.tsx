@@ -30,7 +30,7 @@ const DropdownUser = () => {
 
   return (
     user && (
-      <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
+      <ClickOutside onClick={() => setDropdownOpen(false)} className=" z-[250] relative">
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
           className="flex items-center gap-4"
