@@ -2,6 +2,7 @@
   "name": "marcyreferrals",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "prisma generate && next build",
@@ -34,7 +35,7 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^20.17.9",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "postcss": "^8",

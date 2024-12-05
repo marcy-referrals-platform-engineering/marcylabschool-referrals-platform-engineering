@@ -376,9 +376,15 @@ const ReferralTable = ({
         )}
 
         <span className="flex-grow font-medium text-center">
-          Page {currentPage} of {totalPages || 1} (
-          {ITEMS_PER_PAGE * (currentPage - 1) + 1} -{" "}
-          {referrals.length + ITEMS_PER_PAGE * (currentPage - 1)})
+          {referrals.length ? (
+            <>
+              Page {currentPage} of {totalPages || 1} (
+              {ITEMS_PER_PAGE * (currentPage - 1) + 1} -{" "}
+              {referrals.length + ITEMS_PER_PAGE * (currentPage - 1)})
+            </>
+          ) : (
+            ""
+          )}
         </span>
 
         {currentPage < totalPages ? (
