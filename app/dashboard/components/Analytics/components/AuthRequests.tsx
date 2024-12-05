@@ -82,7 +82,7 @@ function AuthRequests({
       <div
         className={`${
           expanded
-            ? " absolute border z-[67] bg-white w-full bottom-[-4.7rem] duration-200"
+            ? " absolute max-h-[20rem] overflow-scroll  z-[67] bg-white w-full bottom-[-4.7rem] duration-200"
             : " hidden opacity-0"
         }`}
       >
@@ -102,19 +102,13 @@ function AuthRequests({
               </div>
               <div className="flex gap-2 ml-auto">
                 <button
-                  onClick={() => {
-                    handleRequest(request.id, true);
-                    if (requests.length === 0) setExpanded(false);
-                  }}
+                  onClick={() => {handleRequest(request.id, true); if (requests.length === 0) setExpanded(false)}}
                   className="text-[0.9rem] text-green-500 bg-green-200 px-2 py-1 rounded-sm"
                 >
                   Accept
                 </button>
                 <button
-                  onClick={() => {
-                    handleRequest(request.id, false);
-                    if (requests.length === 0) setExpanded(false);
-                  }}
+                  onClick={() => {handleRequest(request.id, false); if (requests.length === 0) setExpanded(false)}}
                   className="text-[0.9rem] text-red-500 bg-red-200 px-2 py-1 rounded-sm"
                 >
                   Reject
