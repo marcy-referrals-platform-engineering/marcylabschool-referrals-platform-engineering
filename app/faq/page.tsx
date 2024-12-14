@@ -16,12 +16,12 @@ const Faq = () => {
           src="https://images.ctfassets.net/5tpkas7gb5io/6Lt2xYF48djzFyaMPauj5u/692c8108e97c6ca8acecafd7e36b9dc7/devonte-graduation.jpg"
           alt="Devonte Graduation"
         />
-        <h1 className="w-[95%]  m-auto  text-black">
+        <h1 className="w-[95%]  m-auto  text-[black]">
           FREQUENTLY ASKED QUESTIONS
         </h1>
       </div>
 
-      <p className="text-[1.5rem] mt-5 font-medium w-[95%] m-auto">
+      <p className="text-[1.5rem] border-t-[0.3rem] py-5  border-[black] mt-10 font-medium w-[95%] m-auto">
         Have questions? Check out answers to some of the most frequently asked
         ones below!
       </p>
