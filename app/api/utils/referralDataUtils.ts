@@ -1,5 +1,5 @@
 export const pointsMap = {
-    hasToured: 10,
+    hasToured: 20,
     hasApplied: 50,
     hasBeenAccepted: 100,
     hasEnrolled: 200,

@@ -20,7 +20,7 @@ function ProcessSection({processData} : {processData: ProcessData[]}) {
   return (
     <div className=" mt-10 w-[90%]    border-t-[0.3rem] m-auto border-t-[#261f1d]">
       <h1 className="text-[2.3rem] lg:text-[2.8rem] xl-[3rem]  md:text-[2.7rem]">
-        THE PROCESS
+        THE PROCESS 
       </h1>
       <p className=" sm:w-[25rem] md:w-[30rem] pb-10 font-medium">
         Earn points when your referral connects with our recruitment team, tours
