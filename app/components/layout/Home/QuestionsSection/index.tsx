@@ -18,7 +18,12 @@ function QuestionsSection() {
         </p>
         <div className="border-b border-black">
           {questions.map((question) => (
-           ti
+            <Accordian
+              setIsOpen={setIsOpen}
+              isOpen={isOpen}
+              title={question.title}
+              body={question.body}
+            />
           ))}
         </div>
       </div>
