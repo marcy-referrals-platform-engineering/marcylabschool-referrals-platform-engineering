@@ -26,7 +26,7 @@ function Accordian({
               isOpen === title ? "flex" : "hidden"
             } text-[1.2rem] whitespace-pre-line`}
           >
-            <span className=" text-[1.2rem]">{body} </span>
+            <span className=" m-auto text-[1.2rem]">{body} </span>
           </p>
         </div>
 

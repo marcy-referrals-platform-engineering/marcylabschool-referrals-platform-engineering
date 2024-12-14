@@ -1,6 +1,8 @@
 "use client";
 import Accordian from "../components/ui/Accordian";
 import { useState } from "react";
+import { referralFAQ } from "./data";
+
 
 const Faq = () => {
   const [isOpen, setIsOpen] = useState<string>("");
@@ -25,14 +27,19 @@ const Faq = () => {
         Have questions? Check out answers to some of the most frequently asked
         ones below!
       </p>
-      <div className=" mt-10 w-[95%] m-auto border-b border-black">
-        <Accordian
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          title="What is the referral program?"
-          body="The referral program is a program that rewards you for referring friends to our platform. When you refer a friend, you get a reward when they sign up and complete their first task."
-        />
-      </div>
+      {
+        referralFAQ.map((faq) => (
+            <div className=" mt-10 w-[95%] m-auto  border-black">
+            <Accordian
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              title={faq.title}
+              body={faq.body}
+            />
+          </div>
+        ))}
+           
+      
     </div>
   );
 };
