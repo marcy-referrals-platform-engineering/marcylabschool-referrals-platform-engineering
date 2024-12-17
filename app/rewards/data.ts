@@ -31,4 +31,4 @@ export const tiers = [
 
 export const maxPoints = 570;
 
-export const redemptionDate = new Date("2024-05-17");
+export const redemptionDate = new Date("2025-05-17");
