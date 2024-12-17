@@ -10,11 +10,10 @@ function QuestionsSection() {
     <div id="faq" className="  m-auto  pb-20">
       <div className="w-[90%] m-auto ">
         <h1 className="  text-[2rem] md:text-[2.8rem] pt-5 ">
-          FREQUENTLY ASKED QUESTIONS
+          COMMON QUESTIONS
         </h1>
         <p className="font-medium pb-10">
-          Please refer to the details below for more information about our
-          referral program.
+          Please refer to the details below for answers to a few common questions. To view more questions, please visit our dedicated <a className="underline" href='/faq'>FAQ page</a>.
         </p>
         <div className="border-b border-black">
           {questions.map((question) => (
