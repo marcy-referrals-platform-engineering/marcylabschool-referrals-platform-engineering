@@ -20,16 +20,17 @@ export interface UserStats {
     const previousTotalReferrals = totalReferrals - referralsThisWeek;
   
     const pointsIncreasePercentage =
-      previousTotalPoints > 0 ? Math.round((pointsThisWeek / previousTotalPoints) * 100) : 100;
+      previousTotalPoints > 0 ? Math.round((pointsThisWeek / previousTotalPoints) * 100) : Infinity;
   
     const referralsIncreasePercentage =
-      previousTotalReferrals > 0 ? Math.round((referralsThisWeek / previousTotalReferrals) * 100) : 100;
+      previousTotalReferrals > 0 ? Math.round((referralsThisWeek / previousTotalReferrals) * 100) : Infinity;
   
     return {
       points: pointsIncreasePercentage,
       referrals: referralsIncreasePercentage,
     };
   };
+
   
 export const generateSWRKey = (userEmail: string | null, selectedUserEmail: string | null) => {
     if (selectedUserEmail) {

@@ -51,9 +51,9 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
         <span
           className={`flex items-center gap-1 text-sm ${textStyle} font-medium `}
         >
-          {rate}
+          {rate === 'Infinity%'? '': rate}
 
-          {levelUp && (
+          {rate !== 'Infinity%' && levelUp && (
             <svg
               className="fill-meta-3"
               width="10"
