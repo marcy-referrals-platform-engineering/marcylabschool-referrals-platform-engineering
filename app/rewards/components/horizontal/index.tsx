@@ -26,8 +26,10 @@ const RewardProgress: React.FC<{ points: any, user: any}> = ({points, user}) => 
 
         {/* Introductory text */}
         <div className="mb-6 text-center">
-          <p className="text-lg">
-            Earn points by referring friends and unlock exciting rewards!
+         
+       
+          <p className="text-md ">
+           Note: Only current fellows and alumni can redeem rewards at this time.
           </p>
           <p className="text-md mt-2">
             You can redeem your rewards starting from{" "}
