@@ -2,9 +2,19 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Install OpenSSL (latest available version in Alpine)
+# Install OpenSSL 
 RUN apk add --no-cache openssl
 
+# Define build-time arguments
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_ANON_KEY
+
+# Set environment variables inside the build container
+ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_ANON_KEY
+
+RUN echo "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL"
+RUN echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_ANON_KEY"
 # Copy and install dependencies
 COPY package.json package-lock.json ./
 RUN npm install
