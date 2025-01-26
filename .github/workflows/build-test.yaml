@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
     - main
+  
+  workflow_dispach:
 
 jobs:
   build:
@@ -33,7 +35,7 @@ jobs:
         run: |
           echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.production
           echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> .env.production
-          echo "NEXT_PUBLIC_ANON_KEY=${{ secrests.NEXT_PUBLIC_ANON_KEY }}" >> .env.production
+          echo "NEXT_PUBLIC_ANON_KEY=${{ secrets.NEXT_PUBLIC_ANON_KEY }}" >> .env.production
 
       - name: Build Application
         run: npm run build
