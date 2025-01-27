@@ -31,17 +31,12 @@ jobs:
           docker build \
             --build-arg NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }} \
             --build-arg NEXT_PUBLIC_ANON_KEY=${{ secrets.NEXT_PUBLIC_ANON_KEY }} \
-            -t referrals:${{ github.sha }} .
+            -t referrals:latest .
 
       - name: Tag Docker Image
         run: |
-          docker tag referrals:${{ github.sha }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/referrals-app:latest
-          docker tag referrals:${{ github.sha }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/referrals-app:${{ github.sha }}
+          docker tag referrals:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/referrals-app:latest
       
       - name: Push Docker Image to Amazon ECR
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/referrals-app:latest
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/referrals-app:${{ github.sha }}
-
-
-        
